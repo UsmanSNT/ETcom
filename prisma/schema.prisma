@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  thumbnailUrl   String?
+  titleKo        String
+  titleEn        String
+  descriptionKo  String   @db.Text
+  descriptionEn  String   @db.Text
+  isPublished    Boolean  @default(true)
+  order          Int      @default(0)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([isPublished, order])
+}
+
+model PromotionCategory {
+  id     String          @id @default(cuid())
+  slug   String          @unique
+  nameKo String
+  nameEn String
+  order  Int             @default(0)
+  posts  PromotionPost[]
+}
+
+model PromotionPost {
+  id             String            @id @default(cuid())
+  categoryId     String
+  category       PromotionCategory @relation(fields: [categoryId], references: [id])
+  thumbnailUrl   String?
+  titleKo        String
+  titleEn        String
+  contentKo      String            @db.Text
+  contentEn      String            @db.Text
+  isPublished    Boolean           @default(true)
+  seoTitle       String?
+  seoDescription String?
+  publishedAt    DateTime          @default(now())
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([categoryId, isPublished, publishedAt])
+}
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String   @db.Text
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
+
+model PageVisit {
+  id        String   @id @default(cuid())
+  path      String
+  locale    String   @default("ko")
+  createdAt DateTime @default(now())
+
+  @@index([path, createdAt])
+}

@@ -1,0 +1,32 @@
+.footer {
+  margin-top: auto;
+  background: #111318;
+  color: #d8dae0;
+  padding: 40px 20px;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.line {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.copyright {
+  margin-top: 16px;
+  font-size: 12px;
+  opacity: 0.5;
+}
