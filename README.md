@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NewHomePage
 
-## Getting Started
+Next.js (App Router) + TypeScript + Prisma/PostgreSQL bilan qurilgan korporativ sayt va admin CMS.
 
-First, run the development server:
+## Ishga tushirish (lokal)
+
+1. PostgreSQL'ni Docker orqali ishga tushiring:
+
+```bash
+docker compose up -d
+```
+
+2. Bog'liqliklarni o'rnating (agar hali o'rnatilmagan bo'lsa):
+
+```bash
+npm install
+```
+
+3. Bazaga schema'ni qo'llang:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+4. Boshlang'ich admin foydalanuvchi va bitta kategoriya yaratish uchun seed'ni ishga tushiring:
+
+```bash
+npm run db:seed
+```
+
+Standart admin login: `admin@newhomepage.com` / `admin1234!` (`.env` dagi `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` orqali o'zgartirish mumkin).
+
+5. Dev serverni ishga tushiring:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Sayt: http://localhost:3000
+- Admin panel: http://localhost:3000/admin/login
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Loyiha tuzilishi
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app` — public sahifalar (`/`, `/about`, `/business`, `/products`, `/promotion`, `/contact`) va `/admin` panel
+- `src/app/api` — public va admin API route'lari
+- `src/lib/i18n/dictionaries.ts` — KO/EN matn resurslari
+- `prisma/schema.prisma` — ma'lumotlar bazasi modeli
 
-## Learn More
+## Production (VPS)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`docker-compose.yml` PostgreSQL uchun. Next.js ilovasini alohida Dockerfile bilan (keyingi bosqichda qo'shiladi) yoki `npm run build && npm run start` orqali ishga tushirish mumkin. `.env` faylida `DATABASE_URL`, `JWT_SECRET` va `NEXT_PUBLIC_SITE_URL` production qiymatlariga o'zgartirilishi kerak.
