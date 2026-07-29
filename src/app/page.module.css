@@ -329,6 +329,30 @@
   color: var(--brand-text-muted);
 }
 
+.viewMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.viewMoreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: 1px solid var(--brand-gray-300);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand-navy);
+}
+
+.viewMoreBtn:hover {
+  background: var(--brand-navy);
+  color: #fff;
+  border-color: var(--brand-navy);
+}
+
 /* News / Promo / Contact row */
 .bottomRow {
   display: grid;

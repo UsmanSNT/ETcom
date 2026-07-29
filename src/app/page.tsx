@@ -196,6 +196,11 @@ export default function Home() {
             ))}
           </div>
         )}
+        <div className={styles.viewMoreRow}>
+          <Link href="/products" className={styles.viewMoreBtn}>
+            {t.home.productsMore} →
+          </Link>
+        </div>
       </section>
 
       {/* News / Promo / Contact */}
