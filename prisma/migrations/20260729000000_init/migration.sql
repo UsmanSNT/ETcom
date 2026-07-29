@@ -1,17 +1,19 @@
 -- CreateTable
 CREATE TABLE "AdminUser" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'admin',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "AdminUser_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Product" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "thumbnailUrl" TEXT,
     "titleKo" TEXT NOT NULL,
     "titleEn" TEXT NOT NULL,
@@ -24,22 +26,26 @@ CREATE TABLE "Product" (
     "order" INTEGER NOT NULL DEFAULT 0,
     "seoTitle" TEXT,
     "seoDescription" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "PromotionCategory" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "nameKo" TEXT NOT NULL,
     "nameEn" TEXT NOT NULL,
-    "order" INTEGER NOT NULL DEFAULT 0
+    "order" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "PromotionCategory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "PromotionPost" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "categoryId" TEXT NOT NULL,
     "thumbnailUrl" TEXT,
     "titleKo" TEXT NOT NULL,
@@ -49,29 +55,34 @@ CREATE TABLE "PromotionPost" (
     "isPublished" BOOLEAN NOT NULL DEFAULT true,
     "seoTitle" TEXT,
     "seoDescription" TEXT,
-    "publishedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    CONSTRAINT "PromotionPost_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "PromotionCategory" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "publishedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "PromotionPost_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "ContactInquiry" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "message" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'new',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ContactInquiry_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "PageVisit" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "path" TEXT NOT NULL,
     "locale" TEXT NOT NULL DEFAULT 'ko',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "PageVisit_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -88,3 +99,6 @@ CREATE INDEX "PromotionPost_categoryId_isPublished_publishedAt_idx" ON "Promotio
 
 -- CreateIndex
 CREATE INDEX "PageVisit_path_createdAt_idx" ON "PageVisit"("path", "createdAt");
+
+-- AddForeignKey
+ALTER TABLE "PromotionPost" ADD CONSTRAINT "PromotionPost_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "PromotionCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

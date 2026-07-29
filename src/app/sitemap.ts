@@ -3,6 +3,10 @@ import { prisma } from "@/lib/prisma";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+// DB'ga bog'liq bo'lgani uchun build vaqtida emas, so'rov kelganda generatsiya qilinadi
+// (aks holda DB build paytida yetib bo'lmasa, `next build` butunlay muvaffaqiyatsiz bo'ladi)
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     "",

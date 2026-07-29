@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,8 +22,8 @@ model Product {
   thumbnailUrl   String?
   titleKo        String
   titleEn        String
-  descriptionKo  String  
-  descriptionEn  String  
+  descriptionKo  String   @db.Text
+  descriptionEn  String   @db.Text
   categoryKo     String?
   categoryEn     String?
   price          Int?
@@ -53,8 +53,8 @@ model PromotionPost {
   thumbnailUrl   String?
   titleKo        String
   titleEn        String
-  contentKo      String           
-  contentEn      String           
+  contentKo      String            @db.Text
+  contentEn      String            @db.Text
   isPublished    Boolean           @default(true)
   seoTitle       String?
   seoDescription String?
@@ -70,7 +70,7 @@ model ContactInquiry {
   name      String
   email     String
   phone     String?
-  message   String  
+  message   String   @db.Text
   status    String   @default("new")
   createdAt DateTime @default(now())
 }
