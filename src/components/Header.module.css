@@ -42,16 +42,35 @@
 }
 
 .navLink {
+  position: relative;
   font-size: 14px;
   font-weight: 500;
   color: var(--brand-navy);
   opacity: 0.85;
   white-space: nowrap;
+  padding-bottom: 4px;
 }
 
 .navLink:hover {
   opacity: 1;
   color: var(--brand-blue);
+}
+
+.navLinkActive {
+  font-weight: 700;
+  color: var(--brand-blue);
+  opacity: 1;
+}
+
+.navLinkActive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--brand-blue);
+  border-radius: 1px;
 }
 
 .right {
@@ -103,6 +122,11 @@
   font-weight: 500;
   border-bottom: 1px solid var(--brand-gray-100);
   color: var(--brand-navy);
+}
+
+.mobileNavLinkActive {
+  font-weight: 700;
+  color: var(--brand-blue);
 }
 
 .mobileLangRow {

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 import styles from "./Header.module.css";
@@ -8,6 +9,7 @@ import styles from "./Header.module.css";
 export function Header() {
   const { locale, setLocale, t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   const navItems = [
     { href: "/about", label: t.nav.about },
@@ -38,11 +40,18 @@ export function Header() {
           </Link>
 
           <nav className={styles.nav}>
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className={styles.navLink}>
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`${styles.navLink} ${isActive ? styles.navLinkActive : ""}`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className={styles.right}>
@@ -83,16 +92,19 @@ export function Header() {
 
         {open && (
           <nav className={styles.mobileNav}>
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={styles.mobileNavLink}
-                onClick={() => setOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`${styles.mobileNavLink} ${isActive ? styles.mobileNavLinkActive : ""}`}
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             <div className={styles.mobileLangRow}>
               <button type="button" onClick={() => setLocale("ko")}>
                 KR
