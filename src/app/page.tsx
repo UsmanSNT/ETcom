@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { LeafIcon, FactoryIcon, ChipIcon, CloudIcon, CapIcon, CubeIcon } from "@/components/icons/SolutionIcons";
+import { LeafIcon, FactoryIcon, ChipIcon, CloudIcon, CapIcon, CubeIcon, SensorIcon, NetworkIcon, SwitchIcon } from "@/components/icons/SolutionIcons";
 import styles from "./page.module.css";
 
 type Product = {
@@ -61,7 +61,15 @@ export default function Home() {
         </div>
         <div className={styles.heroArt}>
           <div className={styles.heroArtShape}>
-            <div className={styles.heroArtInner} />
+            <svg className={styles.heroArtMark} viewBox="0 0 22 18" fill="none">
+              <path
+                d="M8 1L1 9L8 17M14 1L21 9L14 17"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
         </div>
       </section>
@@ -79,21 +87,21 @@ export default function Home() {
 
             <div className={styles.aiSteps}>
               <div className={styles.aiStep}>
-                <ChipIcon className={styles.aiStepIcon} />
+                <SensorIcon className={styles.aiStepIcon} />
                 <div>
                   <div className={styles.aiStepTitle}>{t.home.aiStep1Title}</div>
                   <div className={styles.aiStepDesc}>{t.home.aiStep1Desc}</div>
                 </div>
               </div>
               <div className={styles.aiStep}>
-                <CloudIcon className={styles.aiStepIcon} />
+                <NetworkIcon className={styles.aiStepIcon} />
                 <div>
                   <div className={styles.aiStepTitle}>{t.home.aiStep2Title}</div>
                   <div className={styles.aiStepDesc}>{t.home.aiStep2Desc}</div>
                 </div>
               </div>
               <div className={styles.aiStep}>
-                <CubeIcon className={styles.aiStepIcon} />
+                <SwitchIcon className={styles.aiStepIcon} />
                 <div>
                   <div className={styles.aiStepTitle}>{t.home.aiStep3Title}</div>
                   <div className={styles.aiStepDesc}>{t.home.aiStep3Desc}</div>

@@ -64,18 +64,19 @@
   max-width: 380px;
   aspect-ratio: 4 / 3;
   border-radius: 32px;
-  background: #ffffff;
+  background: linear-gradient(155deg, #ffffff 0%, #eef2f8 100%);
   border: 1px solid rgba(16, 25, 43, 0.08);
+  box-shadow: 0 24px 48px -16px rgba(16, 25, 43, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.heroArtInner {
-  width: 45%;
-  aspect-ratio: 1;
-  border-radius: 12px;
-  border: 1px solid rgba(16, 25, 43, 0.1);
+.heroArtMark {
+  width: 34%;
+  color: var(--brand-navy);
+  opacity: 0.85;
+  filter: drop-shadow(0 8px 16px rgba(16, 25, 43, 0.15));
 }
 
 /* AI Experience */
