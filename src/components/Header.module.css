@@ -1,41 +1,57 @@
+.topBar {
+  height: 4px;
+  background: var(--brand-border-accent);
+}
+
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--background);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  border-bottom: 1px solid var(--brand-gray-100);
 }
 
 .inner {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
-  height: 72px;
+  padding: 0 24px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--brand-navy);
+}
+
+.logoMark {
+  color: var(--brand-blue);
 }
 
 .nav {
   display: none;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
 }
 
 .navLink {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+  color: var(--brand-navy);
   opacity: 0.85;
+  white-space: nowrap;
 }
 
 .navLink:hover {
   opacity: 1;
+  color: var(--brand-blue);
 }
 
 .right {
@@ -44,15 +60,24 @@
   gap: 16px;
 }
 
-.langButton {
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  background: transparent;
-  border-radius: 6px;
-  padding: 6px 12px;
+.langGroup {
+  display: none;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.langBtn {
+  border: none;
+  background: transparent;
   cursor: pointer;
-  color: inherit;
+  padding: 2px 4px;
+  color: var(--brand-text-muted);
+}
+
+.langBtnActive {
+  color: var(--brand-navy);
 }
 
 .menuButton {
@@ -61,26 +86,38 @@
   background: transparent;
   cursor: pointer;
   padding: 8px;
-  color: inherit;
+  color: var(--brand-navy);
 }
 
 .mobileNav {
   display: flex;
   flex-direction: column;
-  padding: 8px 20px 20px;
+  padding: 8px 24px 20px;
   gap: 4px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid var(--brand-gray-100);
 }
 
 .mobileNavLink {
   padding: 12px 0;
   font-size: 16px;
   font-weight: 500;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--brand-gray-100);
+  color: var(--brand-navy);
 }
 
-@media (min-width: 768px) {
+.mobileLangRow {
+  display: flex;
+  gap: 12px;
+  padding: 16px 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (min-width: 900px) {
   .nav {
+    display: flex;
+  }
+  .langGroup {
     display: flex;
   }
   .menuButton {

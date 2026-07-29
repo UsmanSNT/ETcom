@@ -1,32 +1,127 @@
+.partners {
+  border-top: 1px solid var(--brand-gray-100);
+  border-bottom: 1px solid var(--brand-gray-100);
+  padding: 24px;
+}
+
+.partnersInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.partnersLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--brand-text-muted);
+  margin-bottom: 16px;
+}
+
+.partnersRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 40px;
+}
+
+.partnerName {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--brand-gray-300);
+}
+
 .footer {
   margin-top: auto;
-  background: #111318;
-  color: #d8dae0;
-  padding: 40px 20px;
+  background: var(--brand-navy);
+  color: var(--brand-text-inverted);
+  padding: 48px 24px 24px;
 }
 
 .inner {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.name {
-  font-size: 16px;
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.brandName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.brandTagline {
+  font-size: 13px;
+  opacity: 0.65;
+  line-height: 1.6;
+}
+
+.linkCols {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.linkCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.linkColTitle {
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.04em;
   color: #fff;
   margin-bottom: 4px;
 }
 
-.line {
+.linkItem {
   font-size: 13px;
-  opacity: 0.75;
+  opacity: 0.65;
 }
 
-.copyright {
-  margin-top: 16px;
+.linkItem:hover {
+  opacity: 1;
+}
+
+.bottom {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   font-size: 12px;
   opacity: 0.5;
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  }
+  .linkCols {
+    display: contents;
+  }
+  .bottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
