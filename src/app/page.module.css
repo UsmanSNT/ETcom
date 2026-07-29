@@ -361,27 +361,88 @@
   flex-shrink: 0;
 }
 
-.promoCard {
-  background: var(--brand-navy);
+.promoRow {
+  display: flex;
+  gap: 8px;
+  height: 160px;
+}
+
+.promoMain {
+  position: relative;
+  flex: 1;
+  background: linear-gradient(155deg, #16233a 0%, var(--brand-navy) 100%);
   border-radius: 16px;
-  padding: 24px;
-  min-height: 160px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #fff;
   gap: 4px;
+  overflow: hidden;
 }
 
 .promoName {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
 }
 
 .promoTagline {
-  font-size: 12px;
+  font-size: 11px;
   opacity: 0.6;
+}
+
+.promoThumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.promoThumb {
+  position: relative;
+  flex: 1;
+  border-radius: 12px;
+  background: linear-gradient(155deg, #223349 0%, #101d33 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playBtn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.playBtn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.playBtnSmall {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.playBtnSmall svg {
+  width: 11px;
+  height: 11px;
 }
 
 .contactCard {

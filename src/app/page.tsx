@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { LeafIcon, FactoryIcon, ChipIcon, CloudIcon, CapIcon, CubeIcon, SensorIcon, NetworkIcon, SwitchIcon } from "@/components/icons/SolutionIcons";
+import { LeafIcon, FactoryIcon, ChipIcon, CloudIcon, CapIcon, CubeIcon, SensorIcon, NetworkIcon, SwitchIcon, PlayIcon } from "@/components/icons/SolutionIcons";
 import styles from "./page.module.css";
 
 type Product = {
@@ -228,9 +228,28 @@ export default function Home() {
             <div className={styles.sectionLabel} style={{ marginBottom: 20 }}>
               {t.home.sectionPromo}
             </div>
-            <div className={styles.promoCard}>
-              <div className={styles.promoName}>ETCOMPANY</div>
-              <div className={styles.promoTagline}>{t.home.heroTitle1} {t.home.heroTitle2}</div>
+            <div className={styles.promoRow}>
+              <div className={styles.promoMain}>
+                <div className={styles.promoName}>ETCOMPANY</div>
+                <div className={styles.promoTagline}>
+                  {t.home.heroTitle1} {t.home.heroTitle2}
+                </div>
+                <span className={styles.playBtn}>
+                  <PlayIcon />
+                </span>
+              </div>
+              <div className={styles.promoThumbs}>
+                <div className={styles.promoThumb}>
+                  <span className={styles.playBtnSmall}>
+                    <PlayIcon />
+                  </span>
+                </div>
+                <div className={styles.promoThumb}>
+                  <span className={styles.playBtnSmall}>
+                    <PlayIcon />
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
