@@ -1,0 +1,117 @@
+.missionSection {
+  background: var(--brand-navy);
+  color: var(--brand-text-inverted);
+  padding: 40px 24px;
+}
+
+.missionInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+.missionCol {
+  padding-left: 0;
+}
+
+.missionLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--brand-blue);
+  margin-bottom: 10px;
+}
+
+.missionTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.missionDesc {
+  font-size: 13px;
+  opacity: 0.65;
+  line-height: 1.6;
+}
+
+.historySection {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.historyLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--brand-text-muted);
+  margin-bottom: 24px;
+}
+
+.historyGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timelineRow {
+  display: grid;
+  grid-template-columns: 56px 12px 1fr;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--brand-gray-100);
+}
+
+.timelineYear {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--brand-navy);
+}
+
+.timelineDot {
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.timelineDotInner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-navy);
+}
+
+.timelineItem {
+  font-size: 13px;
+  color: var(--brand-text-muted);
+  line-height: 1.6;
+}
+
+.mapArt {
+  border-radius: 12px;
+  background: var(--brand-gray-50);
+  border: 1px solid var(--brand-gray-100);
+  min-height: 260px;
+}
+
+@media (min-width: 900px) {
+  .missionInner {
+    grid-template-columns: 1fr 1fr;
+  }
+  .missionCol:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 32px;
+  }
+  .historyGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

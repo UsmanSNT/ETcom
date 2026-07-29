@@ -10,6 +10,9 @@ export type ProductFormValues = {
   descriptionKo: string;
   descriptionEn: string;
   thumbnailUrl: string;
+  categoryKo: string;
+  categoryEn: string;
+  price: number | null;
   isPublished: boolean;
   order: number;
   seoTitle: string;
@@ -22,6 +25,9 @@ const EMPTY: ProductFormValues = {
   descriptionKo: "",
   descriptionEn: "",
   thumbnailUrl: "",
+  categoryKo: "",
+  categoryEn: "",
+  price: null,
   isPublished: true,
   order: 0,
   seoTitle: "",
@@ -79,6 +85,28 @@ export function ProductForm({
       <div className={styles.field}>
         <label className={styles.label}>썸네일 이미지 URL</label>
         <input className={styles.input} value={values.thumbnailUrl} onChange={(e) => update("thumbnailUrl", e.target.value)} placeholder="https://..." />
+      </div>
+
+      <div className={styles.formRow}>
+        <div className={styles.field}>
+          <label className={styles.label}>카테고리 (한국어)</label>
+          <input className={styles.input} value={values.categoryKo} onChange={(e) => update("categoryKo", e.target.value)} placeholder="스마트팜" />
+        </div>
+        <div className={styles.field}>
+          <label className={styles.label}>카테고리 (영어)</label>
+          <input className={styles.input} value={values.categoryEn} onChange={(e) => update("categoryEn", e.target.value)} placeholder="Smart Farm" />
+        </div>
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>가격 (원, 표시용)</label>
+        <input
+          className={styles.input}
+          type="number"
+          value={values.price ?? ""}
+          onChange={(e) => update("price", e.target.value ? Number(e.target.value) : null)}
+          placeholder="예: 198000"
+        />
       </div>
 
       <div className={styles.field}>

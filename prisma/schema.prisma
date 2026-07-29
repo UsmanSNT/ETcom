@@ -24,6 +24,9 @@ model Product {
   titleEn        String
   descriptionKo  String   @db.Text
   descriptionEn  String   @db.Text
+  categoryKo     String?
+  categoryEn     String?
+  price          Int?
   isPublished    Boolean  @default(true)
   order          Int      @default(0)
   seoTitle       String?

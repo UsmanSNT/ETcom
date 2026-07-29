@@ -13,10 +13,25 @@
   background: #eee;
 }
 
+.category {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand-blue);
+  margin-bottom: 8px;
+}
+
 .title {
   font-size: 28px;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  color: var(--brand-navy);
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brand-navy);
+  margin-bottom: 20px;
 }
 
 .desc {
