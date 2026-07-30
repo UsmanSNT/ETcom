@@ -62,36 +62,53 @@
 }
 
 .infoGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 48px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--brand-gray-100);
+  background: #fff;
+  border: 1px solid var(--brand-gray-100);
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .infoCard {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--brand-gray-100);
+}
+
+.infoCard:last-child {
+  border-bottom: none;
+}
+
+.infoHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .infoIcon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   color: var(--brand-navy);
-  margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 .infoLabel {
   font-size: 13px;
   font-weight: 700;
-  color: var(--brand-text-muted);
+  color: var(--brand-navy);
 }
 
 .infoValue {
   font-size: 16px;
   font-weight: 700;
+  color: var(--brand-blue);
+}
+
+.infoValueNeutral {
   color: var(--brand-navy);
 }
 
@@ -370,7 +387,15 @@
     grid-template-columns: 1fr 1fr;
   }
   .infoGrid {
-    grid-template-columns: repeat(4, 1fr);
+    flex-direction: row;
+  }
+  .infoCard {
+    flex: 1;
+    border-bottom: none;
+    border-right: 1px solid var(--brand-gray-100);
+  }
+  .infoCard:last-child {
+    border-right: none;
   }
   .mainGrid {
     grid-template-columns: 1fr 1fr;

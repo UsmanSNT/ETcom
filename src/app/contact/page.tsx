@@ -67,25 +67,33 @@ export default function ContactPage() {
       <div className={styles.container}>
         <div className={styles.infoGrid}>
           <div className={styles.infoCard}>
-            <PhoneIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoTelLabel}</div>
+            <div className={styles.infoHead}>
+              <PhoneIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoTelLabel}</span>
+            </div>
             <div className={styles.infoValue}>{t.footer.tel}</div>
             <div className={styles.infoDesc}>{t.contact.infoTelDesc}</div>
           </div>
           <div className={styles.infoCard}>
-            <MailIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoEmailLabel}</div>
+            <div className={styles.infoHead}>
+              <MailIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoEmailLabel}</span>
+            </div>
             <div className={styles.infoValue}>{t.footer.email}</div>
             <div className={styles.infoDesc}>{t.contact.infoEmailDesc}</div>
           </div>
           <div className={styles.infoCard}>
-            <PinIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoAddressLabel}</div>
-            <div className={styles.infoValue}>{t.footer.address}</div>
+            <div className={styles.infoHead}>
+              <PinIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoAddressLabel}</span>
+            </div>
+            <div className={`${styles.infoValue} ${styles.infoValueNeutral}`}>{t.footer.address}</div>
           </div>
           <div className={styles.infoCard}>
-            <HeadsetIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoSupportLabel}</div>
+            <div className={styles.infoHead}>
+              <HeadsetIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoSupportLabel}</span>
+            </div>
             <div className={styles.infoDesc}>{t.contact.infoSupportDesc}</div>
           </div>
         </div>
