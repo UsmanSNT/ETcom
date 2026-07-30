@@ -9,7 +9,14 @@
 
 Statik export (Vite/SPA) emas — bu server-side render qiluvchi Node ilova, shuning uchun har doim PM2 orqali ishlab turishi kerak, faqat Nginx orqali fayl xizmat qilinmaydi.
 
-**Fayl yuklash (upload) funksiyasi yo'q.** Mahsulot/post rasmlari admin panelda oddiy URL matn maydoni sifatida kiritiladi (masalan tashqi rasm hostingiga yuklab, linkini qo'yish). Shu sababli persistent upload papkasi va permission sozlash bu bosqichda kerak emas — agar kelajakda haqiqiy fayl yuklash qo'shilsa, alohida so'rov sifatida qo'shiladi.
+**Fayl yuklash (upload) mavjud.** Mahsulot/post rasmlari admin panelda to'g'ridan-to'g'ri kompyuterdan yuklanadi (yoki xohlasa tashqi URL ham kiritish mumkin). Fayllar `public/uploads/` papkasiga yoziladi va Next.js orqali `/uploads/<fayl>` manzilida avtomatik xizmat qilinadi.
+
+Bu papka **git tomonidan kuzatilmaydi** (`.gitignore`da `/public/uploads/*` istisno qilingan), shuning uchun serverda `git pull` qilinganda mavjud yuklangan rasmlar hech qachon o'chirilmaydi yoki qayta yozilmaydi — bu avtomatik persistence beradi, qo'shimcha sozlash shart emas. Faqat papka birinchi marta mavjud va yozish huquqiga ega bo'lishi kerak:
+
+```bash
+mkdir -p /var/www/ETcomp/public/uploads
+chown -R $(whoami):$(whoami) /var/www/ETcomp/public/uploads
+```
 
 ---
 
