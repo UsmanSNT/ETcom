@@ -46,3 +46,7 @@ next-env.d.ts
 # local sqlite dev database
 /prisma/*.db
 /prisma/*.db-journal
+
+# admin-uploaded images (persist on server, not tracked in git)
+/public/uploads/*
+!/public/uploads/.gitkeep

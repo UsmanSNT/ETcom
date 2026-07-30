@@ -59,19 +59,6 @@ export default function Home() {
             {t.home.cta} →
           </Link>
         </div>
-        <div className={styles.heroArt}>
-          <div className={styles.heroArtShape}>
-            <svg className={styles.heroArtMark} viewBox="0 0 22 18" fill="none">
-              <path
-                d="M8 1L1 9L8 17M14 1L21 9L14 17"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
       </section>
 
       {/* AI Experience */}

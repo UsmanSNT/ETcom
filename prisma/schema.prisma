@@ -66,13 +66,19 @@ model PromotionPost {
 }
 
 model ContactInquiry {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  phone     String?
-  message   String   @db.Text
-  status    String   @default("new")
-  createdAt DateTime @default(now())
+  id         String    @id @default(cuid())
+  type       String    @default("general") // general | product
+  name       String
+  company    String?
+  email      String
+  phone      String?
+  message    String    @db.Text
+  status     String    @default("new") // new | in_progress | done
+  reply      String?   @db.Text
+  repliedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([type, status, createdAt])
 }
 
 model PageVisit {

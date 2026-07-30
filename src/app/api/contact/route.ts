@@ -8,15 +8,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid body" }, { status: 400 });
   }
 
-  const { name, email, phone, message } = body;
+  const { name, company, email, phone, message, type, consent } = body;
 
   if (!name.trim() || !email.trim() || !message.trim()) {
     return NextResponse.json({ error: "missing required fields" }, { status: 400 });
   }
 
+  if (!consent) {
+    return NextResponse.json({ error: "consent required" }, { status: 400 });
+  }
+
   const inquiry = await prisma.contactInquiry.create({
     data: {
+      type: type === "product" ? "product" : "general",
       name: name.trim(),
+      company: typeof company === "string" && company.trim() ? company.trim() : null,
       email: email.trim(),
       phone: typeof phone === "string" ? phone.trim() : null,
       message: message.trim(),

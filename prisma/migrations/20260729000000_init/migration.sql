@@ -65,11 +65,15 @@ CREATE TABLE "PromotionPost" (
 -- CreateTable
 CREATE TABLE "ContactInquiry" (
     "id" TEXT NOT NULL,
+    "type" TEXT NOT NULL DEFAULT 'general',
     "name" TEXT NOT NULL,
+    "company" TEXT,
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "message" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'new',
+    "reply" TEXT,
+    "repliedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ContactInquiry_pkey" PRIMARY KEY ("id")
@@ -96,6 +100,9 @@ CREATE UNIQUE INDEX "PromotionCategory_slug_key" ON "PromotionCategory"("slug");
 
 -- CreateIndex
 CREATE INDEX "PromotionPost_categoryId_isPublished_publishedAt_idx" ON "PromotionPost"("categoryId", "isPublished", "publishedAt");
+
+-- CreateIndex
+CREATE INDEX "ContactInquiry_type_status_createdAt_idx" ON "ContactInquiry"("type", "status", "createdAt");
 
 -- CreateIndex
 CREATE INDEX "PageVisit_path_createdAt_idx" ON "PageVisit"("path", "createdAt");

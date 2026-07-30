@@ -18,6 +18,7 @@ export default function AboutPage() {
         title2={t.about.title2}
         desc1={t.about.desc1}
         desc2={t.about.desc2}
+        artImage="/images/home-hero-bg.png"
       />
 
       <section className={styles.missionSection}>

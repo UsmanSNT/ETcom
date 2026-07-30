@@ -2,13 +2,16 @@
 
 import { FormEvent, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { PhoneIcon, MailIcon, PinIcon, HeadsetIcon, PlusIcon } from "@/components/icons/SolutionIcons";
+import { PhoneIcon, MailIcon, PinIcon, HeadsetIcon, PlusIcon, CarIcon, TrainIcon, BusIcon } from "@/components/icons/SolutionIcons";
+
+const DIRECTION_ICONS = [CarIcon, TrainIcon, BusIcon];
 import styles from "./page.module.css";
 
 export default function ContactPage() {
   const { t } = useLanguage();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showConsentDetail, setShowConsentDetail] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,9 +25,12 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.get("name"),
+          company: data.get("company"),
           email: data.get("email"),
           phone: data.get("phone"),
           message: data.get("message"),
+          type: data.get("type"),
+          consent: data.get("consent") === "on",
         }),
       });
       if (!res.ok) throw new Error("failed");
@@ -61,35 +67,64 @@ export default function ContactPage() {
       <div className={styles.container}>
         <div className={styles.infoGrid}>
           <div className={styles.infoCard}>
-            <PhoneIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoTelLabel}</div>
+            <div className={styles.infoHead}>
+              <PhoneIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoTelLabel}</span>
+            </div>
             <div className={styles.infoValue}>{t.footer.tel}</div>
             <div className={styles.infoDesc}>{t.contact.infoTelDesc}</div>
           </div>
           <div className={styles.infoCard}>
-            <MailIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoEmailLabel}</div>
+            <div className={styles.infoHead}>
+              <MailIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoEmailLabel}</span>
+            </div>
             <div className={styles.infoValue}>{t.footer.email}</div>
             <div className={styles.infoDesc}>{t.contact.infoEmailDesc}</div>
           </div>
           <div className={styles.infoCard}>
-            <PinIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoAddressLabel}</div>
-            <div className={styles.infoValue}>{t.footer.address}</div>
+            <div className={styles.infoHead}>
+              <PinIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoAddressLabel}</span>
+            </div>
+            <div className={`${styles.infoValue} ${styles.infoValueNeutral}`}>{t.footer.address}</div>
           </div>
           <div className={styles.infoCard}>
-            <HeadsetIcon className={styles.infoIcon} />
-            <div className={styles.infoLabel}>{t.contact.infoSupportLabel}</div>
+            <div className={styles.infoHead}>
+              <HeadsetIcon className={styles.infoIcon} />
+              <span className={styles.infoLabel}>{t.contact.infoSupportLabel}</span>
+            </div>
             <div className={styles.infoDesc}>{t.contact.infoSupportDesc}</div>
           </div>
         </div>
 
         <div className={styles.mainGrid}>
-          <div>
-            <div className={styles.mapArt} />
+          <div className={styles.card}>
+            <div className={styles.directionsLabel}>{t.contact.directionsLabel}</div>
+            <div className={styles.mapArt}>
+              <iframe
+                className={styles.mapFrame}
+                title="ETCOMPANY location"
+                src={`https://www.google.com/maps?q=${encodeURIComponent("전라북도 익산시 약촌로 132")}&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <div className={styles.directionsList}>
+              {t.contact.directions.map((d, i) => {
+                const Icon = DIRECTION_ICONS[i];
+                return (
+                  <div key={d.mode} className={styles.directionRow}>
+                    <Icon className={styles.directionIcon} />
+                    <span className={styles.directionLabel}>{d.mode}</span>
+                    <span className={styles.directionDesc}>{d.desc}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          <div>
+          <div className={styles.card}>
             <div className={styles.colLabel}>{t.contact.formTitle}</div>
             <div className={styles.colDesc}>{t.contact.formDesc}</div>
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -101,26 +136,56 @@ export default function ContactPage() {
                   <input className={styles.input} id="name" name="name" required />
                 </div>
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="phone">
-                    {t.contact.phone}
+                  <label className={styles.label} htmlFor="company">
+                    {t.contact.company}
                   </label>
-                  <input className={styles.input} id="phone" name="phone" />
+                  <input className={styles.input} id="company" name="company" />
+                </div>
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="email">
+                    {t.contact.email} *
+                  </label>
+                  <input className={styles.input} id="email" name="email" type="email" required />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="phone">
+                    {t.contact.phone} *
+                  </label>
+                  <input className={styles.input} id="phone" name="phone" required />
                 </div>
               </div>
               <div className={styles.field}>
-                <label className={styles.label} htmlFor="email">
-                  {t.contact.email} *
-                </label>
-                <input className={styles.input} id="email" name="email" type="email" required />
+                <select className={styles.input} id="type" name="type" defaultValue="">
+                  <option value="" disabled>
+                    {t.contact.typePlaceholder}
+                  </option>
+                  <option value="general">{t.contact.typeGeneral}</option>
+                  <option value="product">{t.contact.typeProduct}</option>
+                </select>
               </div>
               <div className={styles.field}>
-                <label className={styles.label} htmlFor="message">
-                  {t.contact.message}
-                </label>
-                <textarea className={styles.textarea} id="message" name="message" required />
+                <textarea
+                  className={styles.textarea}
+                  id="message"
+                  name="message"
+                  placeholder={t.contact.messagePlaceholder}
+                  required
+                />
               </div>
+              <div className={styles.consentRow}>
+                <input type="checkbox" id="consent" name="consent" required />
+                <label htmlFor="consent">
+                  {t.contact.consentLabel}{" "}
+                  <button type="button" className={styles.consentLinkBtn} onClick={() => setShowConsentDetail((v) => !v)}>
+                    ({t.contact.consentLink})
+                  </button>
+                </label>
+              </div>
+              {showConsentDetail && <div className={styles.consentDetail}>{t.contact.consentDetail}</div>}
               <button className={styles.submit} type="submit" disabled={status === "loading"}>
-                {t.contact.submit}
+                {t.contact.submit} →
               </button>
               {status === "success" && <p className={`${styles.message} ${styles.success}`}>{t.contact.success}</p>}
               {status === "error" && <p className={`${styles.message} ${styles.error}`}>{t.contact.error}</p>}

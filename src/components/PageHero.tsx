@@ -8,6 +8,7 @@ export function PageHero({
   desc1,
   desc2,
   showArt = true,
+  artImage,
 }: {
   breadcrumb: string;
   label: string;
@@ -16,9 +17,13 @@ export function PageHero({
   desc1: string;
   desc2: string;
   showArt?: boolean;
+  artImage?: string;
 }) {
   return (
-    <section className={styles.hero}>
+    <section
+      className={`${styles.hero} ${artImage ? styles.heroWithBg : ""}`}
+      style={artImage ? { backgroundImage: `url(${artImage})` } : undefined}
+    >
       <div className={styles.inner}>
         <div>
           <div className={styles.breadcrumb}>HOME &gt; {breadcrumb}</div>
@@ -35,7 +40,7 @@ export function PageHero({
             {desc2}
           </p>
         </div>
-        {showArt && <div className={styles.art} />}
+        {showArt && !artImage && <div className={styles.art} />}
       </div>
     </section>
   );
