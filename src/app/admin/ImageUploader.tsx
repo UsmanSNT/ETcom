@@ -29,7 +29,7 @@ export function ImageUploader({
     const selected = Array.from(event.target.files ?? []);
     if (selected.length === 0) return;
     if (value.length + selected.length > MAX_IMAGES) {
-      setError(`Jami ${MAX_IMAGES} tagacha rasm yuklash mumkin.`);
+      setError(`이미지는 최대 ${MAX_IMAGES}개까지 업로드할 수 있습니다.`);
       event.target.value = "";
       return;
     }
@@ -43,16 +43,16 @@ export function ImageUploader({
       const body = await response.json();
       if (!response.ok) {
         const messages: Record<string, string> = {
-          "unsupported file type": "Faqat JPG, PNG, WEBP yoki GIF rasm qabul qilinadi.",
-          "file too large": "Har bir rasm 5 MB dan kichik bo‘lishi kerak.",
-          "too many files": "Bir yozuvga 5 tagacha rasm yuklash mumkin.",
+          "unsupported file type": "JPG, PNG, WEBP, GIF 형식만 업로드할 수 있습니다.",
+          "file too large": "이미지 한 장의 크기는 5MB 이하여야 합니다.",
+          "too many files": "이미지는 최대 5개까지 업로드할 수 있습니다.",
         };
-        setError(messages[body.error] ?? "Rasmlarni yuklashda xatolik yuz berdi.");
+        setError(messages[body.error] ?? "이미지 업로드 중 오류가 발생했습니다.");
         return;
       }
       onChange([...value, ...body.images].map((image, order) => ({ ...image, order })));
     } catch {
-      setError("Rasmlarni yuklashda xatolik yuz berdi.");
+      setError("이미지 업로드 중 오류가 발생했습니다.");
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -73,13 +73,13 @@ export function ImageUploader({
         <div className={styles.uploaderGrid}>
           {value.map((image, index) => (
             <div className={styles.uploaderPreviewWrap} key={image.id}>
-              <img src={image.url} alt={`${index + 1}-rasm`} className={styles.uploaderPreview} />
-              {index === 0 && <span className={styles.uploaderPrimary}>Asosiy</span>}
+              <img src={image.url} alt={`이미지 ${index + 1}`} className={styles.uploaderPreview} />
+              {index === 0 && <span className={styles.uploaderPrimary}>대표 이미지</span>}
               <button
                 type="button"
                 className={styles.uploaderRemove}
                 onClick={() => removeImage(image)}
-                aria-label={`${image.fileName} rasmini o‘chirish`}
+                aria-label={`${image.fileName} 이미지 삭제`}
               >
                 ×
               </button>
@@ -97,10 +97,10 @@ export function ImageUploader({
           disabled={uploading || value.length >= MAX_IMAGES}
         />
         <span className={styles.uploaderStatus}>
-          {uploading ? "Yuklanmoqda…" : `${value.length}/${MAX_IMAGES} rasm`}
+          {uploading ? "업로드 중…" : `이미지 ${value.length}/${MAX_IMAGES}`}
         </span>
       </div>
-      <p className={styles.uploaderHint}>Bir martada bir nechta rasm tanlash mumkin. Birinchi rasm asosiy rasm bo‘ladi.</p>
+      <p className={styles.uploaderHint}>여러 이미지를 한 번에 선택할 수 있으며, 첫 번째 이미지가 대표 이미지로 사용됩니다.</p>
       {error && <div className={styles.errorText}>{error}</div>}
     </div>
   );

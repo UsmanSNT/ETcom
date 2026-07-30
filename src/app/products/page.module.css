@@ -100,8 +100,17 @@
   width: 100%;
   aspect-ratio: 1;
   background: var(--brand-gray-50);
-  object-fit: cover;
+  object-fit: contain;
+  padding: 14px;
   display: block;
+}
+
+.card:hover .thumb {
+  transform: scale(1.025);
+}
+
+.thumb {
+  transition: transform .2s ease;
 }
 
 .cardBody {

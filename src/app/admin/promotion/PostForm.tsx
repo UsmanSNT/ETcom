@@ -127,10 +127,10 @@ export function PostForm({ postId, initial }: { postId?: string; initial?: Parti
       </div>
 
       <div className={styles.seoPanel}>
-        <h2 className={styles.seoPanelTitle}>SEO va ijtimoiy tarmoq sozlamalari</h2>
+        <h2 className={styles.seoPanelTitle}>SEO 및 소셜 미디어 설정</h2>
         <div className={styles.formRow}>
           <div className={styles.field}>
-            <label className={styles.label}>SEO sarlavhasi</label>
+            <label className={styles.label}>SEO 제목</label>
             <input className={styles.input} value={values.seoTitle} onChange={(e) => update("seoTitle", e.target.value)} maxLength={60} />
           </div>
           <div className={styles.field}>
@@ -139,7 +139,7 @@ export function PostForm({ postId, initial }: { postId?: string; initial?: Parti
           </div>
         </div>
         <div className={styles.field}>
-          <label className={styles.label}>SEO tavsifi</label>
+          <label className={styles.label}>SEO 설명</label>
           <textarea className={styles.textarea} value={values.seoDescription} onChange={(e) => update("seoDescription", e.target.value)} maxLength={160} />
         </div>
         <div className={styles.formRow}>
@@ -148,17 +148,17 @@ export function PostForm({ postId, initial }: { postId?: string; initial?: Parti
             <input className={styles.input} value={values.canonicalUrl} onChange={(e) => update("canonicalUrl", e.target.value)} placeholder="https://example.com/promotion/..." />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Open Graph sarlavhasi</label>
+            <label className={styles.label}>Open Graph 제목</label>
             <input className={styles.input} value={values.ogTitle} onChange={(e) => update("ogTitle", e.target.value)} maxLength={60} />
           </div>
         </div>
         <div className={styles.field}>
-          <label className={styles.label}>Open Graph tavsifi</label>
+          <label className={styles.label}>Open Graph 설명</label>
           <input className={styles.input} value={values.ogDescription} onChange={(e) => update("ogDescription", e.target.value)} maxLength={160} />
         </div>
         <div className={styles.checkboxRow}>
           <input type="checkbox" id="noIndex" checked={values.noIndex} onChange={(e) => update("noIndex", e.target.checked)} />
-          <label htmlFor="noIndex">Qidiruv tizimlarida indekslamaslik (noindex)</label>
+          <label htmlFor="noIndex">검색 엔진에 노출하지 않기 (noindex)</label>
         </div>
       </div>
 
