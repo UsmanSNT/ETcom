@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import styles from "./page.module.css";
+
+const ZOOM_SCALE = 2.4;
 
 type Product = {
   thumbnailUrl: string | null;
@@ -46,6 +48,9 @@ export function ProductDetailClient({
   );
   const [selected, setSelected] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [hoverZoom, setHoverZoom] = useState(false);
+  const [origin, setOrigin] = useState({ x: 50, y: 50 });
+  const frameRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!zoomed) return;
@@ -60,26 +65,63 @@ export function ProductDetailClient({
     };
   }, [zoomed]);
 
+  function trackPointer(clientX: number, clientY: number) {
+    const frame = frameRef.current;
+    if (!frame) return;
+    const rect = frame.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * 100;
+    const y = ((clientY - rect.top) / rect.height) * 100;
+    setOrigin({ x: Math.min(100, Math.max(0, x)), y: Math.min(100, Math.max(0, y)) });
+  }
+
   const activeImage = images[selected];
 
   return (
     <div className={styles.container}>
       <div className={styles.detailLayout}>
         <div className={styles.gallery}>
-          <button
-            type="button"
-            className={styles.mainImageButton}
-            onClick={() => activeImage && setZoomed(true)}
-            disabled={!activeImage}
-            aria-label={locale === "ko" ? "제품 이미지 크게 보기" : "View product image"}
+          <div
+            ref={frameRef}
+            className={styles.mainImageFrame}
+            onMouseEnter={() => activeImage && setHoverZoom(true)}
+            onMouseLeave={() => setHoverZoom(false)}
+            onMouseMove={(event) => hoverZoom && trackPointer(event.clientX, event.clientY)}
+            onTouchStart={(event) => {
+              if (!activeImage) return;
+              setHoverZoom(true);
+              trackPointer(event.touches[0].clientX, event.touches[0].clientY);
+            }}
+            onTouchMove={(event) => {
+              if (!hoverZoom) return;
+              event.preventDefault();
+              trackPointer(event.touches[0].clientX, event.touches[0].clientY);
+            }}
+            onTouchEnd={() => setHoverZoom(false)}
           >
             {activeImage ? (
-              <img className={styles.mainImage} src={activeImage.url} alt={`${title} ${selected + 1}`} />
+              <img
+                className={styles.mainImage}
+                src={activeImage.url}
+                alt={`${title} ${selected + 1}`}
+                style={{
+                  transform: hoverZoom ? `scale(${ZOOM_SCALE})` : "scale(1)",
+                  transformOrigin: `${origin.x}% ${origin.y}%`,
+                }}
+              />
             ) : (
               <span className={styles.noImage}>{locale === "ko" ? "등록된 이미지가 없습니다." : "No image available"}</span>
             )}
-            {activeImage && <span className={styles.zoomHint}>{locale === "ko" ? "클릭하여 확대" : "Click to enlarge"}</span>}
-          </button>
+            {activeImage && (
+              <button
+                type="button"
+                className={styles.zoomHint}
+                onClick={() => setZoomed(true)}
+                aria-label={locale === "ko" ? "제품 이미지 크게 보기" : "View product image"}
+              >
+                {locale === "ko" ? "전체 이미지 보기" : "View full image"}
+              </button>
+            )}
+          </div>
 
           {images.length > 1 && (
             <div className={styles.thumbnailList} aria-label={locale === "ko" ? "제품 이미지 목록" : "Product images"}>
@@ -138,9 +180,45 @@ export function ProductDetailClient({
       )}
 
       {zoomed && activeImage && (
-        <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label={title} onClick={() => setZoomed(false)}>
-          <button type="button" className={styles.lightboxClose} onClick={() => setZoomed(false)} aria-label={locale === "ko" ? "닫기" : "Close"}>×</button>
-          <img src={activeImage.url} alt={`${title} ${selected + 1}`} onClick={(event) => event.stopPropagation()} />
+        <div className={styles.lightbox} onClick={() => setZoomed(false)}>
+          <div
+            className={styles.lightboxPanel}
+            role="dialog"
+            aria-modal="true"
+            aria-label={title}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.lightboxHeader}>
+              <span>{title}</span>
+              <button
+                type="button"
+                className={styles.lightboxClose}
+                onClick={() => setZoomed(false)}
+                aria-label={locale === "ko" ? "닫기" : "Close"}
+              >
+                ×
+              </button>
+            </div>
+            <div className={styles.lightboxBody}>
+              <img src={activeImage.url} alt={`${title} ${selected + 1}`} />
+            </div>
+            {images.length > 1 && (
+              <div className={styles.lightboxThumbs}>
+                {images.map((image, index) => (
+                  <button
+                    type="button"
+                    key={image.id}
+                    className={`${styles.thumbnailButton} ${selected === index ? styles.thumbnailActive : ""}`}
+                    onClick={() => setSelected(index)}
+                    aria-label={`${title} ${index + 1}`}
+                    aria-pressed={selected === index}
+                  >
+                    <img src={image.url} alt="" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
