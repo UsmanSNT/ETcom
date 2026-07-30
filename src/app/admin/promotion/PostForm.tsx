@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ImageUploader } from "../ImageUploader";
 import styles from "../admin.module.css";
 
 type Category = { id: string; nameKo: string; nameEn: string };
@@ -92,8 +93,8 @@ export function PostForm({ postId, initial }: { postId?: string; initial?: Parti
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>썸네일 이미지 URL</label>
-        <input className={styles.input} value={values.thumbnailUrl} onChange={(e) => update("thumbnailUrl", e.target.value)} placeholder="https://..." />
+        <label className={styles.label}>썸네일 이미지</label>
+        <ImageUploader value={values.thumbnailUrl} onChange={(url) => update("thumbnailUrl", url)} />
       </div>
 
       <div className={styles.field}>
