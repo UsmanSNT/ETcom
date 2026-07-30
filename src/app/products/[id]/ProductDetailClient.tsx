@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import styles from "./page.module.css";
 
@@ -16,7 +17,22 @@ type Product = {
   images: Array<{ id: string; url: string }>;
 };
 
-export function ProductDetailClient({ product }: { product: Product }) {
+type RelatedProduct = {
+  id: string;
+  slug: string | null;
+  titleKo: string;
+  titleEn: string;
+  price: number | null;
+  imageUrl: string | null;
+};
+
+export function ProductDetailClient({
+  product,
+  relatedProducts,
+}: {
+  product: Product;
+  relatedProducts: RelatedProduct[];
+}) {
   const { locale } = useLanguage();
   const category = locale === "ko" ? product.categoryKo : product.categoryEn;
   const title = locale === "ko" ? product.titleKo : product.titleEn;
@@ -90,6 +106,36 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <p className={styles.desc}>{locale === "ko" ? product.descriptionKo : product.descriptionEn}</p>
         </div>
       </div>
+
+      {relatedProducts.length > 0 && (
+        <section className={styles.relatedSection}>
+          <div className={styles.relatedHeader}>
+            <div>
+              <span>{locale === "ko" ? "다른 제품" : "OTHER PRODUCTS"}</span>
+              <h2>{locale === "ko" ? "함께 살펴보세요" : "Explore more products"}</h2>
+            </div>
+            <Link href="/products">{locale === "ko" ? "전체 제품 보기" : "View all"} →</Link>
+          </div>
+          <div className={styles.relatedRail}>
+            {relatedProducts.map((item) => {
+              const itemTitle = locale === "ko" ? item.titleKo : item.titleEn;
+              return (
+                <Link
+                  key={item.id}
+                  href={`/products/${item.slug ?? item.id}`}
+                  className={styles.relatedCard}
+                >
+                  <div className={styles.relatedImage}>
+                    {item.imageUrl ? <img src={item.imageUrl} alt={itemTitle} /> : <span>No image</span>}
+                  </div>
+                  <strong>{itemTitle}</strong>
+                  {item.price && <small>₩{item.price.toLocaleString()}</small>}
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {zoomed && activeImage && (
         <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label={title} onClick={() => setZoomed(false)}>

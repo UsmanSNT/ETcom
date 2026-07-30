@@ -98,6 +98,69 @@
 .price { margin-bottom: 24px; color: var(--brand-navy); font-size: 22px; font-weight: 800; }
 .desc { padding-top: 24px; border-top: 1px solid var(--brand-gray-100); font-size: 16px; line-height: 1.8; opacity: .85; white-space: pre-wrap; }
 
+.relatedSection {
+  margin-top: 76px;
+  padding-top: 34px;
+  border-top: 1px solid var(--brand-gray-100);
+}
+
+.relatedHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.relatedHeader span { color: var(--brand-blue); font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+.relatedHeader h2 { margin-top: 6px; color: var(--brand-navy); font-size: 24px; }
+.relatedHeader > a { flex: 0 0 auto; color: var(--brand-navy); font-size: 13px; font-weight: 700; }
+
+.relatedRail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(180px, 1fr);
+  gap: 16px;
+  overflow-x: auto;
+  padding: 2px 2px 16px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.relatedCard {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--brand-gray-100);
+  border-radius: 12px;
+  background: #fff;
+  scroll-snap-align: start;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.relatedCard:hover {
+  border-color: #b9c6d8;
+  box-shadow: 0 10px 28px rgba(14, 26, 43, .09);
+  transform: translateY(-3px);
+}
+
+.relatedImage {
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+  padding: 10px;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #f7f9fb;
+  color: var(--brand-text-muted);
+  font-size: 11px;
+}
+
+.relatedImage img { width: 100%; height: 100%; object-fit: contain; }
+.relatedCard strong { display: block; min-height: 38px; color: var(--brand-navy); font-size: 14px; line-height: 1.4; }
+.relatedCard small { display: block; margin-top: 8px; color: var(--brand-navy); font-size: 13px; font-weight: 800; }
+
 .lightbox {
   position: fixed;
   inset: 0;
@@ -139,4 +202,7 @@
   .thumbnailButton { width: 72px; flex: 0 0 72px; }
   .lightbox { padding: 18px; }
   .lightbox img { width: 96vw; height: 84vh; }
+  .relatedSection { margin-top: 52px; }
+  .relatedHeader { align-items: flex-start; }
+  .relatedRail { grid-auto-columns: minmax(150px, 44vw); }
 }

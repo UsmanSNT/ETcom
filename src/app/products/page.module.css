@@ -1,11 +1,28 @@
 .hero {
-  padding: 48px 24px;
-  background: var(--brand-gray-50);
+  min-height: 330px;
+  padding: 62px 24px;
+  display: flex;
+  align-items: center;
+  background: #f5f6f7 url("/images/product_bg.png") center / cover no-repeat;
 }
 
 .heroInner {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: 280px;
+    padding: 42px 20px;
+    background-position: 62% center;
+  }
+
+  .heroInner {
+    max-width: 58%;
+    margin-left: 0;
+  }
 }
 
 .breadcrumb {

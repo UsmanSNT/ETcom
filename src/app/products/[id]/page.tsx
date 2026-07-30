@@ -57,6 +57,20 @@ export default async function ProductDetailPage({
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) notFound();
+  const relatedProducts = await prisma.product.findMany({
+    where: { isPublished: true, id: { not: product.id } },
+    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+    take: 12,
+    select: {
+      id: true,
+      slug: true,
+      titleKo: true,
+      titleEn: true,
+      price: true,
+      thumbnailUrl: true,
+      images: { orderBy: { order: "asc" }, take: 1, select: { id: true } },
+    },
+  });
   const productUrl = product.canonicalUrl ?? `${BASE_URL}/products/${product.slug ?? product.id}`;
   const jsonLd = {
     "@context": "https://schema.org",
@@ -87,6 +101,10 @@ export default async function ProductDetailPage({
           ...product,
           images: product.images.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
         }}
+        relatedProducts={relatedProducts.map((item) => ({
+          ...item,
+          imageUrl: item.images[0] ? `/api/images/${item.images[0].id}` : item.thumbnailUrl,
+        }))}
       />
     </>
   );
