@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
+import { prisma } from "@/lib/prisma";
 import { getAdminFromRequest } from "@/lib/auth";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const MAX_SIZE = 5 * 1024 * 1024; // 5MB
-
-// public/uploads is served automatically by Next.js. On the server, exclude
-// this folder when re-uploading source files on future deploys so existing
-// uploaded images are not wiped — see DEPLOY.md.
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILES = 5;
 
 export async function POST(req: NextRequest) {
   if (!getAdminFromRequest(req)) {
@@ -17,28 +12,59 @@ export async function POST(req: NextRequest) {
   }
 
   const formData = await req.formData().catch(() => null);
-  const file = formData?.get("file");
+  const files = formData?.getAll("files").filter((item): item is File => item instanceof File) ?? [];
 
-  if (!file || !(file instanceof File)) {
-    return NextResponse.json({ error: "no file provided" }, { status: 400 });
+  if (files.length === 0) {
+    return NextResponse.json({ error: "no files provided" }, { status: 400 });
   }
-
-  if (!ALLOWED_TYPES.includes(file.type)) {
+  if (files.length > MAX_FILES) {
+    return NextResponse.json({ error: "too many files" }, { status: 400 });
+  }
+  if (files.some((file) => !ALLOWED_TYPES.includes(file.type))) {
     return NextResponse.json({ error: "unsupported file type" }, { status: 400 });
   }
-
-  if (file.size > MAX_SIZE) {
-    return NextResponse.json({ error: "file too large (max 5MB)" }, { status: 400 });
+  if (files.some((file) => file.size > MAX_FILE_SIZE)) {
+    return NextResponse.json({ error: "file too large" }, { status: 400 });
   }
 
-  await mkdir(UPLOAD_DIR, { recursive: true });
+  const assets = await prisma.$transaction(
+    await Promise.all(
+      files.map(async (file, order) => ({
+        fileName: file.name.slice(0, 255),
+        mimeType: file.type,
+        size: file.size,
+        data: Buffer.from(await file.arrayBuffer()),
+        order,
+      })),
+    ).then((items) =>
+      items.map((data) =>
+        prisma.imageAsset.create({
+          data,
+          select: { id: true, fileName: true, mimeType: true, size: true, order: true },
+        }),
+      ),
+    ),
+  );
 
-  const ext = path.extname(file.name) || `.${file.type.split("/")[1]}`;
-  const safeExt = ext.replace(/[^a-zA-Z0-9.]/g, "");
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${safeExt}`;
+  return NextResponse.json(
+    {
+      images: assets.map((asset) => ({
+        ...asset,
+        url: `/api/images/${asset.id}`,
+      })),
+    },
+    { status: 201 },
+  );
+}
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(UPLOAD_DIR, filename), buffer);
-
-  return NextResponse.json({ url: `/uploads/${filename}` }, { status: 201 });
+export async function DELETE(req: NextRequest) {
+  if (!getAdminFromRequest(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const id = new URL(req.url).searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "image id required" }, { status: 400 });
+  }
+  await prisma.imageAsset.deleteMany({ where: { id } });
+  return NextResponse.json({ ok: true });
 }

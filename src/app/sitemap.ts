@@ -23,17 +23,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const [products, posts] = await Promise.all([
-    prisma.product.findMany({ where: { isPublished: true }, select: { id: true, updatedAt: true } }),
-    prisma.promotionPost.findMany({ where: { isPublished: true }, select: { id: true, updatedAt: true } }),
+    prisma.product.findMany({ where: { isPublished: true, noIndex: false }, select: { id: true, slug: true, updatedAt: true, canonicalUrl: true } }),
+    prisma.promotionPost.findMany({ where: { isPublished: true, noIndex: false }, select: { id: true, slug: true, updatedAt: true, canonicalUrl: true } }),
   ]);
 
   const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
-    url: `${BASE_URL}/products/${p.id}`,
+    url: p.canonicalUrl ?? `${BASE_URL}/products/${p.slug ?? p.id}`,
     lastModified: p.updatedAt,
   }));
 
   const postRoutes: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: `${BASE_URL}/promotion/${p.id}`,
+    url: p.canonicalUrl ?? `${BASE_URL}/promotion/${p.slug ?? p.id}`,
     lastModified: p.updatedAt,
   }));
 

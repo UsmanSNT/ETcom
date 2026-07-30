@@ -12,6 +12,7 @@ type Product = {
   categoryKo: string | null;
   categoryEn: string | null;
   price: number | null;
+  images: Array<{ id: string; url: string }>;
 };
 
 export function ProductDetailClient({ product }: { product: Product }) {
@@ -20,13 +21,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
   return (
     <div className={styles.container}>
-      {product.thumbnailUrl && (
+      {(product.images?.length ? product.images : product.thumbnailUrl ? [{ id: "legacy", url: product.thumbnailUrl }] : []).map((image, index) => (
         <img
+          key={image.id}
           className={styles.thumb}
-          src={product.thumbnailUrl}
-          alt={locale === "ko" ? product.titleKo : product.titleEn}
+          src={image.url}
+          alt={`${locale === "ko" ? product.titleKo : product.titleEn} ${index + 1}`}
         />
-      )}
+      ))}
       {category && <div className={styles.category}>{category}</div>}
       <h1 className={styles.title}>{locale === "ko" ? product.titleKo : product.titleEn}</h1>
       {product.price && <div className={styles.price}>₩ {product.price.toLocaleString()}</div>}

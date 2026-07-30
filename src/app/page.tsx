@@ -23,6 +23,8 @@ type Product = {
   thumbnailUrl: string | null;
   titleKo: string;
   titleEn: string;
+  images: Array<{ id: string; url: string }>;
+  slug: string | null;
 };
 
 type Post = {
@@ -30,6 +32,7 @@ type Post = {
   titleKo: string;
   titleEn: string;
   publishedAt: string;
+  slug?: string | null;
 };
 
 const solutions = [
@@ -217,13 +220,13 @@ export default function Home() {
               : product;
             return (
               <Link
-                href={isProduct ? `/products/${product.id}` : "/products"}
+                href={isProduct ? `/products/${product.slug ?? product.id}` : "/products"}
                 className={styles.productCard}
                 key={isProduct ? product.id : product}
               >
                 <div className={styles.productVisual}>
-                  {isProduct && product.thumbnailUrl ? (
-                    <img src={product.thumbnailUrl} alt={title} />
+                  {isProduct && (product.images?.[0]?.url || product.thumbnailUrl) ? (
+                    <img src={product.images?.[0]?.url ?? product.thumbnailUrl ?? ""} alt={title} />
                   ) : (
                     <div
                       className={`${styles.productPhoto} ${styles[`productPhoto${index + 1}`]}`}
@@ -248,7 +251,7 @@ export default function Home() {
               { id: "2", titleKo: "스마트팜 통합 환경 제어기 신제품 출시", titleEn: "New Smart Farm Controller", publishedAt: "2026-07-15" },
               { id: "3", titleKo: "IoT 데이터로거 시리얼링크 APP 업데이트 안내", titleEn: "IoT Datalogger App Update", publishedAt: "2026-06-30" },
             ]).map((post) => (
-              <Link href={posts.length ? `/promotion/${post.id}` : "/promotion"} key={post.id}>
+              <Link href={posts.length ? `/promotion/${post.slug ?? post.id}` : "/promotion"} key={post.id}>
                 <span>{locale === "ko" ? post.titleKo : post.titleEn}</span>
                 <time>{new Date(post.publishedAt).toISOString().slice(0, 10).replaceAll("-", ".")}</time>
               </Link>

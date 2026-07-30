@@ -11,15 +11,20 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!body) {
     return NextResponse.json({ error: "invalid body" }, { status: 400 });
   }
+  const imageIds = getImageIds(body.images);
+  if (imageIds === null) {
+    return NextResponse.json({ error: "up to 5 images allowed" }, { status: 400 });
+  }
 
-  const product = await prisma.product.update({
+  const product = await prisma.$transaction(async (tx) => {
+    await tx.product.update({
     where: { id },
     data: {
       titleKo: body.titleKo,
       titleEn: body.titleEn,
       descriptionKo: body.descriptionKo,
       descriptionEn: body.descriptionEn,
-      thumbnailUrl: body.thumbnailUrl ?? null,
+      thumbnailUrl: null,
       categoryKo: body.categoryKo ?? null,
       categoryEn: body.categoryEn ?? null,
       price: body.price ? Number(body.price) : null,
@@ -27,10 +32,41 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       order: body.order,
       seoTitle: body.seoTitle ?? null,
       seoDescription: body.seoDescription ?? null,
-    },
+      slug: cleanText(body.slug),
+      canonicalUrl: cleanText(body.canonicalUrl),
+      ogTitle: cleanText(body.ogTitle),
+      ogDescription: cleanText(body.ogDescription),
+      noIndex: Boolean(body.noIndex),
+    } });
+    await tx.imageAsset.deleteMany({
+      where: { productId: id, ...(imageIds.length ? { id: { notIn: imageIds } } : {}) },
+    });
+    await Promise.all(imageIds.map((imageId, order) =>
+      tx.imageAsset.updateMany({
+        where: {
+          id: imageId,
+          OR: [{ productId: id }, { productId: null, promotionPostId: null }],
+        },
+        data: { productId: id, promotionPostId: null, order },
+      }),
+    ));
+    return tx.product.findUniqueOrThrow({
+      where: { id },
+      include: { images: { orderBy: { order: "asc" }, select: { id: true, fileName: true, mimeType: true, size: true, order: true } } },
+    });
   });
 
-  return NextResponse.json(product);
+  return NextResponse.json({ ...product, images: product.images.map((image) => ({ ...image, url: `/api/images/${image.id}` })) });
+}
+
+function getImageIds(images: unknown): string[] | null {
+  if (!Array.isArray(images) || images.length > 5) return images === undefined ? [] : null;
+  const ids = images.map((image) => image && typeof image === "object" && "id" in image ? String(image.id) : "");
+  return ids.every(Boolean) && new Set(ids).size === ids.length ? ids : null;
+}
+
+function cleanText(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

@@ -16,6 +16,8 @@ type Product = {
   categoryKo: string | null;
   categoryEn: string | null;
   price: number | null;
+  images: Array<{ id: string; url: string }>;
+  slug: string | null;
 };
 
 const TRUST_ITEMS = [
@@ -109,9 +111,9 @@ export default function ProductsPage() {
             {filtered.map((p) => {
               const category = locale === "ko" ? p.categoryKo : p.categoryEn;
               return (
-                <Link key={p.id} href={`/products/${p.id}`} className={styles.card}>
-                  {p.thumbnailUrl ? (
-                    <img className={styles.thumb} src={p.thumbnailUrl} alt={locale === "ko" ? p.titleKo : p.titleEn} />
+                <Link key={p.id} href={`/products/${p.slug ?? p.id}`} className={styles.card}>
+                  {p.images?.[0]?.url || p.thumbnailUrl ? (
+                    <img className={styles.thumb} src={p.images?.[0]?.url ?? p.thumbnailUrl ?? ""} alt={locale === "ko" ? p.titleKo : p.titleEn} />
                   ) : (
                     <div className={styles.thumb} />
                   )}

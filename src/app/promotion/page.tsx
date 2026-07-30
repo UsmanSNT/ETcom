@@ -12,6 +12,8 @@ type Post = {
   titleEn: string;
   publishedAt: string;
   category: { id: string; nameKo: string; nameEn: string };
+  images: Array<{ id: string; url: string }>;
+  slug: string | null;
 };
 
 export default function PromotionPage() {
@@ -79,9 +81,9 @@ export default function PromotionPage() {
         ) : (
           <div className={styles.grid}>
             {filtered.map((p) => (
-              <Link key={p.id} href={`/promotion/${p.id}`} className={styles.card}>
-                {p.thumbnailUrl ? (
-                  <img className={styles.thumb} src={p.thumbnailUrl} alt={locale === "ko" ? p.titleKo : p.titleEn} />
+              <Link key={p.id} href={`/promotion/${p.slug ?? p.id}`} className={styles.card}>
+                {p.images?.[0]?.url || p.thumbnailUrl ? (
+                  <img className={styles.thumb} src={p.images?.[0]?.url ?? p.thumbnailUrl ?? ""} alt={locale === "ko" ? p.titleKo : p.titleEn} />
                 ) : (
                   <div className={styles.thumb} />
                 )}

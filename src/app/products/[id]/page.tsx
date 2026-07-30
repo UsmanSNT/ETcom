@@ -3,8 +3,13 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductDetailClient } from "./ProductDetailClient";
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 async function getProduct(id: string) {
-  const product = await prisma.product.findUnique({ where: { id } });
+  const product = await prisma.product.findFirst({
+    where: { OR: [{ id }, { slug: id }] },
+    include: { images: { orderBy: { order: "asc" }, select: { id: true } } },
+  });
   if (!product || !product.isPublished) return null;
   return product;
 }
@@ -17,14 +22,29 @@ export async function generateMetadata({
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) return {};
+  const canonical = product.canonicalUrl ?? `${BASE_URL}/products/${product.slug ?? product.id}`;
+  const image = product.images[0] ? `${BASE_URL}/api/images/${product.images[0].id}` : product.thumbnailUrl ?? undefined;
 
   return {
     title: product.seoTitle ?? product.titleKo,
     description: product.seoDescription ?? product.descriptionKo,
+    alternates: { canonical },
+    robots: {
+      index: !product.noIndex,
+      follow: !product.noIndex,
+    },
     openGraph: {
-      title: product.seoTitle ?? product.titleKo,
-      description: product.seoDescription ?? product.descriptionKo,
-      images: product.thumbnailUrl ? [product.thumbnailUrl] : undefined,
+      title: product.ogTitle ?? product.seoTitle ?? product.titleKo,
+      description: product.ogDescription ?? product.seoDescription ?? product.descriptionKo,
+      url: canonical,
+      type: "website",
+      images: image ? [image] : undefined,
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title: product.ogTitle ?? product.seoTitle ?? product.titleKo,
+      description: product.ogDescription ?? product.seoDescription ?? product.descriptionKo,
+      images: image ? [image] : undefined,
     },
   };
 }
@@ -37,6 +57,37 @@ export default async function ProductDetailPage({
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) notFound();
+  const productUrl = product.canonicalUrl ?? `${BASE_URL}/products/${product.slug ?? product.id}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.titleKo,
+    description: product.seoDescription ?? product.descriptionKo,
+    url: productUrl,
+    image: product.images.map((image) => `${BASE_URL}/api/images/${image.id}`),
+    brand: { "@type": "Brand", name: "ETCOMPANY" },
+    ...(product.price
+      ? {
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "KRW",
+            price: product.price,
+            availability: "https://schema.org/InStock",
+            url: productUrl,
+          },
+        }
+      : {}),
+  };
 
-  return <ProductDetailClient product={product} />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <ProductDetailClient
+        product={{
+          ...product,
+          images: product.images.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
+        }}
+      />
+    </>
+  );
 }

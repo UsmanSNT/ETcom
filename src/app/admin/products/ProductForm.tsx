@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ImageUploader } from "../ImageUploader";
+import { ImageUploader, type UploadedImage } from "../ImageUploader";
 import styles from "../admin.module.css";
 
 export type ProductFormValues = {
@@ -10,7 +10,7 @@ export type ProductFormValues = {
   titleEn: string;
   descriptionKo: string;
   descriptionEn: string;
-  thumbnailUrl: string;
+  images: UploadedImage[];
   categoryKo: string;
   categoryEn: string;
   price: number | null;
@@ -18,6 +18,11 @@ export type ProductFormValues = {
   order: number;
   seoTitle: string;
   seoDescription: string;
+  slug: string;
+  canonicalUrl: string;
+  ogTitle: string;
+  ogDescription: string;
+  noIndex: boolean;
 };
 
 const EMPTY: ProductFormValues = {
@@ -25,7 +30,7 @@ const EMPTY: ProductFormValues = {
   titleEn: "",
   descriptionKo: "",
   descriptionEn: "",
-  thumbnailUrl: "",
+  images: [],
   categoryKo: "",
   categoryEn: "",
   price: null,
@@ -33,6 +38,11 @@ const EMPTY: ProductFormValues = {
   order: 0,
   seoTitle: "",
   seoDescription: "",
+  slug: "",
+  canonicalUrl: "",
+  ogTitle: "",
+  ogDescription: "",
+  noIndex: false,
 };
 
 export function ProductForm({
@@ -43,7 +53,17 @@ export function ProductForm({
   initial?: Partial<ProductFormValues>;
 }) {
   const router = useRouter();
-  const [values, setValues] = useState<ProductFormValues>({ ...EMPTY, ...initial });
+  const [values, setValues] = useState<ProductFormValues>({
+    ...EMPTY,
+    ...initial,
+    images: initial?.images ?? [],
+    seoTitle: initial?.seoTitle ?? "",
+    seoDescription: initial?.seoDescription ?? "",
+    slug: initial?.slug ?? "",
+    canonicalUrl: initial?.canonicalUrl ?? "",
+    ogTitle: initial?.ogTitle ?? "",
+    ogDescription: initial?.ogDescription ?? "",
+  });
   const [saving, setSaving] = useState(false);
 
   function update<K extends keyof ProductFormValues>(key: K, value: ProductFormValues[K]) {
@@ -85,7 +105,7 @@ export function ProductForm({
 
       <div className={styles.field}>
         <label className={styles.label}>썸네일 이미지</label>
-        <ImageUploader value={values.thumbnailUrl} onChange={(url) => update("thumbnailUrl", url)} />
+        <ImageUploader value={values.images} onChange={(images) => update("images", images)} />
       </div>
 
       <div className={styles.formRow}>
@@ -137,6 +157,34 @@ export function ProductForm({
       <div className={styles.field}>
         <label className={styles.label}>SEO 설명</label>
         <textarea className={styles.textarea} value={values.seoDescription} onChange={(e) => update("seoDescription", e.target.value)} />
+      </div>
+
+      <div className={styles.seoPanel}>
+        <h2 className={styles.seoPanelTitle}>SEO va ijtimoiy tarmoq sozlamalari</h2>
+        <div className={styles.formRow}>
+          <div className={styles.field}>
+            <label className={styles.label}>URL slug</label>
+            <input className={styles.input} value={values.slug} onChange={(e) => update("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))} placeholder="smart-farm-controller" />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label}>Canonical URL</label>
+            <input className={styles.input} value={values.canonicalUrl} onChange={(e) => update("canonicalUrl", e.target.value)} placeholder="https://example.com/products/..." />
+          </div>
+        </div>
+        <div className={styles.formRow}>
+          <div className={styles.field}>
+            <label className={styles.label}>Open Graph sarlavhasi</label>
+            <input className={styles.input} value={values.ogTitle} onChange={(e) => update("ogTitle", e.target.value)} maxLength={60} />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label}>Open Graph tavsifi</label>
+            <input className={styles.input} value={values.ogDescription} onChange={(e) => update("ogDescription", e.target.value)} maxLength={160} />
+          </div>
+        </div>
+        <div className={styles.checkboxRow}>
+          <input type="checkbox" id="noIndex" checked={values.noIndex} onChange={(e) => update("noIndex", e.target.checked)} />
+          <label htmlFor="noIndex">Qidiruv tizimlarida indekslamaslik (noindex)</label>
+        </div>
       </div>
 
       <div className={styles.checkboxRow}>
