@@ -20,7 +20,10 @@ export function PageHero({
   artImage?: string;
 }) {
   return (
-    <section className={styles.hero}>
+    <section
+      className={`${styles.hero} ${artImage ? styles.heroWithBg : ""}`}
+      style={artImage ? { backgroundImage: `url(${artImage})` } : undefined}
+    >
       <div className={styles.inner}>
         <div>
           <div className={styles.breadcrumb}>HOME &gt; {breadcrumb}</div>
@@ -37,12 +40,7 @@ export function PageHero({
             {desc2}
           </p>
         </div>
-        {showArt && (
-          <div
-            className={styles.art}
-            style={artImage ? { backgroundImage: `url(${artImage})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
-          />
-        )}
+        {showArt && !artImage && <div className={styles.art} />}
       </div>
     </section>
   );
