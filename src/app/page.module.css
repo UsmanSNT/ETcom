@@ -5,18 +5,18 @@
 
 /* Hero */
 .hero {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
   align-items: center;
-  gap: 32px;
+  min-height: 420px;
   padding: 56px 24px;
-  background: var(--brand-blue-light);
+  background: var(--brand-blue-light) url("/images/home-hero-bg.png") no-repeat center right / cover;
 }
 
 .heroLeft {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 480px;
 }
 
 .tagline {
@@ -52,31 +52,6 @@
   color: var(--brand-navy);
   padding-bottom: 6px;
   border-bottom: 2px solid var(--brand-navy);
-}
-
-.heroArt {
-  display: flex;
-  justify-content: center;
-}
-
-.heroArtShape {
-  width: 100%;
-  max-width: 380px;
-  aspect-ratio: 4 / 3;
-  border-radius: 32px;
-  background: linear-gradient(155deg, #ffffff 0%, #eef2f8 100%);
-  border: 1px solid rgba(16, 25, 43, 0.08);
-  box-shadow: 0 24px 48px -16px rgba(16, 25, 43, 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.heroArtMark {
-  width: 34%;
-  color: var(--brand-navy);
-  opacity: 0.85;
-  filter: drop-shadow(0 8px 16px rgba(16, 25, 43, 0.15));
 }
 
 /* AI Experience */

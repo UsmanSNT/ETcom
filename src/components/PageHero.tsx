@@ -8,6 +8,7 @@ export function PageHero({
   desc1,
   desc2,
   showArt = true,
+  artImage,
 }: {
   breadcrumb: string;
   label: string;
@@ -16,6 +17,7 @@ export function PageHero({
   desc1: string;
   desc2: string;
   showArt?: boolean;
+  artImage?: string;
 }) {
   return (
     <section className={styles.hero}>
@@ -35,7 +37,12 @@ export function PageHero({
             {desc2}
           </p>
         </div>
-        {showArt && <div className={styles.art} />}
+        {showArt && (
+          <div
+            className={styles.art}
+            style={artImage ? { backgroundImage: `url(${artImage})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+          />
+        )}
       </div>
     </section>
   );
