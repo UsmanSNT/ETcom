@@ -1,16 +1,16 @@
 .header {
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 50;
   background: #ffffff;
-  border-bottom: 1px solid var(--brand-gray-100);
+  border-bottom: 0;
 }
 
 .inner {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
-  height: 64px;
+  height: 82px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -27,7 +27,7 @@
 }
 
 .logoMark {
-  color: var(--brand-blue);
+  color: var(--brand-navy);
 }
 
 .nav {
@@ -154,6 +154,6 @@
     display: none;
   }
   .menuButton {
-    display: none;
+    display: inline-flex;
   }
 }

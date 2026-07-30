@@ -1,8 +1,8 @@
 export function LeafIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M20 4c-8 0-16 4-16 14 10 0 16-6 16-14z" />
-      <path d="M5 19c2-4 5-7 9-9" />
+      <path d="M12 13C8 13 4 10 4 5c4 0 8 2 8 8zM12 13c4 0 8-3 8-8-4 0-8 2-8 8z" />
+      <path d="M12 12v8M7 20h10" />
     </svg>
   );
 }
@@ -137,10 +137,9 @@ export function SensorIcon(props: React.SVGProps<SVGSVGElement>) {
 export function SwitchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <rect x="2" y="5" width="20" height="7" rx="3.5" />
-      <circle cx="8" cy="8.5" r="2" fill="currentColor" stroke="none" />
-      <rect x="2" y="14" width="20" height="7" rx="3.5" />
-      <circle cx="16" cy="17.5" r="2" fill="currentColor" stroke="none" />
+      <path d="M3 7h7M14 7h7M3 17h4M11 17h10M12 3v8M9 13v8" />
+      <circle cx="12" cy="7" r="2.5" />
+      <circle cx="9" cy="17" r="2.5" />
     </svg>
   );
 }

@@ -23,6 +23,62 @@
   gap: 24px 40px;
 }
 
+.partnersGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(18px, 3vw, 52px);
+}
+
+.partnerLogo {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: visible;
+}
+
+.partnerLogo img {
+  display: block;
+  width: 100%;
+  height: 46px;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: .72;
+  transition: filter .2s ease, opacity .2s ease, transform .2s ease;
+}
+
+.partnerLogo:nth-child(4) img {
+  transform: scale(2.15);
+}
+
+.partnerLogo:nth-child(6) img {
+  transform: scale(1.8);
+}
+
+.partnerLogo:nth-child(7) img {
+  transform: scale(2);
+}
+
+.partnerLogo:hover img {
+  filter: grayscale(0);
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.partnerLogo:nth-child(4):hover img {
+  transform: scale(2.15) translateY(-1px);
+}
+
+.partnerLogo:nth-child(6):hover img {
+  transform: scale(1.8) translateY(-1px);
+}
+
+.partnerLogo:nth-child(7):hover img {
+  transform: scale(2) translateY(-1px);
+}
+
 .partnerName {
   font-size: 15px;
   font-weight: 700;
@@ -45,6 +101,11 @@
   padding-bottom: 32px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+.socials { display: flex; gap: 10px; margin-top: 8px; }
+.socials span { width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; color: #fff; font-size: 9px; }
+.contactCol { display: flex; flex-direction: column; gap: 10px; }
+.qrCode { width: 72px; height: 72px; align-self: center; background: url("/images/footer-reference.png") -620px -22px / 710px 135px no-repeat; border: 4px solid #fff; border-radius: 2px; }
 
 .brandCol {
   display: flex;
@@ -112,10 +173,11 @@
   display: flex;
   gap: 16px;
 }
+.bottomLinks i { width: 1px; height: 12px; background: rgba(255,255,255,.35); }
 
 @media (min-width: 768px) {
   .inner {
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    grid-template-columns: 1.45fr .8fr .9fr .8fr 1.1fr 80px;
   }
   .linkCols {
     display: contents;
@@ -123,5 +185,18 @@
   .bottom {
     flex-direction: row;
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 767px) {
+  .partnersGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 30px;
+  }
+
+  .partnerLogo:last-child {
+    grid-column: 1 / 3;
+    width: 50%;
+    justify-self: center;
   }
 }
