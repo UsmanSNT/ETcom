@@ -60,7 +60,6 @@ export default function ContactPage() {
               {t.contact.desc2}
             </p>
           </div>
-          <div className={styles.art} />
         </div>
       </section>
 

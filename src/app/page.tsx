@@ -124,14 +124,14 @@ export default function Home() {
                 [SensorIcon, t.home.aiStep1Title, t.home.aiStep1Desc],
                 [NetworkIcon, t.home.aiStep2Title, t.home.aiStep2Desc],
                 [SwitchIcon, t.home.aiStep3Title, t.home.aiStep3Desc],
-              ].map(([Icon, title, description], index) => {
+              ].map(([Icon, title, description]) => {
                 const StepIcon = Icon as typeof SensorIcon;
                 return (
                   <div className={styles.aiStep} key={String(title)}>
                     <StepIcon className={styles.aiStepIcon} />
                     <div>
                       <strong>
-                        {String(index + 1).padStart(2, "0")}. {String(title)}
+                        {String(title)}
                       </strong>
                       <p>{String(description)}</p>
                     </div>

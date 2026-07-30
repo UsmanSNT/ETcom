@@ -1,37 +1,39 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "./LanguageProvider";
 import styles from "./Footer.module.css";
 
 export function Footer() {
   const { t } = useLanguage();
+  const pathname = usePathname();
 
   return (
     <>
-      <div className={styles.partners}>
-        <div className={styles.partnersInner}>
-          <div className={styles.partnersLabel}>{t.home.sectionPartners}</div>
-          <div className={styles.partnersGrid}>
-            {Array.from({ length: 7 }, (_, index) => (
-              <div className={styles.partnerLogo} key={index}>
-                <img
-                  src={`/images/logo_png-${index + 1}.png`}
-                  alt={`Partner ${index + 1}`}
-                />
-              </div>
-            ))}
+      {pathname === "/" && (
+        <div className={styles.partners}>
+          <div className={styles.partnersInner}>
+            <div className={styles.partnersLabel}>{t.home.sectionPartners}</div>
+            <div className={styles.partnersGrid}>
+              {Array.from({ length: 7 }, (_, index) => (
+                <div className={styles.partnerLogo} key={index}>
+                  <img
+                    src={`/images/logo_png-${index + 1}.png`}
+                    alt={`Partner ${index + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <footer className={styles.footer}>
         <div className={styles.inner}>
           <div className={styles.brandCol}>
             <div className={styles.brandName}>
-              <svg width="25" height="20" viewBox="0 0 22 18" fill="none">
-                <path d="M8 1L1 9L8 17M14 1L21 9L14 17" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <span className={styles.brandLogo} aria-hidden="true" />
               {t.footer.companyName}
             </div>
             <div className={styles.brandTagline}>

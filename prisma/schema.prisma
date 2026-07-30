@@ -118,3 +118,21 @@ model PageVisit {
 
   @@index([path, createdAt])
 }
+
+model DownloadResource {
+  id          String   @id @default(cuid())
+  slot        String?  @unique
+  titleKo     String
+  titleEn     String
+  fileName    String
+  mimeType    String
+  size        Int
+  data        Bytes
+  publishedAt DateTime @default(now())
+  isPublished Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, order, publishedAt])
+}

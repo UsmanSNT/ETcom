@@ -4,6 +4,24 @@
   padding: 48px 24px;
 }
 
+.bannerImage {
+  width: min(1330px, 100%);
+  min-height: 190px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bannerImage .inner {
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
 .bannerLight {
   background: #ffffff;
   color: var(--brand-navy);

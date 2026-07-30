@@ -74,11 +74,18 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-          <div className={styles.mapArt} />
+          <div className={styles.mapArt}>
+            <img src="/images/about-global-map.gif" alt="ETCOMPANY global network map" />
+          </div>
         </div>
       </section>
 
-      <CtaBanner title1={t.about.ctaTitle1} title2={t.about.ctaTitle2} btnLabel={t.about.ctaBtn} />
+      <CtaBanner
+        title1={t.about.ctaTitle1}
+        title2={t.about.ctaTitle2}
+        btnLabel={t.about.ctaBtn}
+        backgroundImage="/images/about_img-2.png"
+      />
     </div>
   );
 }

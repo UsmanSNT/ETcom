@@ -10,6 +10,7 @@ export function Header() {
   const { locale, setLocale, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const isProducts = pathname.startsWith("/products");
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -26,25 +27,16 @@ export function Header() {
     { href: "/about", label: t.nav.about },
     { href: "/business", label: t.nav.business },
     { href: "/products", label: t.nav.products },
-    { href: "/rd", label: t.nav.rd },
     { href: "/portfolio", label: t.nav.portfolio },
     { href: "/promotion", label: t.nav.promotion },
     { href: "/contact", label: t.nav.contact },
   ];
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${isProducts ? styles.productsHeader : ""}`}>
       <div className={styles.inner}>
         <Link href="/" className={styles.logo} onClick={() => setOpen(false)}>
-          <svg className={styles.logoMark} width="22" height="18" viewBox="0 0 22 18" fill="none">
-            <path
-              d="M8 1L1 9L8 17M14 1L21 9L14 17"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <span className={styles.logoMark} aria-hidden="true" />
           ETCOMPANY
         </Link>
 
@@ -64,6 +56,25 @@ export function Header() {
         </nav>
 
         <div className={styles.right}>
+          {isProducts ? (
+            <div className={styles.productActions}>
+              <Link href="/products" className={styles.productAction} aria-label="Search products">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.7" />
+                  <path d="m16 16 5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                </svg>
+              </Link>
+              <button type="button" className={styles.productAction} aria-label="Cart">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M3 4h2l2 11h10l2-8H6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="9" cy="20" r="1.3" fill="currentColor" />
+                  <circle cx="17" cy="20" r="1.3" fill="currentColor" />
+                </svg>
+                <span>0</span>
+              </button>
+            </div>
+          ) : (
+          <>
           <div className={styles.langGroup}>
             <button
               type="button"
@@ -114,6 +125,8 @@ export function Header() {
               />
             </svg>
           </button>
+          </>
+          )}
         </div>
       </div>
 

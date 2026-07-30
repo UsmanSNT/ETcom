@@ -1,15 +1,20 @@
 .missionSection {
+  width: min(1330px, 100%);
+  margin: 0 auto;
   background: var(--brand-navy);
   color: var(--brand-text-inverted);
-  padding: 40px 24px;
+  padding: 72px 24px;
 }
 
 .missionInner {
-  max-width: 1280px;
+  width: 100%;
+  max-width: 1330px;
+  min-height: 300px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: 56px;
+  align-items: center;
 }
 
 .missionCol {
@@ -17,29 +22,30 @@
 }
 
 .missionLabel {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--brand-blue);
-  margin-bottom: 10px;
+  margin-bottom: 28px;
 }
 
 .missionTitle {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 800;
   color: #fff;
-  line-height: 1.4;
-  margin-bottom: 12px;
+  line-height: 1.6;
+  margin-bottom: 34px;
 }
 
 .missionDesc {
-  font-size: 13px;
-  opacity: 0.65;
-  line-height: 1.6;
+  max-width: 520px;
+  font-size: 15px;
+  opacity: 0.72;
+  line-height: 2;
 }
 
 .historySection {
-  max-width: 1280px;
+  max-width: 1330px;
   margin: 0 auto;
   padding: 40px 24px;
 }
@@ -68,7 +74,6 @@
   grid-template-columns: 56px 12px 1fr;
   gap: 12px;
   padding: 14px 0;
-  border-bottom: 1px solid var(--brand-gray-100);
 }
 
 .timelineYear {
@@ -97,19 +102,31 @@
 }
 
 .mapArt {
-  border-radius: 12px;
-  background: var(--brand-gray-50);
-  border: 1px solid var(--brand-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0;
+  background: #fff;
+  border: 0;
   min-height: 260px;
+}
+
+.mapArt img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 @media (min-width: 900px) {
   .missionInner {
     grid-template-columns: 1fr 1fr;
+    column-gap: 80px;
   }
   .missionCol:first-child {
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    padding-right: 32px;
+    padding-right: 80px;
   }
   .historyGrid {
     grid-template-columns: 1fr 1fr;

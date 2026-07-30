@@ -102,11 +102,24 @@ async function main() {
     create: { email, passwordHash, name: "Admin", role: "admin" },
   });
 
-  const category = await prisma.promotionCategory.upsert({
-    where: { slug: "news" },
-    update: {},
-    create: { slug: "news", nameKo: "뉴스", nameEn: "News", order: 0 },
-  });
+  const promotionCategories = [
+    { slug: "press", nameKo: "보도자료", nameEn: "Press Releases", order: 1 },
+    { slug: "news", nameKo: "뉴스", nameEn: "News", order: 2 },
+    { slug: "events", nameKo: "전시회/행사", nameEn: "Exhibitions / Events", order: 3 },
+    { slug: "media", nameKo: "미디어", nameEn: "Media", order: 4 },
+    { slug: "resources", nameKo: "자료실", nameEn: "Resources", order: 5 },
+    { slug: "patents-certifications", nameKo: "특허 · 인증", nameEn: "Patents · Certifications", order: 6 },
+  ];
+  const categories = await Promise.all(
+    promotionCategories.map((category) =>
+      prisma.promotionCategory.upsert({
+        where: { slug: category.slug },
+        update: { nameKo: category.nameKo, nameEn: category.nameEn, order: category.order },
+        create: category,
+      }),
+    ),
+  );
+  const category = categories.find((item) => item.slug === "news")!;
 
   const existingProducts = await prisma.product.count();
   if (existingProducts === 0) {

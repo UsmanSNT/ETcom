@@ -123,6 +123,14 @@
   margin-bottom: 8px;
 }
 
+.brandLogo {
+  width: 34px;
+  height: 34px;
+  display: block;
+  flex: 0 0 auto;
+  background: url("/images/logo-footer.png") center / 310% auto no-repeat;
+}
+
 .brandTagline {
   font-size: 13px;
   opacity: 0.65;

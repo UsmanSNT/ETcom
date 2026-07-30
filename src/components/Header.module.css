@@ -7,13 +7,24 @@
 }
 
 .inner {
-  max-width: 1280px;
+  max-width: 1330px;
   margin: 0 auto;
   padding: 0 24px;
   height: 82px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.productsHeader .inner {
+  max-width: 1600px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.productsHeader .logo {
+  width: 230px;
+  flex: 0 0 230px;
 }
 
 .logo {
@@ -27,7 +38,11 @@
 }
 
 .logoMark {
-  color: var(--brand-navy);
+  width: 31px;
+  height: 31px;
+  display: block;
+  flex: 0 0 auto;
+  background: url("/images/logo-navbar.png") center / 310% auto no-repeat;
 }
 
 .nav {
@@ -72,6 +87,41 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.productActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.productAction {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--brand-navy);
+  cursor: pointer;
+}
+
+.productAction svg { width: 24px; height: 24px; }
+.productAction span {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  min-width: 15px;
+  height: 15px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--brand-blue);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
 }
 
 .langGroup {
@@ -143,6 +193,13 @@
   color: var(--brand-blue);
 }
 
+@media (max-width: 899px) {
+  .productsHeader .logo {
+    width: auto;
+    flex: 0 1 auto;
+  }
+}
+
 @media (min-width: 900px) {
   .nav {
     display: flex;
@@ -154,6 +211,6 @@
     display: none;
   }
   .menuButton {
-    display: inline-flex;
+    display: none;
   }
 }

@@ -7,15 +7,24 @@ export function CtaBanner({
   desc,
   btnLabel,
   variant = "dark",
+  backgroundImage,
 }: {
   title1: string;
   title2?: string;
   desc?: string;
   btnLabel: string;
   variant?: "dark" | "light";
+  backgroundImage?: string;
 }) {
   return (
-    <section className={`${styles.banner} ${variant === "light" ? styles.bannerLight : ""}`}>
+    <section
+      className={`${styles.banner} ${variant === "light" ? styles.bannerLight : ""} ${backgroundImage ? styles.bannerImage : ""}`}
+      style={
+        backgroundImage
+          ? { backgroundImage: `linear-gradient(90deg, rgba(1, 18, 38, .86), rgba(1, 18, 38, .32)), url("${backgroundImage}")` }
+          : undefined
+      }
+    >
       <div className={styles.inner}>
         <div>
           <div className={styles.title}>

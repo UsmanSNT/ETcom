@@ -1,11 +1,21 @@
 .hero {
-  padding: 48px 24px;
-  background: var(--brand-gray-50);
+  width: min(1330px, 100%);
+  min-height: 430px;
+  margin: 0 auto;
+  padding: 48px 64px;
+  display: flex;
+  align-items: center;
+  background-color: var(--brand-gray-50);
+  background-image: url("/images/contact-hero.png");
+  background-repeat: no-repeat;
+  background-position: center 54%;
+  background-size: cover;
 }
 
 .heroInner {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 580px;
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
@@ -13,9 +23,9 @@
 }
 
 .breadcrumb {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--brand-text-muted);
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 
 .label {
@@ -23,27 +33,28 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--brand-text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 44px;
   font-weight: 800;
-  line-height: 1.3;
+  line-height: 1.28;
+  letter-spacing: -0.04em;
   color: var(--brand-navy);
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .divider {
   width: 32px;
   height: 2px;
   background: var(--brand-navy);
-  margin-bottom: 16px;
+  margin-bottom: 22px;
 }
 
 .desc {
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.8;
   color: var(--brand-text-muted);
 }
 
@@ -56,7 +67,7 @@
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1330px;
   margin: 0 auto;
   padding: 32px 24px 64px;
 }
@@ -383,9 +394,6 @@
 }
 
 @media (min-width: 900px) {
-  .heroInner {
-    grid-template-columns: 1fr 1fr;
-  }
   .infoGrid {
     flex-direction: row;
   }
@@ -402,5 +410,22 @@
   }
   .bottomGrid {
     grid-template-columns: 1.4fr 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: 500px;
+    padding: 54px 24px;
+    align-items: flex-start;
+    background-position: 60% center;
+  }
+
+  .heroInner {
+    max-width: 72%;
+  }
+
+  .title {
+    font-size: 36px;
   }
 }
