@@ -111,6 +111,17 @@
   grid-template-columns: 1fr;
   gap: 40px;
   margin-bottom: 48px;
+  align-items: stretch;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  border: 1px solid var(--brand-gray-100);
+  border-radius: 16px;
+  padding: 28px;
 }
 
 .colLabel {
@@ -150,6 +161,13 @@
   margin-bottom: 12px;
 }
 
+.directionsList {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-evenly;
+}
+
 .directionRow {
   display: flex;
   align-items: flex-start;
@@ -158,6 +176,10 @@
   color: var(--brand-text-muted);
   padding: 10px 0;
   border-bottom: 1px solid var(--brand-gray-100);
+}
+
+.directionRow:last-child {
+  border-bottom: none;
 }
 
 .directionIcon {
@@ -184,6 +206,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  flex: 1;
 }
 
 .formRow {

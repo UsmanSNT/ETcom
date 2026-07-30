@@ -88,7 +88,7 @@ export default function ContactPage() {
         </div>
 
         <div className={styles.mainGrid}>
-          <div>
+          <div className={styles.card}>
             <div className={styles.directionsLabel}>{t.contact.directionsLabel}</div>
             <div className={styles.mapArt}>
               <iframe
@@ -99,19 +99,21 @@ export default function ContactPage() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-            {t.contact.directions.map((d, i) => {
-              const Icon = DIRECTION_ICONS[i];
-              return (
-                <div key={d.mode} className={styles.directionRow}>
-                  <Icon className={styles.directionIcon} />
-                  <span className={styles.directionLabel}>{d.mode}</span>
-                  <span className={styles.directionDesc}>{d.desc}</span>
-                </div>
-              );
-            })}
+            <div className={styles.directionsList}>
+              {t.contact.directions.map((d, i) => {
+                const Icon = DIRECTION_ICONS[i];
+                return (
+                  <div key={d.mode} className={styles.directionRow}>
+                    <Icon className={styles.directionIcon} />
+                    <span className={styles.directionLabel}>{d.mode}</span>
+                    <span className={styles.directionDesc}>{d.desc}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          <div>
+          <div className={styles.card}>
             <div className={styles.colLabel}>{t.contact.formTitle}</div>
             <div className={styles.colDesc}>{t.contact.formDesc}</div>
             <form className={styles.form} onSubmit={handleSubmit}>
