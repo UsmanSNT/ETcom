@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "NEW HOMEPAGE",
-    template: "%s | NEW HOMEPAGE",
+    default: "ETCOMPANY",
+    template: "%s | ETCOMPANY",
   },
-  description: "NEW HOMEPAGE - 회사 공식 홈페이지",
+  description: "ETCOMPANY - 회사 공식 홈페이지",
 };
 
 export default function RootLayout({
