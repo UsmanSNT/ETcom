@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid body" }, { status: 400 });
   }
 
-  const { name, email, phone, message } = body;
+  const { name, email, phone, message, type } = body;
 
   if (!name.trim() || !email.trim() || !message.trim()) {
     return NextResponse.json({ error: "missing required fields" }, { status: 400 });
@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
 
   const inquiry = await prisma.contactInquiry.create({
     data: {
+      type: type === "product" ? "product" : "general",
       name: name.trim(),
       email: email.trim(),
       phone: typeof phone === "string" ? phone.trim() : null,

@@ -219,6 +219,29 @@
   font-size: 13px;
 }
 
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #f7f8fa;
+  color: #6b7280;
+  border: 1px solid #eceef2;
+  cursor: pointer;
+}
+
+.tabActive {
+  background: #171717;
+  color: #fff;
+  border-color: #171717;
+}
+
 .uploader {
   display: flex;
   flex-direction: column;

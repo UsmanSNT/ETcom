@@ -25,6 +25,7 @@ export default function ContactPage() {
           email: data.get("email"),
           phone: data.get("phone"),
           message: data.get("message"),
+          type: data.get("type"),
         }),
       });
       if (!res.ok) throw new Error("failed");
@@ -112,6 +113,15 @@ export default function ContactPage() {
                   {t.contact.email} *
                 </label>
                 <input className={styles.input} id="email" name="email" type="email" required />
+              </div>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="type">
+                  {t.contact.typeLabel}
+                </label>
+                <select className={styles.input} id="type" name="type" defaultValue="general">
+                  <option value="general">{t.contact.typeGeneral}</option>
+                  <option value="product">{t.contact.typeProduct}</option>
+                </select>
               </div>
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="message">
