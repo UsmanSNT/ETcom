@@ -2,7 +2,9 @@
 
 import { FormEvent, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { PhoneIcon, MailIcon, PinIcon, HeadsetIcon, PlusIcon } from "@/components/icons/SolutionIcons";
+import { PhoneIcon, MailIcon, PinIcon, HeadsetIcon, PlusIcon, CarIcon, TrainIcon, BusIcon } from "@/components/icons/SolutionIcons";
+
+const DIRECTION_ICONS = [CarIcon, TrainIcon, BusIcon];
 import styles from "./page.module.css";
 
 export default function ContactPage() {
@@ -87,7 +89,18 @@ export default function ContactPage() {
 
         <div className={styles.mainGrid}>
           <div>
+            <div className={styles.directionsLabel}>{t.contact.directionsLabel}</div>
             <div className={styles.mapArt} />
+            {t.contact.directions.map((d, i) => {
+              const Icon = DIRECTION_ICONS[i];
+              return (
+                <div key={d.mode} className={styles.directionRow}>
+                  <Icon className={styles.directionIcon} />
+                  <span className={styles.directionLabel}>{d.mode}</span>
+                  <span className={styles.directionDesc}>{d.desc}</span>
+                </div>
+              );
+            })}
           </div>
 
           <div>

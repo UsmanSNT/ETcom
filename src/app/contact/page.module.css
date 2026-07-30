@@ -135,13 +135,29 @@
   margin-bottom: 16px;
 }
 
+.directionsLabel {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--brand-navy);
+  margin-bottom: 12px;
+}
+
 .directionRow {
   display: flex;
+  align-items: flex-start;
   gap: 10px;
   font-size: 12px;
   color: var(--brand-text-muted);
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--brand-gray-100);
+}
+
+.directionIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--brand-navy);
+  margin-top: 1px;
 }
 
 .directionLabel {
@@ -149,6 +165,11 @@
   color: var(--brand-navy);
   flex-shrink: 0;
   width: 48px;
+}
+
+.directionDesc {
+  white-space: pre-line;
+  line-height: 1.6;
 }
 
 .form {

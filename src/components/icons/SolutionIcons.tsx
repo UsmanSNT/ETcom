@@ -184,3 +184,39 @@ export function CubeIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function CarIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13" />
+      <path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z" />
+      <circle cx="7.5" cy="15" r="1.2" />
+      <circle cx="16.5" cy="15" r="1.2" />
+    </svg>
+  );
+}
+
+export function TrainIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="5" y="3" width="14" height="13" rx="3" />
+      <path d="M5 11h14" />
+      <circle cx="9" cy="14" r="0.1" />
+      <circle cx="8" cy="14" r="1" fill="currentColor" stroke="none" />
+      <circle cx="16" cy="14" r="1" fill="currentColor" stroke="none" />
+      <path d="M8 20l-2 1M16 20l2 1M9 16h6" />
+    </svg>
+  );
+}
+
+export function BusIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="4" y="4" width="16" height="13" rx="2" />
+      <path d="M4 10h16" />
+      <path d="M7 20v-3M17 20v-3" />
+      <circle cx="8" cy="14" r="0.1" />
+      <path d="M7.5 14h.01M16.5 14h.01" />
+    </svg>
+  );
+}
