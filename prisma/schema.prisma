@@ -69,6 +69,7 @@ model ContactInquiry {
   id         String    @id @default(cuid())
   type       String    @default("general") // general | product
   name       String
+  company    String?
   email      String
   phone      String?
   message    String    @db.Text

@@ -67,6 +67,7 @@ CREATE TABLE "ContactInquiry" (
     "id" TEXT NOT NULL,
     "type" TEXT NOT NULL DEFAULT 'general',
     "name" TEXT NOT NULL,
+    "company" TEXT,
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "message" TEXT NOT NULL,

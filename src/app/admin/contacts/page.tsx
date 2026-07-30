@@ -7,6 +7,7 @@ type Inquiry = {
   id: string;
   type: string;
   name: string;
+  company: string | null;
   email: string;
   phone: string | null;
   message: string;
@@ -136,6 +137,7 @@ export default function AdminContactsPage() {
           <tr>
             <th>유형</th>
             <th>이름</th>
+            <th>회사명</th>
             <th>이메일</th>
             <th>연락처</th>
             <th>내용</th>
@@ -150,6 +152,7 @@ export default function AdminContactsPage() {
               <tr>
                 <td>{TYPE_LABEL[i.type] ?? i.type}</td>
                 <td>{i.name}</td>
+                <td>{i.company ?? "-"}</td>
                 <td>{i.email}</td>
                 <td>{i.phone ?? "-"}</td>
                 <td>{i.message.length > 40 ? `${i.message.slice(0, 40)}...` : i.message}</td>
@@ -175,7 +178,7 @@ export default function AdminContactsPage() {
               </tr>
               {openId === i.id && (
                 <tr>
-                  <td colSpan={8}>
+                  <td colSpan={9}>
                     <div className={styles.card} style={{ marginBottom: 0 }}>
                       <div style={{ fontSize: 13, color: "var(--brand-text-muted, #6b7280)", marginBottom: 8 }}>
                         문의 내용

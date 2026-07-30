@@ -243,6 +243,39 @@
   resize: vertical;
 }
 
+.consentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--brand-text-muted);
+}
+
+.consentRow input {
+  margin-top: 3px;
+}
+
+.consentLinkBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--brand-blue);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.consentDetail {
+  margin-top: -8px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--brand-gray-50);
+  border: 1px solid var(--brand-gray-100);
+  font-size: 12px;
+  color: var(--brand-text-muted);
+  line-height: 1.6;
+}
+
 .submit {
   margin-top: 4px;
   padding: 14px;
