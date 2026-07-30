@@ -90,7 +90,15 @@ export default function ContactPage() {
         <div className={styles.mainGrid}>
           <div>
             <div className={styles.directionsLabel}>{t.contact.directionsLabel}</div>
-            <div className={styles.mapArt} />
+            <div className={styles.mapArt}>
+              <iframe
+                className={styles.mapFrame}
+                title="ETCOMPANY location"
+                src={`https://www.google.com/maps?q=${encodeURIComponent("전라북도 익산시 약촌로 132")}&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
             {t.contact.directions.map((d, i) => {
               const Icon = DIRECTION_ICONS[i];
               return (
