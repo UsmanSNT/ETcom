@@ -496,22 +496,28 @@
     height: 220px;
   }
 
-  /* Let long direction descriptions wrap under the label instead of
-     being squeezed by the fixed-width label + divider. */
+  /* Keep the icon + label + description on one row (don't push text down);
+     shrink the icon box and label so the description fits beside it. */
   .directionRow {
-    flex-wrap: wrap;
     gap: 12px;
-    padding: 14px 16px;
+    padding: 12px 14px;
+  }
+  .directionIconBox {
+    width: 40px;
+    height: 40px;
+  }
+  .directionIcon {
+    width: 20px;
+    height: 20px;
   }
   .directionLabel {
     min-width: 0;
-    padding-right: 0;
-    border-right: none;
+    padding-right: 12px;
+    font-size: 14px;
   }
   .directionDesc {
-    flex: 1 1 100%;
-    padding-top: 10px;
-    border-top: 1px solid #e6ebf2;
+    font-size: 12px;
+    line-height: 1.5;
   }
 
   .bottomGrid {
