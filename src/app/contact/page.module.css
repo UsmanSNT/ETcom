@@ -1,4 +1,5 @@
 .hero {
+  position: relative;
   width: min(1330px, 100%);
   min-height: 430px;
   margin: 0 auto;
@@ -399,8 +400,12 @@
 
 .channelsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+}
+
+.channelCard {
+  min-width: 0;
 }
 
 .channelCard {
@@ -432,17 +437,89 @@
 
 @media (max-width: 767px) {
   .hero {
-    min-height: 500px;
-    padding: 54px 24px;
-    align-items: flex-start;
+    min-height: 420px;
+    padding: 48px 20px;
+    align-items: center;
     background-position: 60% center;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.8) 45%, rgba(255,255,255,.3) 100%);
   }
 
   .heroInner {
-    max-width: 72%;
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+  }
+
+  .breadcrumb {
+    margin-bottom: 20px;
+    color: #4a5568;
   }
 
   .title {
-    font-size: 36px;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .desc {
+    font-size: 14px;
+    color: #26313f;
+  }
+
+  .container {
+    padding: 28px 16px 48px;
+  }
+
+  .infoGrid {
+    margin-bottom: 32px;
+  }
+
+  .mainGrid {
+    gap: 28px;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  /* Stack the two-column name/email/phone fields on small screens */
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .mapArt {
+    height: 220px;
+  }
+
+  /* Let long direction descriptions wrap under the label instead of
+     being squeezed by the fixed-width label + divider. */
+  .directionRow {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .directionLabel {
+    min-width: 0;
+    padding-right: 0;
+    border-right: none;
+  }
+  .directionDesc {
+    flex: 1 1 100%;
+    padding-top: 10px;
+    border-top: 1px solid #e6ebf2;
+  }
+
+  .bottomGrid {
+    gap: 28px;
+    padding-top: 32px;
+  }
+
+  .channelsGrid {
+    gap: 10px;
   }
 }
