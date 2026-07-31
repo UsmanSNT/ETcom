@@ -114,7 +114,9 @@ export default function ContactPage() {
                 const Icon = DIRECTION_ICONS[i];
                 return (
                   <div key={d.mode} className={styles.directionRow}>
-                    <Icon className={styles.directionIcon} />
+                    <div className={styles.directionIconBox}>
+                      <Icon className={styles.directionIcon} />
+                    </div>
                     <span className={styles.directionLabel}>{d.mode}</span>
                     <span className={styles.directionDesc}>{d.desc}</span>
                   </div>

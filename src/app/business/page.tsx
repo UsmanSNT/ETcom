@@ -74,8 +74,10 @@ export default function BusinessPage() {
             const Icon = TECH_ICONS[i];
             return (
               <div key={title} className={styles.techItem}>
-                <Icon className={styles.techIcon} />
-                <div>
+                <div className={styles.techIconBox}>
+                  <Icon className={styles.techIcon} />
+                </div>
+                <div className={styles.techText}>
                   <div className={styles.techTitle}>{t.business[title]}</div>
                   <div className={styles.techDesc}>{t.business[desc]}</div>
                 </div>

@@ -78,40 +78,78 @@
 }
 
 .techLabel {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--brand-text-muted);
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--brand-navy);
   margin-bottom: 24px;
+}
+
+.techLabel::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 3px;
+  background: var(--brand-blue, #2f6bff);
 }
 
 .techGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 16px;
 }
 
 .techItem {
   display: flex;
+  align-items: stretch;
+  gap: 18px;
+  padding: 16px 20px;
+  border-radius: 18px;
+  background: #fbfcfe;
+  border: 1px solid #eef1f6;
+  box-shadow: 0 2px 6px rgba(15, 39, 72, 0.04);
+}
+
+.techIconBox {
+  flex-shrink: 0;
+  align-self: center;
+  width: 56px;
+  height: 56px;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  border-radius: 14px;
+  background: #e9f0fb;
+  color: var(--brand-navy);
 }
 
 .techIcon {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   color: var(--brand-navy);
   flex-shrink: 0;
 }
 
+.techText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 18px;
+  border-left: 1px solid #e3e8ef;
+}
+
 .techTitle {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   color: var(--brand-navy);
 }
 
 .techDesc {
-  font-size: 12px;
+  margin-top: 4px;
+  font-size: 13px;
   color: var(--brand-text-muted);
 }
 
@@ -155,9 +193,6 @@
 
 @media (min-width: 900px) {
   .areasGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .techGrid {
     grid-template-columns: repeat(4, 1fr);
   }
   .industriesGrid {
