@@ -6,11 +6,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 import { BellIcon, UserIcon } from "./icons/SolutionIcons";
 import styles from "./Header.module.css";
+import type { ReactNode } from "react";
 
 const REVEAL_ZONE = 96;
 const IDLE_HIDE_DELAY = 1500;
 
-const NAV_ICONS: Record<string, JSX.Element> = {
+const NAV_ICONS: Record<string, ReactNode> = {
   "/about": (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
