@@ -20,6 +20,7 @@ import {
   TruckIcon,
   WarrantyIcon,
 } from "@/components/icons/SolutionIcons";
+import { ProductHeroCarousel } from "./ProductHeroCarousel";
 import styles from "./page.module.css";
 
 type Product = {
@@ -202,23 +203,7 @@ export default function ProductsPage() {
       </aside>
 
       <main className={styles.shopMain}>
-        <section className={styles.hero}>
-        <div className={styles.heroInner}>
-          <div className={styles.breadcrumb}>
-            <span>HOME</span>
-            <b aria-hidden="true">›</b>
-            <span>Products</span>
-            <b aria-hidden="true">›</b>
-            <strong>{t.products.breadcrumb}</strong>
-          </div>
-          <h1 className={styles.title}>{t.products.title}</h1>
-          <p className={styles.desc}>
-            {t.products.desc1}
-            <br />
-            {t.products.desc2}
-          </p>
-        </div>
-        </section>
+        <ProductHeroCarousel />
 
         <div className={styles.container}>
         <form className={styles.searchBar} onSubmit={handleSearchSubmit} role="search">
