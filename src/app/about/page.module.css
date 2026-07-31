@@ -1,6 +1,5 @@
 .missionSection {
-  width: min(1330px, 100%);
-  margin: 0 auto;
+  width: 100%;
   background: var(--brand-navy);
   color: var(--brand-text-inverted);
   padding: 72px 24px;
