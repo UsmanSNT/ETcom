@@ -35,70 +35,72 @@ const NAV_ICONS: Record<string, ReactNode> = {
   ),
 };
 
-type RevealState = "hidden" | "visible" | "docked";
+const IDLE_HIDE_MS = 5000;
+const BOTTOM_ZONE = 80;
 
-/**
- * Bottom-bar reveal rules requested for mobile:
- *  - actively scrolling DOWN  → visible
- *  - scroll stops (idle)      → hidden
- *  - scrolling UP             → hidden
- *  - reached the page bottom  → docked (sits below the footer, in flow)
- */
-function useBottomNavReveal(): RevealState {
-  const [state, setState] = useState<RevealState>("hidden");
+function useBottomNavReveal(): boolean {
+  const [hidden, setHidden] = useState(true);
   const lastY = useRef(0);
-  const idle = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const ticking = useRef(false);
 
   useEffect(() => {
     lastY.current = window.scrollY;
 
-    const clearIdle = () => {
-      if (idle.current) {
-        clearTimeout(idle.current);
-        idle.current = null;
+    function clearIdle() {
+      if (idleTimer.current) {
+        clearTimeout(idleTimer.current);
+        idleTimer.current = null;
       }
-    };
-    const atBottom = () =>
-      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+    }
 
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastY.current;
+    function scheduleIdle() {
+      clearIdle();
+      idleTimer.current = setTimeout(() => setHidden(true), IDLE_HIDE_MS);
+    }
 
-      if (atBottom()) {
-        setState("docked");
-        clearIdle();
-      } else if (delta > 3) {
-        setState("visible");
-        clearIdle();
-        idle.current = setTimeout(() => setState("hidden"), 300);
-      } else if (delta < -3) {
-        setState("hidden");
-        clearIdle();
-      }
+    function nearBottom() {
+      return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - BOTTOM_ZONE;
+    }
 
-      lastY.current = y;
-    };
+    function onScroll() {
+      if (ticking.current) return;
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const delta = y - lastY.current;
+
+        if (nearBottom()) {
+          setHidden(false);
+          clearIdle();
+        } else if (delta > 4) {
+          setHidden(false);
+          scheduleIdle();
+        } else if (delta < -4) {
+          setHidden(true);
+          clearIdle();
+        }
+
+        lastY.current = y;
+        ticking.current = false;
+      });
+    }
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    onScroll();
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
       clearIdle();
     };
   }, []);
 
-  return state;
+  return hidden;
 }
 
 export function MobileBottomNav() {
   const { t } = useLanguage();
   const pathname = usePathname();
-  const state = useBottomNavReveal();
+  const hidden = useBottomNavReveal();
 
-  // Not shown inside the admin area.
   if (pathname.startsWith("/admin")) return null;
 
   const items = [
@@ -111,9 +113,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className={`${styles.bottomNav} ${state === "visible" ? styles.show : ""} ${
-        state === "docked" ? styles.docked : ""
-      }`}
+      className={`${styles.bottomNav} ${hidden ? styles.bottomNavHidden : ""}`}
       aria-label="Mobile navigation"
     >
       {items.map((item) => {

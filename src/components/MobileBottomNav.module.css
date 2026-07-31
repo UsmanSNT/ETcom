@@ -16,25 +16,14 @@
     background: #ffffff;
     border-top: 1px solid var(--brand-gray-100);
     box-shadow: 0 -6px 18px rgba(15, 23, 42, 0.07);
-    transform: translateY(112%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
     padding-bottom: env(safe-area-inset-bottom, 0);
     will-change: transform;
   }
 
-  /* Actively scrolling down → slide up into view.
-     Compound selectors so these win over .bottomNav regardless of the
-     CSS-module rule order in the injected stylesheet. */
-  .bottomNav.show {
-    transform: translateY(0);
-  }
-
-  /* At the very bottom of the page it stops floating and sits in normal
-     flow, below the footer. */
-  .bottomNav.docked {
-    position: static;
-    transform: none;
-    box-shadow: none;
+  .bottomNavHidden {
+    transform: translateY(100%);
   }
 
   .item {

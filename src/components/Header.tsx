@@ -111,25 +111,6 @@ export function Header() {
         </nav>
 
         <div className={styles.right}>
-          {isProducts && (
-            <div className={styles.productActions}>
-              <button type="button" className={styles.productAction} aria-label="Notifications">
-                <BellIcon />
-              </button>
-              <button type="button" className={styles.productAction} aria-label="Cart">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M3 4h2l2 11h10l2-8H6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="9" cy="20" r="1.3" fill="currentColor" />
-                  <circle cx="17" cy="20" r="1.3" fill="currentColor" />
-                </svg>
-                <span>0</span>
-              </button>
-              <button type="button" className={styles.productAction} aria-label="Account">
-                <UserIcon />
-              </button>
-            </div>
-          )}
-
           {!isProducts && (
             <div className={styles.langGroup}>
               <button
