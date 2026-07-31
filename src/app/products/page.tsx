@@ -24,14 +24,6 @@ import { ProductHeroCarousel } from "./ProductHeroCarousel";
 import { ScrollRow } from "@/components/ScrollRow";
 import styles from "./page.module.css";
 
-function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...props}>
-      <path d="M3 6h18M3 12h18M3 18h18" />
-    </svg>
-  );
-}
-
 type Product = {
   id: string;
   thumbnailUrl: string | null;
@@ -87,6 +79,13 @@ export default function ProductsPage() {
       .then((res) => res.json())
       .then(setProducts)
       .catch(() => setProducts([]));
+  }, []);
+
+  // The header's mobile burger (products page only) toggles this sidebar.
+  useEffect(() => {
+    const toggle = () => setSidebarOpen((v) => !v);
+    window.addEventListener("etc:toggle-product-sidebar", toggle);
+    return () => window.removeEventListener("etc:toggle-product-sidebar", toggle);
   }, []);
 
   async function handleImageSearch(file: File) {
@@ -167,15 +166,6 @@ export default function ProductsPage() {
 
   return (
     <div className={styles.shopLayout}>
-      <button
-        type="button"
-        className={styles.mobileSidebarToggle}
-        onClick={() => setSidebarOpen(true)}
-        aria-label="Open categories"
-      >
-        <MenuIcon />
-      </button>
-
       {sidebarOpen && (
         <div className={styles.sidebarOverlay} onClick={() => setSidebarOpen(false)} />
       )}

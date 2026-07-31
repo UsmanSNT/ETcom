@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { MobileBottomNav } from "./MobileBottomNav";
 import { VisitTracker } from "./VisitTracker";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
@@ -19,6 +20,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <Header />
       <main style={{ paddingTop: 82 }}>{children}</main>
       <Footer />
+      <MobileBottomNav />
     </>
   );
 }
