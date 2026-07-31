@@ -4,6 +4,7 @@
 }
 
 .heroWithBg {
+  position: relative;
   width: min(1330px, 100%);
   min-height: 0;
   aspect-ratio: 1572 / 656;
@@ -106,5 +107,30 @@
     aspect-ratio: auto;
     background-position: center right;
     background-size: cover;
+  }
+  /* Light scrim so the dark hero text stays legible whether the background
+     is plain white or blended into the hero image. */
+  .heroWithBg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.82) 42%,
+      rgba(255, 255, 255, 0.35) 100%
+    );
+  }
+  .heroWithBg .inner {
+    position: relative;
+    z-index: 1;
+  }
+  .heroWithBg .breadcrumb,
+  .heroWithBg .label {
+    color: var(--brand-navy);
+    font-weight: 700;
+  }
+  .heroWithBg .desc {
+    color: #26313f;
   }
 }
