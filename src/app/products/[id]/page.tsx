@@ -8,7 +8,10 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 async function getProduct(id: string) {
   const product = await prisma.product.findFirst({
     where: { OR: [{ id }, { slug: id }] },
-    include: { images: { orderBy: { order: "asc" }, select: { id: true } } },
+    include: {
+      images: { orderBy: { order: "asc" }, select: { id: true } },
+      reviews: { select: { rating: true } },
+    },
   });
   if (!product || !product.isPublished) return null;
   return product;
@@ -100,6 +103,10 @@ export default async function ProductDetailPage({
         product={{
           ...product,
           images: product.images.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
+          avgRating: product.reviews.length
+            ? product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length
+            : null,
+          reviewCount: product.reviews.length,
         }}
         relatedProducts={relatedProducts.map((item) => ({
           ...item,

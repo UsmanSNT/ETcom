@@ -17,7 +17,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     <>
       <VisitTracker />
       <Header />
-      <main>{children}</main>
+      <main style={{ paddingTop: 82 }}>{children}</main>
       <Footer />
     </>
   );

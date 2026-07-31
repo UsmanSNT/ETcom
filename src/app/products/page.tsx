@@ -1,16 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { StarRatingDisplay } from "@/components/StarRating";
 import {
+  CameraIcon,
   CartIcon,
+  CloseIcon,
   CubeIcon,
   GridIcon,
   HeadsetIcon,
   LeafIcon,
   LedIcon,
   NetworkIcon,
+  SearchIcon,
   SensorIcon,
   ShieldIcon,
   TruckIcon,
@@ -30,6 +34,10 @@ type Product = {
   price: number | null;
   images: Array<{ id: string; url: string }>;
   slug: string | null;
+  avgRating: number | null;
+  reviewCount: number;
+  popularityScore: number;
+  createdAt: string;
 };
 
 const TRUST_ITEMS = [
@@ -56,6 +64,12 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[] | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<"popularity" | "latest">("popularity");
+  const [imageSearchResults, setImageSearchResults] = useState<Product[] | null>(null);
+  const [imageSearchStatus, setImageSearchStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/products")
@@ -64,15 +78,65 @@ export default function ProductsPage() {
       .catch(() => setProducts([]));
   }, []);
 
+  async function handleImageSearch(file: File) {
+    setImageSearchStatus("loading");
+    setImagePreview(URL.createObjectURL(file));
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/products/search-by-image", { method: "POST", body: formData });
+      if (!res.ok) throw new Error("failed");
+      const results: Product[] = await res.json();
+      setImageSearchResults(results);
+      setImageSearchStatus("idle");
+    } catch {
+      setImageSearchResults([]);
+      setImageSearchStatus("error");
+    }
+  }
+
+  function clearImageSearch() {
+    setImageSearchResults(null);
+    setImageSearchStatus("idle");
+    setImagePreview(null);
+  }
+
   const filtered = useMemo(() => {
+    if (imageSearchResults) return imageSearchResults;
     if (!products) return [];
-    if (activeCategory === "all") return products;
-    return products.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === activeCategory);
-  }, [products, activeCategory, locale]);
+    let list = products;
+    if (activeCategory !== "all") {
+      list = list.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === activeCategory);
+    }
+    const query = search.trim().toLowerCase();
+    if (query) {
+      list = list.filter((p) => {
+        const name = locale === "ko" ? p.titleKo : p.titleEn;
+        return name.toLowerCase().includes(query);
+      });
+    }
+    list = [...list].sort((a, b) => {
+      if (sortBy === "latest") {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      return b.popularityScore - a.popularityScore || (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
+    });
+    return list;
+  }, [products, activeCategory, search, sortBy, locale, imageSearchResults]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, locale]);
+  }, [activeCategory, locale, search, imageSearchResults]);
+
+  function handleSearchSubmit(event: FormEvent) {
+    event.preventDefault();
+    setSearch(searchInput);
+  }
+
+  function handleSearchClear() {
+    setSearchInput("");
+    setSearch("");
+  }
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pagedProducts = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -157,43 +221,104 @@ export default function ProductsPage() {
         </section>
 
         <div className={styles.container}>
-        <div className={styles.toolbar}>
-          <div className={styles.tabs}>
+        <form className={styles.searchBar} onSubmit={handleSearchSubmit} role="search">
+          <SearchIcon className={styles.searchIcon} aria-hidden="true" />
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder={t.products.searchPlaceholder}
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            aria-label={t.products.searchLabel}
+          />
+          {searchInput && (
             <button
               type="button"
-              className={`${styles.tab} ${activeCategory === "all" ? styles.tabActive : ""}`}
-              onClick={() => setActiveCategory("all")}
+              className={styles.searchClearBtn}
+              onClick={handleSearchClear}
+              aria-label={t.products.searchClear}
             >
-              {t.products.all} ({products?.length ?? 0})
+              <CloseIcon />
             </button>
-            {SIDEBAR_CATEGORIES.slice(0, 6).map(({ ko, en }) => {
-              const name = locale === "ko" ? ko : en;
-              const count = products?.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === name).length ?? 0;
-              return (
-                <button
-                  key={name}
-                  type="button"
-                  className={`${styles.tab} ${activeCategory === name ? styles.tabActive : ""}`}
-                  onClick={() => setActiveCategory(name)}
-                >
-                  {name} ({count})
-                </button>
-              );
-            })}
-          </div>
-          <div className={styles.sortRow}>
+          )}
+          <label className={styles.imageSearchBtn} aria-label={t.products.imageSearchLabel} title={t.products.imageSearchLabel}>
+            <CameraIcon />
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              hidden
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) handleImageSearch(file);
+                event.target.value = "";
+              }}
+            />
+          </label>
+          <button type="submit" className={styles.searchSubmitBtn}>
+            {t.products.searchLabel}
+          </button>
+        </form>
+
+        {(imageSearchResults !== null || imageSearchStatus === "loading") && (
+          <div className={styles.imageSearchBanner}>
+            {imagePreview && <img src={imagePreview} alt="" className={styles.imageSearchThumb} />}
             <span>
-              {filtered.length}
-              {t.products.countSuffix}
+              {imageSearchStatus === "loading"
+                ? t.products.imageSearchLoading
+                : imageSearchResults && imageSearchResults.length > 0
+                  ? `${t.products.imageSearchResultsLabel} ${imageSearchResults.length}${t.products.countSuffix}`
+                  : t.products.imageSearchEmpty}
             </span>
-            <select className={styles.sortSelect} defaultValue="latest">
-              <option value="latest">{t.products.sort}</option>
-            </select>
+            <button type="button" onClick={clearImageSearch}>
+              <CloseIcon /> {t.products.imageSearchClear}
+            </button>
           </div>
-        </div>
+        )}
+
+        {imageSearchResults === null && (
+          <div className={styles.toolbar}>
+            <div className={styles.tabs}>
+              <button
+                type="button"
+                className={`${styles.tab} ${activeCategory === "all" ? styles.tabActive : ""}`}
+                onClick={() => setActiveCategory("all")}
+              >
+                {t.products.all} ({products?.length ?? 0})
+              </button>
+              {SIDEBAR_CATEGORIES.slice(0, 6).map(({ ko, en }) => {
+                const name = locale === "ko" ? ko : en;
+                const count = products?.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === name).length ?? 0;
+                return (
+                  <button
+                    key={name}
+                    type="button"
+                    className={`${styles.tab} ${activeCategory === name ? styles.tabActive : ""}`}
+                    onClick={() => setActiveCategory(name)}
+                  >
+                    {name} ({count})
+                  </button>
+                );
+              })}
+            </div>
+            <div className={styles.sortRow}>
+              <span>
+                {filtered.length}
+                {t.products.countSuffix}
+              </span>
+              <select
+                className={styles.sortSelect}
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value as "popularity" | "latest")}
+              >
+                <option value="popularity">{t.products.sortPopularity}</option>
+                <option value="latest">{t.products.sort}</option>
+              </select>
+            </div>
+          </div>
+        )}
 
         {products && filtered.length === 0 ? (
-          <p className={styles.empty}>{t.products.empty}</p>
+          <p className={styles.empty}>{search.trim() ? t.products.searchEmpty : t.products.empty}</p>
         ) : (
           <div className={styles.grid}>
             {pagedProducts.map((p) => {
@@ -208,6 +333,15 @@ export default function ProductsPage() {
                   <div className={styles.cardBody}>
                     {category && <div className={styles.cardCategory}>{category}</div>}
                     <div className={styles.cardTitle}>{locale === "ko" ? p.titleKo : p.titleEn}</div>
+                    {p.reviewCount > 0 ? (
+                      <div className={styles.cardRating}>
+                        <StarRatingDisplay value={p.avgRating ?? 0} size={12} />
+                        <span>{(p.avgRating ?? 0).toFixed(1)}</span>
+                        <span className={styles.cardRatingCount}>({p.reviewCount})</span>
+                      </div>
+                    ) : (
+                      <div className={styles.cardRatingEmpty}>{t.products.noReviewsYet}</div>
+                    )}
                     <div className={styles.cardBottom}>
                       <span className={styles.cardPrice}>{p.price ? `₩ ${p.price.toLocaleString()}` : ""}</span>
                       <span className={styles.cartBtn}>

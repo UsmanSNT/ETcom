@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAdminFromRequest } from "@/lib/auth";
+import { computeImageHash } from "@/lib/imageHash";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -29,13 +30,17 @@ export async function POST(req: NextRequest) {
 
   const assets = await prisma.$transaction(
     await Promise.all(
-      files.map(async (file, order) => ({
-        fileName: file.name.slice(0, 255),
-        mimeType: file.type,
-        size: file.size,
-        data: Buffer.from(await file.arrayBuffer()),
-        order,
-      })),
+      files.map(async (file, order) => {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        return {
+          fileName: file.name.slice(0, 255),
+          mimeType: file.type,
+          size: file.size,
+          data: buffer,
+          imageHash: await computeImageHash(buffer),
+          order,
+        };
+      }),
     ).then((items) =>
       items.map((data) =>
         prisma.imageAsset.create({

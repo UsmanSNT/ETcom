@@ -18,16 +18,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "consent required" }, { status: 400 });
   }
 
-  const inquiry = await prisma.contactInquiry.create({
-    data: {
-      type: type === "product" ? "product" : "general",
-      name: name.trim(),
-      company: typeof company === "string" && company.trim() ? company.trim() : null,
-      email: email.trim(),
-      phone: typeof phone === "string" ? phone.trim() : null,
-      message: message.trim(),
-    },
-  });
+  try {
+    const inquiry = await prisma.contactInquiry.create({
+      data: {
+        type: type === "product" ? "product" : "general",
+        name: name.trim(),
+        company: typeof company === "string" && company.trim() ? company.trim() : null,
+        email: email.trim(),
+        phone: typeof phone === "string" ? phone.trim() : null,
+        message: message.trim(),
+      },
+    });
 
-  return NextResponse.json({ id: inquiry.id }, { status: 201 });
+    return NextResponse.json({ id: inquiry.id }, { status: 201 });
+  } catch (error) {
+    console.error("[POST /api/contact] failed to save inquiry:", error);
+    return NextResponse.json({ error: "failed to save inquiry" }, { status: 500 });
+  }
 }

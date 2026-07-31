@@ -2,15 +2,82 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 import styles from "./Header.module.css";
+
+// Header is hidden below this scroll offset so it never disappears while the
+// page is basically still at the top.
+const REVEAL_ZONE = 96;
+// How long the header stays visible after an upward scroll before it hides
+// itself again if the visitor isn't actively scrolling.
+const IDLE_HIDE_DELAY = 1500;
+
+function useAutoHideOnScroll(disabled: boolean) {
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const ticking = useRef(false);
+
+  useEffect(() => {
+    if (disabled) {
+      setHidden(false);
+      return;
+    }
+
+    lastScrollY.current = window.scrollY;
+
+    function clearIdleTimer() {
+      if (idleTimer.current) {
+        clearTimeout(idleTimer.current);
+        idleTimer.current = null;
+      }
+    }
+
+    function scheduleIdleHide() {
+      clearIdleTimer();
+      idleTimer.current = setTimeout(() => setHidden(true), IDLE_HIDE_DELAY);
+    }
+
+    function handleScroll() {
+      if (ticking.current) return;
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const delta = currentY - lastScrollY.current;
+
+        if (currentY < REVEAL_ZONE) {
+          setHidden(false);
+          clearIdleTimer();
+        } else if (delta > 4) {
+          setHidden(true);
+          clearIdleTimer();
+        } else if (delta < -4) {
+          setHidden(false);
+          scheduleIdleHide();
+        }
+
+        lastScrollY.current = currentY;
+        ticking.current = false;
+      });
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearIdleTimer();
+    };
+  }, [disabled]);
+
+  return hidden;
+}
 
 export function Header() {
   const { locale, setLocale, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isProducts = pathname.startsWith("/products");
+  const hidden = useAutoHideOnScroll(open);
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -33,7 +100,9 @@ export function Header() {
   ];
 
   return (
-    <header className={`${styles.header} ${isProducts ? styles.productsHeader : ""}`}>
+    <header
+      className={`${styles.header} ${isProducts ? styles.productsHeader : ""} ${hidden ? styles.headerHidden : ""}`}
+    >
       <div className={styles.inner}>
         <Link href="/" className={styles.logo} onClick={() => setOpen(false)}>
           <span className={styles.logoMark} aria-hidden="true" />

@@ -262,6 +262,121 @@
   padding: 32px 24px 64px;
 }
 
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 6px 6px 6px 16px;
+  border: 1px solid var(--brand-gray-100);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.searchBar:focus-within {
+  border-color: var(--brand-navy);
+}
+
+.searchIcon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: var(--brand-text-muted);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  color: var(--brand-navy);
+}
+
+.searchInput:focus { outline: none; }
+.searchInput::placeholder { color: var(--brand-text-muted); }
+
+.searchClearBtn {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 50%;
+  background: var(--brand-gray-50);
+  color: var(--brand-text-muted);
+  cursor: pointer;
+}
+
+.searchClearBtn svg { width: 12px; height: 12px; }
+
+.searchSubmitBtn {
+  flex: 0 0 auto;
+  padding: 9px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--brand-navy);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.imageSearchBtn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--brand-gray-50);
+  color: var(--brand-navy);
+  cursor: pointer;
+}
+
+.imageSearchBtn:hover { background: var(--brand-gray-100); }
+.imageSearchBtn svg { width: 17px; height: 17px; }
+
+.imageSearchBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border: 1px solid var(--brand-gray-100);
+  border-radius: 12px;
+  background: #f8fafc;
+  font-size: 13px;
+  color: var(--brand-navy);
+}
+
+.imageSearchThumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+
+.imageSearchBanner span { flex: 1; }
+
+.imageSearchBanner button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border: 1px solid var(--brand-gray-100);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--brand-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.imageSearchBanner button svg { width: 11px; height: 11px; }
+
 .toolbar {
   display: block;
   margin-bottom: 20px;
@@ -360,6 +475,27 @@
   font-weight: 700;
   color: var(--brand-navy);
   margin-bottom: 8px;
+}
+
+.cardRating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: -2px 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand-navy);
+}
+
+.cardRatingCount {
+  font-weight: 500;
+  color: var(--brand-text-muted);
+}
+
+.cardRatingEmpty {
+  margin: -2px 0 8px;
+  font-size: 11px;
+  color: var(--brand-text-muted);
 }
 
 .cardBottom {
