@@ -55,6 +55,8 @@
 .chartCard svg { width: 100%; height: 72px; overflow: visible; }
 .gridLine { fill: none; stroke: #294058; stroke-width: 1; }
 .mainChart { fill: none; stroke: #279ef3; stroke-width: 1.7; }
+.forecastChart { fill: none; stroke: #f0a030; stroke-width: 1.6; stroke-dasharray: 4 3; opacity: .9; }
+.forecastDot { fill: #f0a030; stroke: #00152b; }
 .chartCard circle { fill: #fff; stroke: #279ef3; }
 .chartTimes { display: flex; justify-content: space-between; color: #8293a7; font-size: 8px; }
 

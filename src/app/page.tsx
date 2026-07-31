@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { ScrollRow } from "@/components/ScrollRow";
 import {
   CapIcon,
   ChipIcon,
@@ -94,23 +95,59 @@ function SparkLine({ history, min, max }: { history: number[]; min: number; max:
   );
 }
 
-function linePath(history: number[], min: number, max: number, w: number, h: number, pad = 10) {
-  if (history.length < 2) return { d: `M0 ${h / 2}H${w}`, lastX: w, lastY: h / 2 };
+/**
+ * Simple statistical forecast (no external AI needed): fit a least-squares
+ * trend line to the recent samples and project it forward `steps` points,
+ * clamped to the sensor's valid range. This produces the "예측/forecast" curve.
+ */
+function forecast(history: number[], steps: number, min: number, max: number) {
+  const n = history.length;
+  if (n < 2) return Array.from({ length: steps }, () => history[n - 1] ?? min);
+  const recent = history.slice(-5);
+  const m = recent.length;
+  const meanX = (m - 1) / 2;
+  const meanY = recent.reduce((a, b) => a + b, 0) / m;
+  let num = 0;
+  let den = 0;
+  for (let i = 0; i < m; i++) {
+    num += (i - meanX) * (recent[i] - meanY);
+    den += (i - meanX) ** 2;
+  }
+  const slope = den === 0 ? 0 : num / den;
+  const last = recent[m - 1];
+  const out: number[] = [];
+  for (let s = 1; s <= steps; s++) {
+    out.push(Math.min(max, Math.max(min, last + slope * s)));
+  }
+  return out;
+}
+
+/** Build an SVG path across a combined actual+forecast series over [0,w]. */
+function seriesPath(values: number[], min: number, max: number, w: number, h: number, pad = 10) {
   const range = max - min || 1;
-  const pts = history.map((v, i) => {
-    const x = (i / (history.length - 1)) * w;
+  return values.map((v, i) => {
+    const x = (i / (values.length - 1)) * w;
     const y = pad + (1 - (v - min) / range) * (h - pad * 2);
     return { x, y };
   });
-  const d = `M${pts.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" L")}`;
-  const last = pts[pts.length - 1];
-  return { d, lastX: last.x, lastY: last.y };
 }
-
-const MENU_ITEMS = ["대시보드", "실시간 모니터링", "데이터 분석", "AI 예측", "알림 관리", "설정"];
 
 export default function Home() {
   const { t, locale } = useLanguage();
+  const menuItems = [
+    t.home.dashMenu1,
+    t.home.dashMenu2,
+    t.home.dashMenu3,
+    t.home.dashMenu4,
+    t.home.dashMenu5,
+    t.home.dashMenu6,
+  ];
+  const sensorLabels = [
+    t.home.sensorTemp,
+    t.home.sensorHumidity,
+    t.home.sensorCo2,
+    t.home.sensorLux,
+  ];
   const [products, setProducts] = useState<Product[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
 
@@ -229,8 +266,8 @@ export default function Home() {
           </div>
 
           <div className={styles.dashboardCard}>
-            <aside className={styles.dashboardMenu}>
-              {MENU_ITEMS.map((item, index) => (
+            <ScrollRow as="aside" className={styles.dashboardMenu}>
+              {menuItems.map((item, index) => (
                 <span
                   className={index === activeMenu ? styles.menuActive : ""}
                   key={item}
@@ -240,7 +277,7 @@ export default function Home() {
                   <i aria-hidden="true">⊙</i> {item}
                 </span>
               ))}
-            </aside>
+            </ScrollRow>
             <div className={`${styles.dashboardContent} ${styles.dashboardFade}`} key={activeMenu}>
               <div className={styles.statGrid}>
                 {SENSOR_CONFIGS.map((cfg, i) => {
@@ -248,7 +285,7 @@ export default function Home() {
                   const display = cfg.format ? cfg.format(current) : current.toFixed(cfg.decimals);
                   return (
                     <div className={styles.statTile} key={cfg.label}>
-                      <p>{cfg.label}</p>
+                      <p>{sensorLabels[i]}</p>
                       <strong>
                         {display}
                         <small>{cfg.unit}</small>
@@ -260,28 +297,41 @@ export default function Home() {
               </div>
               <div className={styles.dashboardBottom}>
                 <div className={`${styles.predictionCard} ${warningActive ? styles.predictionWarning : ""}`}>
-                  <p>AI 예측 결과</p>
-                  <strong>{warningActive ? "⚠ 주의 필요" : "＋ 이상 없음"}</strong>
-                  <span>{warningActive ? "일부 환경 수치가 변동 중입니다." : "모든 환경이 정상 범위입니다."}</span>
+                  <p>{t.home.dashPredictTitle}</p>
+                  <strong>{warningActive ? t.home.dashPredictWarnHead : t.home.dashPredictOkHead}</strong>
+                  <span>{warningActive ? t.home.dashPredictWarnBody : t.home.dashPredictOkBody}</span>
                 </div>
                 <div className={styles.chartCard}>
                   <div className={styles.chartHeading}>
-                    <span>온도 예측 (24시간)</span>
-                    <small>— 예측 · 실제</small>
+                    <span>{t.home.dashChartTitle}</span>
+                    <small>{t.home.dashChartLegend}</small>
                   </div>
                   {(() => {
-                    const { d, lastX, lastY } = linePath(
-                      sensorHistories[0],
-                      SENSOR_CONFIGS[0].min,
-                      SENSOR_CONFIGS[0].max,
-                      360,
-                      88,
-                    );
+                    const { min, max } = SENSOR_CONFIGS[0];
+                    const actual = sensorHistories[0];
+                    const predicted = forecast(actual, 4, min, max);
+                    // Draw actual and forecast on one continuous x-axis so the
+                    // dashed forecast visibly continues the solid trend line.
+                    const combined = [...actual, ...predicted];
+                    const pts = seriesPath(combined, min, max, 360, 88);
+                    const join = actual.length - 1;
+                    const toD = (arr: { x: number; y: number }[]) =>
+                      `M${arr.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" L")}`;
+                    const actualPts = pts.slice(0, actual.length);
+                    const forecastPts = pts.slice(join); // include join point for continuity
+                    const nowPt = pts[join];
                     return (
                       <svg viewBox="0 0 360 88" aria-label="24시간 온도 예측 그래프">
                         <path className={styles.gridLine} d="M0 22H360M0 48H360M0 74H360" />
-                        <path className={styles.mainChart} d={d} />
-                        <circle cx={lastX} cy={lastY} r="4" />
+                        {actual.length >= 2 && <path className={styles.mainChart} d={toD(actualPts)} />}
+                        <path className={styles.forecastChart} d={toD(forecastPts)} />
+                        <circle cx={nowPt.x} cy={nowPt.y} r="4" />
+                        <circle
+                          className={styles.forecastDot}
+                          cx={pts[pts.length - 1].x}
+                          cy={pts[pts.length - 1].y}
+                          r="3.5"
+                        />
                       </svg>
                     );
                   })()}

@@ -1,0 +1,43 @@
+.wrap {
+  position: relative;
+  min-width: 0;
+}
+
+/* When a drag is in progress, show the grabbing cursor and stop text
+   selection so the drag feels like grabbing the row. */
+.dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.hint {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+.left {
+  left: 2px;
+}
+
+.right {
+  right: 2px;
+}
+
+.hint.show {
+  opacity: 1;
+}

@@ -251,11 +251,17 @@ export default function PromotionPage() {
 }
 
 function PromotionCategoryIcon({ type }: { type: string }) {
-  if (type === "news" || type === "events") {
+  if (type === "news") {
     return (
       <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="5" width="18" height="16" rx="2" />
-        <path d="M7 3v4M17 3v4M3 10h18M8 14h3M14 14h3M8 18h3" />
+        <path d="M4 5h13v14H5a2 2 0 0 1-2-2V7M17 8h3v9a2 2 0 0 1-2 2M7 9h7M7 13h7M7 17h4" />
+      </svg>
+    );
+  }
+  if (type === "events") {
+    return (
+      <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
+        <path d="M3 21V8l9-4 9 4v13M3 21h18M8 21v-6h8v6M6 11h.01M12 11h.01M18 11h.01" />
       </svg>
     );
   }

@@ -21,6 +21,7 @@ import {
   WarrantyIcon,
 } from "@/components/icons/SolutionIcons";
 import { ProductHeroCarousel } from "./ProductHeroCarousel";
+import { ScrollRow } from "@/components/ScrollRow";
 import styles from "./page.module.css";
 
 function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -293,7 +294,7 @@ export default function ProductsPage() {
 
         {imageSearchResults === null && (
           <div className={styles.toolbar}>
-            <div className={styles.tabs}>
+            <ScrollRow className={styles.tabs}>
               <button
                 type="button"
                 className={`${styles.tab} ${activeCategory === "all" ? styles.tabActive : ""}`}
@@ -315,7 +316,7 @@ export default function ProductsPage() {
                   </button>
                 );
               })}
-            </div>
+            </ScrollRow>
             <div className={styles.sortRow}>
               <span>
                 {filtered.length}
