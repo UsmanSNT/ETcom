@@ -23,6 +23,14 @@ import {
 import { ProductHeroCarousel } from "./ProductHeroCarousel";
 import styles from "./page.module.css";
 
+function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" {...props}>
+      <path d="M3 6h18M3 12h18M3 18h18" />
+    </svg>
+  );
+}
+
 type Product = {
   id: string;
   thumbnailUrl: string | null;
@@ -71,6 +79,7 @@ export default function ProductsPage() {
   const [imageSearchResults, setImageSearchResults] = useState<Product[] | null>(null);
   const [imageSearchStatus, setImageSearchStatus] = useState<"idle" | "loading" | "error">("idle");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/products")
@@ -148,7 +157,20 @@ export default function ProductsPage() {
 
   return (
     <div className={styles.shopLayout}>
-      <aside className={styles.sidebar}>
+      <button
+        type="button"
+        className={styles.mobileSidebarToggle}
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open categories"
+      >
+        <MenuIcon />
+      </button>
+
+      {sidebarOpen && (
+        <div className={styles.sidebarOverlay} onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.sidebarTitle}>SHOP</div>
         <nav className={styles.sidebarNav} aria-label="Product categories">
           <button

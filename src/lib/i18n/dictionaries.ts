@@ -162,6 +162,8 @@ export const dictionaries = {
     },
     products: {
       breadcrumb: "전체 제품",
+      heroTitle: "전체 제품",
+      heroDesc: "이티컴퍼니의 다양한 제품을 만나보세요.\n스마트한 기술로 더 나은 환경과 효율을 제공합니다.",
       title: "전체 제품",
       desc1: "이티컴퍼니의 다양한 제품을 만나보세요.",
       desc2: "스마트한 기술로 더 나은 환경과 효율을 제공합니다.",
@@ -428,6 +430,8 @@ export const dictionaries = {
     },
     products: {
       breadcrumb: "All Products",
+      heroTitle: "All Products",
+      heroDesc: "Discover ETCOMPANY's diverse product lineup.\nSmart technology for a better environment and efficiency.",
       title: "All Products",
       desc1: "Discover ETCOMPANY's diverse product lineup.",
       desc2: "Smart technology for a better environment and efficiency.",

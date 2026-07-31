@@ -55,6 +55,8 @@
   background: url("/images/logo-navbar.png") center / 310% auto no-repeat;
 }
 
+/* Desktop nav */
+
 .nav {
   display: none;
   align-items: center;
@@ -92,6 +94,8 @@
   background: var(--brand-blue);
   border-radius: 1px;
 }
+
+/* Right actions */
 
 .right {
   display: flex;
@@ -180,22 +184,38 @@
   color: var(--brand-navy);
 }
 
+/* ── Mobile drawer (style 2) ── */
+
+.mobileDrawer {
+  display: none;
+}
+
 .mobileNav {
   display: flex;
   flex-direction: column;
-  padding: 8px 24px 20px;
-  gap: 4px;
-  border-top: 1px solid var(--brand-gray-100);
-  max-height: calc(100vh - 64px);
-  overflow-y: auto;
+  gap: 0;
 }
 
 .mobileNavLink {
-  padding: 12px 0;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 8px;
+  border-bottom: 1px solid var(--brand-gray-100);
+  color: #0D1B2D;
   font-size: 16px;
   font-weight: 500;
-  border-bottom: 1px solid var(--brand-gray-100);
-  color: var(--brand-navy);
+  text-decoration: none;
+  transition: background .15s;
+}
+
+.mobileNavLink:last-child {
+  border-bottom: 0;
+}
+
+.mobileNavLink:active {
+  background: #f5f7fa;
 }
 
 .mobileNavLinkActive {
@@ -203,10 +223,88 @@
   color: var(--brand-blue);
 }
 
+.mobileNavLinkActive .mobileNavIcon {
+  color: var(--brand-blue);
+}
+
+.mobileNavIcon {
+  display: grid;
+  place-items: center;
+  color: #6B7280;
+}
+
+.mobileNavIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.mobileNavLabel {
+  flex: 1;
+}
+
+.mobileDrawerLang {
+  padding: 14px 20px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.mobileDrawerLang .langIconBtn {
+  padding: 8px 16px;
+  gap: 6px;
+  border-color: var(--brand-gray-100);
+  border-radius: 999px;
+  background: #f5f7fa;
+}
+
+/* ── Responsive ── */
+
 @media (max-width: 899px) {
   .productsHeader .logo {
     width: auto;
     flex: 0 1 auto;
+  }
+
+  .inner {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .productActions {
+    gap: 8px;
+  }
+
+  .productAction {
+    width: 28px;
+    height: 28px;
+  }
+
+  .productAction svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobileDrawer {
+    display: block;
+    position: fixed;
+    top: 64px;
+    left: 4px;
+    right: 4px;
+    background: #fff;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    overflow-y: auto;
+    padding: 8px 16px 24px;
+    animation: drawerSlide .2s ease;
+    z-index: 49;
+  }
+
+  @keyframes drawerSlide {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .right .langIconBtn {
+    display: none;
   }
 }
 
@@ -221,6 +319,9 @@
     display: none;
   }
   .menuButton {
+    display: none;
+  }
+  .mobileDrawer {
     display: none;
   }
 }

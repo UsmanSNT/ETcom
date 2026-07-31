@@ -16,6 +16,15 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
+    image: "/images/product_bg.png",
+    titleKo: "전체 제품",
+    titleEn: "All Products",
+    bulletsKo: ["스마트팜 솔루션", "환경 모니터링", "IoT 디바이스", "맞춤형 개발"],
+    bulletsEn: ["Smart Farm Solutions", "Environmental Monitoring", "IoT Devices", "Custom Development"],
+    taglineKo: "이티컴퍼니의 다양한 제품을 만나보세요.\n스마트한 기술로 더 나은 환경과 효율을 제공합니다.",
+    taglineEn: "Discover ETCOMPANY's diverse product lineup.\nSmart technology for a better environment and efficiency.",
+  },
+  {
     image: "/images/product_bg-1.png",
     titleKo: "스마트 수직농장",
     titleEn: "Smart Vertical Farm",
@@ -117,14 +126,16 @@ export function ProductHeroCarousel() {
         >
           <div className={styles.heroSlideScrim} />
           <div className={styles.heroInner}>
-            <div className={styles.breadcrumb}>
-              <span>HOME</span>
-              <b aria-hidden="true">›</b>
-              <span>Products</span>
-              <b aria-hidden="true">›</b>
-              <strong>{t.products.breadcrumb}</strong>
-            </div>
-            <h1 className={styles.title}>{locale === "ko" ? slide.titleKo : slide.titleEn}</h1>
+            {index === 0 && (
+              <div className={styles.breadcrumb}>
+                <span>HOME</span>
+                <b aria-hidden="true">›</b>
+                <span>Products</span>
+                <b aria-hidden="true">›</b>
+                <strong>{t.products.breadcrumb}</strong>
+              </div>
+            )}
+            <h2 className={index === 0 ? styles.title : styles.carouselTitle}>{locale === "ko" ? slide.titleKo : slide.titleEn}</h2>
             <ul className={styles.heroBullets}>
               {(locale === "ko" ? slide.bulletsKo : slide.bulletsEn).map((bullet) => (
                 <li key={bullet}>{bullet}</li>
@@ -142,12 +153,10 @@ export function ProductHeroCarousel() {
             type="button"
             role="tab"
             aria-selected={index === active}
-            aria-label={`${index + 1}`}
+            aria-label={`Slide ${index + 1}`}
             className={`${styles.heroDot} ${index === active ? styles.heroDotActive : ""}`}
             onClick={() => goTo(index)}
-          >
-            {index + 1}
-          </button>
+          />
         ))}
       </div>
     </section>

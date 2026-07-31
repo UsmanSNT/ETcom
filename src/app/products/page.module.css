@@ -256,6 +256,14 @@
   }
 }
 
+.mobileSidebarToggle {
+  display: none;
+}
+
+.sidebarOverlay {
+  display: none;
+}
+
 .heroCarousel {
   position: relative;
   width: 100%;
@@ -269,7 +277,7 @@
   inset: 0;
   display: flex;
   align-items: center;
-  padding: 72px 24px;
+  padding: 40px 24px;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -295,6 +303,15 @@
 .heroCarousel .heroInner {
   position: relative;
   z-index: 1;
+}
+
+.carouselTitle {
+  font-size: clamp(24px, 2.5vw, 34px);
+  font-weight: 800;
+  color: var(--brand-navy);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
 }
 
 .heroBullets {
@@ -328,40 +345,41 @@
 .heroDots {
   position: absolute;
   left: 50%;
-  bottom: 20px;
+  bottom: 12px;
   z-index: 2;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   transform: translateX(-50%);
 }
 
 .heroDot {
-  width: 26px;
-  height: 26px;
-  border: 1px solid rgba(16, 25, 43, .18);
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .82);
-  color: #536176;
-  font-size: 11px;
-  font-weight: 700;
+  background: rgba(0, 0, 0, .18);
   cursor: pointer;
-  transition: background .2s ease, color .2s ease, border-color .2s ease;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.heroDot:hover {
+  background: rgba(0, 0, 0, .35);
 }
 
 .heroDotActive {
   background: var(--brand-navy);
-  border-color: var(--brand-navy);
-  color: #fff;
+  transform: scale(1.25);
 }
 
 @media (max-width: 767px) {
   .heroCarousel {
     aspect-ratio: auto;
-    min-height: 540px;
+    min-height: 260px;
   }
 
   .heroSlide {
-    padding: 64px 20px 76px;
+    padding: 32px 20px 40px;
     background-position: 61% center;
   }
 
@@ -373,12 +391,53 @@
     max-width: 100%;
   }
 
+  .heroCarousel .title {
+    font-size: clamp(22px, 6vw, 32px);
+    margin-bottom: 10px;
+  }
+
   .heroBullets li {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .heroDots {
-    bottom: 14px;
+    bottom: 8px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .tabs {
+    gap: 6px 8px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    font-size: 12px;
+    padding: 6px 10px;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .container {
+    padding: 20px 14px 48px;
+  }
+
+  .searchBar {
+    padding: 4px 4px 4px 12px;
+  }
+
+  .searchInput {
+    font-size: 13px;
+  }
+
+  .searchSubmitBtn {
+    padding: 8px 14px;
+    font-size: 12px;
   }
 }
 
@@ -452,8 +511,8 @@
 .imageSearchBtn {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   flex: 0 0 auto;
   border-radius: 50%;
   background: var(--brand-gray-50);
@@ -462,7 +521,7 @@
 }
 
 .imageSearchBtn:hover { background: var(--brand-gray-100); }
-.imageSearchBtn svg { width: 17px; height: 17px; }
+.imageSearchBtn svg { width: 22px; height: 22px; }
 
 .imageSearchBanner {
   display: flex;
@@ -753,7 +812,16 @@
   line-height: 1.5;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1099px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .trustRow {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -766,10 +834,57 @@
   .shopLayout {
     display: block;
     max-width: none;
+    position: relative;
   }
 
   .sidebar {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 100;
+    background: #fff;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    box-shadow: none;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,.12);
+  }
+
+  .sidebarOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: rgba(0,0,0,.35);
+  }
+
+  .mobileSidebarToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 24px;
+    left: 16px;
+    z-index: 90;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--brand-navy);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,.22);
+    cursor: pointer;
+  }
+
+  .mobileSidebarToggle svg {
+    width: 22px;
+    height: 22px;
   }
 
   .shopMain {
@@ -777,9 +892,14 @@
   }
 
   .shopMain .hero {
-    min-height: 540px;
+    min-height: 400px;
     aspect-ratio: auto;
     background-size: cover;
+  }
+
+  .heroCarousel {
+    aspect-ratio: auto;
+    min-height: 280px;
   }
 }
 
