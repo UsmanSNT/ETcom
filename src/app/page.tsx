@@ -107,7 +107,7 @@ export default function Home() {
   );
   const [activeMenu, setActiveMenu] = useState(0);
   const [warningActive, setWarningActive] = useState(false);
-  const warningTimer = useRef<ReturnType<typeof setTimeout>>();
+  const warningTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sensor value updates every 2s
   useEffect(() => {
@@ -138,7 +138,9 @@ export default function Home() {
       }, delay);
     }
     scheduleWarning();
-    return () => clearTimeout(warningTimer.current);
+    return () => {
+      if (warningTimer.current) clearTimeout(warningTimer.current);
+    };
   }, []);
 
   useEffect(() => {
