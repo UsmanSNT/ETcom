@@ -8,7 +8,6 @@ export const dictionaries = {
       business: "Solutions",
       products: "Products",
       rd: "R&D",
-      portfolio: "Portfolio",
       promotion: "News",
       contact: "Contact",
     },
@@ -156,10 +155,6 @@ export const dictionaries = {
       title: "R&D",
       body: "지속적인 연구개발을 통해 핵심 기술 경쟁력을 확보하고 있습니다.",
     },
-    portfolio: {
-      title: "Portfolio",
-      body: "다양한 산업 분야에서 축적한 프로젝트 경험을 소개합니다.",
-    },
     products: {
       breadcrumb: "전체 제품",
       heroTitle: "전체 제품",
@@ -276,7 +271,6 @@ export const dictionaries = {
       business: "Solutions",
       products: "Products",
       rd: "R&D",
-      portfolio: "Portfolio",
       promotion: "News",
       contact: "Contact",
     },
@@ -423,10 +417,6 @@ export const dictionaries = {
     rd: {
       title: "R&D",
       body: "We secure core technology competitiveness through continuous research and development.",
-    },
-    portfolio: {
-      title: "Portfolio",
-      body: "Explore our project experience accumulated across various industries.",
     },
     products: {
       breadcrumb: "All Products",

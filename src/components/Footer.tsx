@@ -88,7 +88,6 @@ export function Footer() {
             <AccordionSection title={t.footer.companyCol}>
               <Link className={styles.linkItem} href="/about">{t.nav.about}</Link>
               <Link className={styles.linkItem} href="/about">Vision &amp; Mission</Link>
-              <Link className={styles.linkItem} href="/portfolio">{t.nav.portfolio}</Link>
               <Link className={styles.linkItem} href="/about">인증 및 수상</Link>
             </AccordionSection>
 

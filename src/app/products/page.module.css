@@ -957,4 +957,35 @@
     font-size: 14px;
     line-height: 1.65;
   }
+
+  /* Must come after the unconditional (desktop) .tabs rule so the mobile
+     single-row scroll actually wins the cascade on small screens. */
+  .toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 12px;
+    padding-bottom: 2px;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .sortRow {
+    width: 100%;
+  }
 }

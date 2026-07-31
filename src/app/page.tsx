@@ -94,6 +94,19 @@ function SparkLine({ history, min, max }: { history: number[]; min: number; max:
   );
 }
 
+function linePath(history: number[], min: number, max: number, w: number, h: number, pad = 10) {
+  if (history.length < 2) return { d: `M0 ${h / 2}H${w}`, lastX: w, lastY: h / 2 };
+  const range = max - min || 1;
+  const pts = history.map((v, i) => {
+    const x = (i / (history.length - 1)) * w;
+    const y = pad + (1 - (v - min) / range) * (h - pad * 2);
+    return { x, y };
+  });
+  const d = `M${pts.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" L")}`;
+  const last = pts[pts.length - 1];
+  return { d, lastX: last.x, lastY: last.y };
+}
+
 const MENU_ITEMS = ["대시보드", "실시간 모니터링", "데이터 분석", "AI 예측", "알림 관리", "설정"];
 
 export default function Home() {
@@ -256,11 +269,22 @@ export default function Home() {
                     <span>온도 예측 (24시간)</span>
                     <small>— 예측 · 실제</small>
                   </div>
-                  <svg viewBox="0 0 360 88" aria-label="24시간 온도 예측 그래프">
-                    <path className={styles.gridLine} d="M0 22H360M0 48H360M0 74H360" />
-                    <path className={`${styles.mainChart} ${styles.chartAnimate}`} d="M0 60C30 76 42 18 80 31S125 59 160 55 204 26 240 42 290 68 360 44" />
-                    <circle cx="240" cy="42" r="4" />
-                  </svg>
+                  {(() => {
+                    const { d, lastX, lastY } = linePath(
+                      sensorHistories[0],
+                      SENSOR_CONFIGS[0].min,
+                      SENSOR_CONFIGS[0].max,
+                      360,
+                      88,
+                    );
+                    return (
+                      <svg viewBox="0 0 360 88" aria-label="24시간 온도 예측 그래프">
+                        <path className={styles.gridLine} d="M0 22H360M0 48H360M0 74H360" />
+                        <path className={styles.mainChart} d={d} />
+                        <circle cx={lastX} cy={lastY} r="4" />
+                      </svg>
+                    );
+                  })()}
                   <div className={styles.chartTimes}>
                     <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
                   </div>
@@ -312,7 +336,10 @@ export default function Home() {
                     />
                   )}
                 </div>
-                <span>{title}</span><b aria-hidden="true">→</b>
+                <div className={styles.productLabel}>
+                  <span>{title}</span>
+                  <b aria-hidden="true">→</b>
+                </div>
               </Link>
             );
           })}
