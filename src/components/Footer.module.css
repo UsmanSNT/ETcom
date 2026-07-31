@@ -398,16 +398,45 @@
 
 /* ── Mobile ── */
 
+/* Partners marquee (mobile) */
+
+.partnersMarquee {
+  display: none;
+}
+
 @media (max-width: 767px) {
   .partnersGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px 30px;
+    display: none;
   }
 
-  .partnerLogo:last-child {
-    grid-column: 1 / 3;
-    width: 50%;
-    justify-self: center;
+  .partnersMarquee {
+    display: block;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .marqueeTrack {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    width: max-content;
+    animation: marqueeScroll 20s linear infinite;
+  }
+
+  .marqueeTrack .partnerLogo {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 40px;
+  }
+
+  .marqueeTrack .partnerLogo img {
+    height: 32px;
+  }
+
+  @keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 
   .qrSection {

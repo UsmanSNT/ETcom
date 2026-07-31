@@ -35,6 +35,7 @@ export default function BusinessPage() {
         title2={t.business.title2}
         desc1={t.business.desc1}
         desc2={t.business.desc2}
+        artImage="/images/sulutions-bg-0.png"
       />
 
       <CoreCompetencies />

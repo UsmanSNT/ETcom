@@ -120,10 +120,14 @@ export default function ProductsPage() {
     }
     const query = search.trim().toLowerCase();
     if (query) {
-      list = list.filter((p) => {
-        const name = locale === "ko" ? p.titleKo : p.titleEn;
-        return name.toLowerCase().includes(query);
-      });
+      list = list.filter((p) =>
+        p.titleKo.toLowerCase().includes(query) ||
+        p.titleEn.toLowerCase().includes(query) ||
+        p.descriptionKo.toLowerCase().includes(query) ||
+        p.descriptionEn.toLowerCase().includes(query) ||
+        (p.categoryKo?.toLowerCase().includes(query) ?? false) ||
+        (p.categoryEn?.toLowerCase().includes(query) ?? false)
+      );
     }
     list = [...list].sort((a, b) => {
       if (sortBy === "latest") {
@@ -137,6 +141,11 @@ export default function ProductsPage() {
   useEffect(() => {
     setCurrentPage(1);
   }, [activeCategory, locale, search, imageSearchResults]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setSearch(searchInput), 250);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   function handleSearchSubmit(event: FormEvent) {
     event.preventDefault();

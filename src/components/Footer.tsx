@@ -50,6 +50,18 @@ export function Footer() {
                 </div>
               ))}
             </div>
+            <div className={styles.partnersMarquee} aria-hidden="true">
+              <div className={styles.marqueeTrack}>
+                {Array.from({ length: 14 }, (_, index) => (
+                  <div className={styles.partnerLogo} key={index}>
+                    <img
+                      src={`/images/logo_png-${(index % 7) + 1}.png`}
+                      alt=""
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}

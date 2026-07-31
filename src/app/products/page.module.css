@@ -409,18 +409,39 @@
     gap: 12px;
   }
 
+  .toolbar {
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+
   .tabs {
-    gap: 6px 8px;
-    overflow-x: auto;
+    gap: 6px;
     flex-wrap: nowrap;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 14px;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .tab {
     font-size: 12px;
-    padding: 6px 10px;
+    padding: 6px 12px;
     white-space: nowrap;
     flex: 0 0 auto;
+    border: 1px solid var(--brand-gray-100);
+  }
+
+  .tabActive {
+    border-color: var(--brand-navy);
+  }
+
+  .sortRow {
+    gap: 10px;
+    font-size: 12px;
   }
 
   .container {

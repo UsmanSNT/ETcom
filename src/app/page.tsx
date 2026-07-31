@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import {
   CapIcon,
@@ -53,25 +53,93 @@ const fallbackProducts = [
   "식물성장 LED",
 ];
 
-const readings = [
-  { label: "온도", value: "24.6", unit: "°C" },
-  { label: "습도", value: "56.8", unit: "%" },
-  { label: "CO₂", value: "682", unit: "ppm" },
-  { label: "조도", value: "12,400", unit: "lux" },
+type SensorConfig = {
+  label: string;
+  unit: string;
+  base: number;
+  min: number;
+  max: number;
+  decimals: number;
+  format?: (v: number) => string;
+};
+
+const SENSOR_CONFIGS: SensorConfig[] = [
+  { label: "온도", unit: "°C", base: 24.6, min: 23.5, max: 25.8, decimals: 1 },
+  { label: "습도", unit: "%", base: 56.8, min: 52, max: 62, decimals: 1 },
+  { label: "CO₂", unit: "ppm", base: 682, min: 620, max: 750, decimals: 0 },
+  { label: "조도", unit: "lux", base: 12400, min: 11000, max: 14000, decimals: 0, format: (v) => Math.round(v).toLocaleString() },
 ];
 
-function TrendLine() {
+function randomWalk(prev: number, min: number, max: number, step: number) {
+  const next = prev + (Math.random() - 0.5) * step;
+  return Math.min(max, Math.max(min, next));
+}
+
+function SparkLine({ history, min, max }: { history: number[]; min: number; max: number }) {
+  if (history.length < 2) return null;
+  const range = max - min || 1;
+  const w = 120;
+  const h = 28;
+  const pad = 2;
+  const points = history.map((v, i) => {
+    const x = (i / (history.length - 1)) * w;
+    const y = pad + (1 - (v - min) / range) * (h - pad * 2);
+    return `${x} ${y}`;
+  });
+  const d = `M${points.join(" L")}`;
   return (
-    <svg className={styles.sparkline} viewBox="0 0 120 28" aria-hidden="true">
-      <path d="M0 22 13 15 25 20 39 9 53 17 68 7 82 15 98 6 110 11 120 4" />
+    <svg className={styles.sparkline} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
+      <path d={d} />
     </svg>
   );
 }
+
+const MENU_ITEMS = ["대시보드", "실시간 모니터링", "데이터 분석", "AI 예측", "알림 관리", "설정"];
 
 export default function Home() {
   const { t, locale } = useLanguage();
   const [products, setProducts] = useState<Product[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
+
+  /* ── Dashboard animation state ── */
+  const [sensorHistories, setSensorHistories] = useState<number[][]>(() =>
+    SENSOR_CONFIGS.map((s) => [s.base]),
+  );
+  const [activeMenu, setActiveMenu] = useState(0);
+  const [warningActive, setWarningActive] = useState(false);
+  const warningTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  // Sensor value updates every 2s
+  useEffect(() => {
+    const id = setInterval(() => {
+      setSensorHistories((prev) =>
+        prev.map((hist, i) => {
+          const cfg = SENSOR_CONFIGS[i];
+          const step = (cfg.max - cfg.min) * 0.25;
+          const next = randomWalk(hist[hist.length - 1], cfg.min, cfg.max, step);
+          const updated = [...hist, next];
+          return updated.length > 10 ? updated.slice(-10) : updated;
+        }),
+      );
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Warning flash every 8-10s
+  useEffect(() => {
+    function scheduleWarning() {
+      const delay = 8000 + Math.random() * 2000;
+      warningTimer.current = setTimeout(() => {
+        setWarningActive(true);
+        setTimeout(() => {
+          setWarningActive(false);
+          scheduleWarning();
+        }, 2000);
+      }, delay);
+    }
+    scheduleWarning();
+    return () => clearTimeout(warningTimer.current);
+  }, []);
 
   useEffect(() => {
     fetch("/api/products")
@@ -147,32 +215,39 @@ export default function Home() {
 
           <div className={styles.dashboardCard}>
             <aside className={styles.dashboardMenu}>
-              {["대시보드", "실시간 모니터링", "데이터 분석", "AI 예측", "알림 관리", "설정"].map(
-                (item, index) => (
-                  <span className={index === 0 ? styles.menuActive : ""} key={item}>
-                    <i aria-hidden="true">⊙</i> {item}
-                  </span>
-                ),
-              )}
+              {MENU_ITEMS.map((item, index) => (
+                <span
+                  className={index === activeMenu ? styles.menuActive : ""}
+                  key={item}
+                  onClick={() => setActiveMenu(index)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <i aria-hidden="true">⊙</i> {item}
+                </span>
+              ))}
             </aside>
-            <div className={styles.dashboardContent}>
+            <div className={`${styles.dashboardContent} ${styles.dashboardFade}`} key={activeMenu}>
               <div className={styles.statGrid}>
-                {readings.map((reading) => (
-                  <div className={styles.statTile} key={reading.label}>
-                    <p>{reading.label}</p>
-                    <strong>
-                      {reading.value}
-                      <small>{reading.unit}</small>
-                    </strong>
-                    <TrendLine />
-                  </div>
-                ))}
+                {SENSOR_CONFIGS.map((cfg, i) => {
+                  const current = sensorHistories[i][sensorHistories[i].length - 1];
+                  const display = cfg.format ? cfg.format(current) : current.toFixed(cfg.decimals);
+                  return (
+                    <div className={styles.statTile} key={cfg.label}>
+                      <p>{cfg.label}</p>
+                      <strong>
+                        {display}
+                        <small>{cfg.unit}</small>
+                      </strong>
+                      <SparkLine history={sensorHistories[i]} min={cfg.min} max={cfg.max} />
+                    </div>
+                  );
+                })}
               </div>
               <div className={styles.dashboardBottom}>
-                <div className={styles.predictionCard}>
+                <div className={`${styles.predictionCard} ${warningActive ? styles.predictionWarning : ""}`}>
                   <p>AI 예측 결과</p>
-                  <strong>＋ 이상 없음</strong>
-                  <span>모든 환경이 정상 범위입니다.</span>
+                  <strong>{warningActive ? "⚠ 주의 필요" : "＋ 이상 없음"}</strong>
+                  <span>{warningActive ? "일부 환경 수치가 변동 중입니다." : "모든 환경이 정상 범위입니다."}</span>
                 </div>
                 <div className={styles.chartCard}>
                   <div className={styles.chartHeading}>
@@ -181,7 +256,7 @@ export default function Home() {
                   </div>
                   <svg viewBox="0 0 360 88" aria-label="24시간 온도 예측 그래프">
                     <path className={styles.gridLine} d="M0 22H360M0 48H360M0 74H360" />
-                    <path className={styles.mainChart} d="M0 60C30 76 42 18 80 31S125 59 160 55 204 26 240 42 290 68 360 44" />
+                    <path className={`${styles.mainChart} ${styles.chartAnimate}`} d="M0 60C30 76 42 18 80 31S125 59 160 55 204 26 240 42 290 68 360 44" />
                     <circle cx="240" cy="42" r="4" />
                   </svg>
                   <div className={styles.chartTimes}>
