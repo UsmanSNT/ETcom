@@ -60,11 +60,23 @@ export default async function ProductDetailPage({
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) notFound();
-  const savedCategories = await prisma.productCategory.findMany({
-    orderBy: { order: "asc" },
-    select: { nameKo: true, nameEn: true },
-  });
-  const categories = savedCategories.map((c) => ({ ko: c.nameKo, en: c.nameEn }));
+  let categories: Array<{ ko: string; en: string }> = [];
+  try {
+    const savedCategories = await prisma.productCategory.findMany({
+      orderBy: { order: "asc" },
+      select: { nameKo: true, nameEn: true },
+    });
+    categories = savedCategories.map((c) => ({ ko: c.nameKo, en: c.nameEn }));
+  } catch {
+    const allCats = await prisma.product.findMany({
+      where: { isPublished: true },
+      select: { categoryKo: true, categoryEn: true },
+      distinct: ["categoryKo", "categoryEn"],
+    });
+    categories = allCats
+      .filter((c) => c.categoryKo || c.categoryEn)
+      .map((c) => ({ ko: c.categoryKo ?? "", en: c.categoryEn ?? "" }));
+  }
 
   const relatedProducts = await prisma.product.findMany({
     where: { isPublished: true, id: { not: product.id } },

@@ -6,10 +6,14 @@ export async function GET(req: NextRequest) {
   if (!getAdminFromRequest(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const categories = await prisma.productCategory.findMany({
-    orderBy: { order: "asc" },
-  });
-  return NextResponse.json(categories);
+  try {
+    const categories = await prisma.productCategory.findMany({
+      orderBy: { order: "asc" },
+    });
+    return NextResponse.json(categories);
+  } catch {
+    return NextResponse.json([]);
+  }
 }
 
 export async function POST(req: NextRequest) {
