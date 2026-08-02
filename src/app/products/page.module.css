@@ -32,11 +32,10 @@
 
 .sidebarItem {
   width: 100%;
-  min-height: 48px;
-  display: grid;
-  grid-template-columns: 31px minmax(0, 1fr) auto;
+  min-height: 44px;
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 9px 12px;
   border: 0;
   border-radius: 8px;
@@ -44,27 +43,30 @@
   color: #39465a;
   font: inherit;
   font-size: 13px;
+  font-weight: 600;
   text-align: left;
+  white-space: nowrap;
   cursor: pointer;
 }
 
 .sidebarItem:hover { background: #f5f7fa; }
 .sidebarItemActive { background: #f0f3f7; color: var(--brand-navy); font-weight: 800; }
 .sidebarIcon {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   color: #53657c;
-  text-align: center;
 }
 
 .sidebarIcon svg {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   display: block;
   stroke-width: 1.65;
 }
 .sidebarItem small { color: #8b96a5; font-size: 10px; }
-.sidebarItem b { color: #7b8796; font-size: 18px; font-weight: 400; }
+.sidebarItem b { margin-left: auto; color: #7b8796; font-size: 18px; font-weight: 400; }
 
 .sidebarContact {
   margin-top: 34px;
