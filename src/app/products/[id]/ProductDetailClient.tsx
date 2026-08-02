@@ -1,20 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
-import { StarRatingDisplay, StarRatingInput } from "@/components/StarRating";
+import { StarRatingDisplay } from "@/components/StarRating";
 import styles from "./page.module.css";
 
 const ZOOM_SCALE = 2.4;
-
-type Review = {
-  id: string;
-  rating: number;
-  comment: string | null;
-  authorName: string | null;
-  createdAt: string;
-};
 
 type Product = {
   id: string;
@@ -66,63 +58,8 @@ export function ProductDetailClient({
   const [lens, setLens] = useState({ left: 0, top: 0, width: 0, height: 0 });
   const frameRef = useRef<HTMLDivElement>(null);
 
-  const reviewStorageKey = `reviewed:${product.id}`;
-  const [avgRating, setAvgRating] = useState(product.avgRating);
-  const [reviewCount, setReviewCount] = useState(product.reviewCount);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [ratingInput, setRatingInput] = useState(0);
-  const [comment, setComment] = useState("");
-  const [authorName, setAuthorName] = useState("");
-  const [reviewStatus, setReviewStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [alreadyReviewed, setAlreadyReviewed] = useState(false);
-
-  useEffect(() => {
-    setAlreadyReviewed(Boolean(typeof window !== "undefined" && window.localStorage.getItem(reviewStorageKey)));
-  }, [reviewStorageKey]);
-
-  useEffect(() => {
-    fetch(`/api/products/${product.id}/reviews`)
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data: Review[]) => setReviews(data.filter((r) => r.comment)))
-      .catch(() => setReviews([]));
-  }, [product.id]);
-
-  async function handleReviewSubmit(event: FormEvent) {
-    event.preventDefault();
-    if (ratingInput < 1) {
-      setReviewStatus("error");
-      return;
-    }
-    setReviewStatus("loading");
-    try {
-      const res = await fetch(`/api/products/${product.id}/reviews`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          rating: ratingInput,
-          comment: comment.trim() || undefined,
-          authorName: authorName.trim() || undefined,
-        }),
-      });
-      if (!res.ok) throw new Error("failed");
-      const created: Review = await res.json();
-
-      setReviewCount((count) => {
-        const nextCount = count + 1;
-        setAvgRating((avg) => ((avg ?? 0) * count + ratingInput) / nextCount);
-        return nextCount;
-      });
-      if (created.comment) setReviews((list) => [created, ...list]);
-      window.localStorage.setItem(reviewStorageKey, "1");
-      setAlreadyReviewed(true);
-      setRatingInput(0);
-      setComment("");
-      setAuthorName("");
-      setReviewStatus("success");
-    } catch {
-      setReviewStatus("error");
-    }
-  }
+  const [avgRating] = useState(product.avgRating);
+  const [reviewCount] = useState(product.reviewCount);
 
   useEffect(() => {
     if (!zoomed) return;
@@ -254,58 +191,12 @@ export function ProductDetailClient({
           <p className={styles.desc}>{locale === "ko" ? product.descriptionKo : product.descriptionEn}</p>
 
           <div className={styles.reviewBox}>
-            {alreadyReviewed ? (
-              <p className={styles.reviewNote}>{t.products.alreadyReviewed}</p>
-            ) : (
-              <form onSubmit={handleReviewSubmit}>
-                <div className={styles.reviewBoxTitle}>{t.products.rateProductLabel}</div>
-                <StarRatingInput value={ratingInput} onChange={setRatingInput} />
-                <p className={styles.reviewHint}>{t.products.rateOptionalHint}</p>
-                <textarea
-                  className={styles.reviewTextarea}
-                  value={comment}
-                  onChange={(event) => setComment(event.target.value)}
-                  placeholder={t.products.commentPlaceholder}
-                  rows={3}
-                />
-                <input
-                  className={styles.reviewNameInput}
-                  value={authorName}
-                  onChange={(event) => setAuthorName(event.target.value)}
-                  placeholder={t.products.namePlaceholder}
-                  maxLength={60}
-                />
-                <button type="submit" className={styles.reviewSubmitBtn} disabled={reviewStatus === "loading"}>
-                  {t.products.submitReview}
-                </button>
-                {reviewStatus === "error" && ratingInput < 1 && (
-                  <p className={styles.reviewError}>{t.products.ratingRequired}</p>
-                )}
-                {reviewStatus === "error" && ratingInput >= 1 && (
-                  <p className={styles.reviewError}>{t.products.reviewSubmitError}</p>
-                )}
-              </form>
-            )}
-            {reviewStatus === "success" && <p className={styles.reviewSuccess}>{t.products.reviewSubmitted}</p>}
+            <div className={styles.reviewBoxTitle}>{locale === "ko" ? "제품 문의" : "Product Inquiry"}</div>
+            <p className={styles.reviewHint}>{locale === "ko" ? "이 제품에 대해 궁금한 점이 있으신가요? 전문 엔지니어가 신속히 답변드립니다." : "Have questions about this product? Our engineers will respond quickly."}</p>
+            <Link href="/contact" className={styles.reviewSubmitBtn} style={{ display: "inline-flex", textDecoration: "none", textAlign: "center", justifyContent: "center" }}>
+              {locale === "ko" ? "문의하기" : "Contact Us"} →
+            </Link>
           </div>
-
-          {reviews.length > 0 && (
-            <div className={styles.reviewList}>
-              <div className={styles.reviewBoxTitle}>{t.products.recentReviewsLabel}</div>
-              {reviews.map((review) => (
-                <div key={review.id} className={styles.reviewItem}>
-                  <div className={styles.reviewItemHead}>
-                    <StarRatingDisplay value={review.rating} size={12} />
-                    {review.authorName && <span className={styles.reviewAuthor}>{review.authorName}</span>}
-                    <time className={styles.reviewDate}>
-                      {new Date(review.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")}
-                    </time>
-                  </div>
-                  <p className={styles.reviewComment}>{review.comment}</p>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 

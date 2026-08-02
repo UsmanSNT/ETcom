@@ -6,7 +6,6 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { StarRatingDisplay } from "@/components/StarRating";
 import {
   CameraIcon,
-  CartIcon,
   CloseIcon,
   CubeIcon,
   GridIcon,
@@ -171,7 +170,6 @@ export default function ProductsPage() {
       )}
 
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
-        <div className={styles.sidebarTitle}>SHOP</div>
         <nav className={styles.sidebarNav} aria-label="Product categories">
           <button
             type="button"
@@ -351,9 +349,6 @@ export default function ProductsPage() {
                     )}
                     <div className={styles.cardBottom}>
                       <span className={styles.cardPrice}>{p.price ? `₩ ${p.price.toLocaleString()}` : ""}</span>
-                      <span className={styles.cartBtn}>
-                        <CartIcon width={15} height={15} />
-                      </span>
                     </div>
                   </div>
                 </Link>

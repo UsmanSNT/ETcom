@@ -662,7 +662,7 @@
 .thumb {
   width: 100%;
   aspect-ratio: 1;
-  background: var(--brand-gray-50);
+  background: transparent;
   object-fit: contain;
   padding: 14px;
   display: block;
