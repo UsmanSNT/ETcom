@@ -248,13 +248,17 @@ export default function Home() {
       <section className={styles.aiSection}>
         <div className={styles.aiInner}>
           <div className={styles.aiIntro}>
-            <div>
+            <div className={styles.aiIntroLeft}>
               <p className={styles.aiLabel}>{t.home.aiExperienceLabel}</p>
               <h2 className={styles.aiTitle}>
                 {t.home.aiExperienceTitle1}
                 <br />
                 {t.home.aiExperienceTitle2}
               </h2>
+              <p className={styles.aiDesc}>{t.home.aiExperienceDesc}</p>
+              <Link href="/business" className={styles.aiMore}>
+                {t.home.aiMore} <span aria-hidden="true">→</span>
+              </Link>
             </div>
 
             <div className={styles.aiSteps}>
@@ -273,19 +277,13 @@ export default function Home() {
                   >
                     <StepIcon className={styles.aiStepIcon} />
                     <div>
-                      <strong>
-                        {String(title)}
-                      </strong>
+                      <strong>{String(title)}</strong>
                       <p>{String(description)}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
-
-            <Link href="/business" className={styles.aiMore}>
-              {t.home.aiMore} <span aria-hidden="true">→</span>
-            </Link>
           </div>
 
           <div className={styles.dashboardCard}>

@@ -20,19 +20,20 @@
 
 .aiSection { padding: 44px 40px; background: radial-gradient(circle at 22% 15%, #062b51, transparent 33%), #00152b; color: white; }
 .aiInner { width: min(1320px, 100%); min-height: 430px; margin: auto; display: grid; grid-template-columns: 45% 55%; gap: 24px; align-items: start; }
-.aiIntro { display: flex; flex-direction: column; gap: 32px; padding: 20px 42px 20px 0; position: relative; }
-.aiLabel { margin-bottom: 20px; font-size: 11px; font-weight: 700; opacity: .65; }
+.aiIntro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 20px 0; }
+.aiIntroLeft { display: flex; flex-direction: column; gap: 20px; }
+.aiLabel { font-size: 11px; font-weight: 700; opacity: .65; letter-spacing: .08em; }
 .aiTitle { font-size: 28px; line-height: 1.55; letter-spacing: -.03em; white-space: nowrap; }
-.aiSteps { display: flex; flex-direction: column; gap: 26px; }
-.aiStep { display: flex; align-items: flex-start; gap: 19px; }
-.aiStepIcon { width: 52px; height: 52px; flex: 0 0 auto; color: #28a8ff; stroke-width: 1.65; }
-.aiStep { padding: 10px 14px; border-radius: 8px; transition: background .2s; }
+.aiDesc { font-size: 14px; line-height: 1.8; color: #a5b3c3; white-space: pre-line; }
+.aiSteps { display: flex; flex-direction: column; gap: 16px; }
+.aiStep { display: flex; align-items: flex-start; gap: 19px; padding: 14px 18px; border-radius: 10px; transition: background .2s; cursor: pointer; }
 .aiStep:hover { background: rgba(40, 168, 255, .1); }
 .aiStepActive { background: rgba(40, 168, 255, .15); }
+.aiStepIcon { width: 44px; height: 44px; flex: 0 0 auto; color: #28a8ff; stroke-width: 1.65; }
 .aiStepActive .aiStepIcon { color: #fff; }
-.aiStep strong { display: block; margin-bottom: 7px; font-size: 13px; }
-.aiStep p { color: #a5b3c3; font-size: 11px; line-height: 1.7; }
-.aiMore { position: absolute; left: 0; bottom: -16px; display: flex; gap: 34px; font-size: 12px; font-weight: 600; }
+.aiStep strong { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 800; }
+.aiStep p { color: #a5b3c3; font-size: 12px; line-height: 1.7; }
+.aiMore { display: flex; align-items: center; gap: 16px; font-size: 13px; font-weight: 700; color: #fff; }
 
 .dashboardCard {
   min-height: 380px; display: grid; grid-template-columns: 1fr; gap: 14px; padding: 24px 20px 20px;
@@ -135,8 +136,7 @@
 @media (max-width: 1050px) {
   .heroCopy { padding-left: 0; }
   .aiInner { grid-template-columns: 1fr; gap: 40px; }
-  .aiIntro { padding-right: 0; }
-  .aiMore { bottom: -10px; }
+  .aiIntro { gap: 32px; }
   .solutionsGrid, .productsGrid { grid-template-columns: repeat(3, 1fr); }
   .solutionItem:nth-child(3) { border-right: 0; }
   .productVisual { border-right: 0; }
@@ -162,8 +162,7 @@
   .heroSubtitle { font-size: 14px; }
   .textLink { margin-top: 32px; }
   .aiSection { padding: 45px 20px; }
-  .aiIntro { grid-template-columns: 1fr; }
-  .aiMore { position: static; margin-top: 4px; }
+  .aiIntro { grid-template-columns: 1fr; gap: 24px; }
   .dashboardCard { grid-template-columns: 1fr; padding: 14px; }
   .dashboardMenu {
     flex-direction: row;
