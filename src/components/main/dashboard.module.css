@@ -21,7 +21,7 @@
 .sensorRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .sensorCard { padding: 14px 16px; border-radius: 8px; background: #112941; }
 .sensorHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.sensorIcon { font-size: 18px; }
+.sensorIconWrap { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0; }
 .sensorLabel { color: #8293a7; font-size: 11px; }
 .sensorValue { display: flex; align-items: baseline; gap: 4px; }
 .sensorValue strong { font-size: 28px; color: #fff; }
@@ -62,14 +62,14 @@
 .insightCard { padding: 16px; border-radius: 8px; background: #112941; }
 .insightItem { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(30,58,95,0.5); }
 .insightItem:last-child { border-bottom: 0; }
-.insightIcon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.insightIconWrap { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background: rgba(59,130,246,0.1); flex-shrink: 0; }
 .insightItem strong { display: block; color: #fff; font-size: 12px; margin-bottom: 4px; }
 .insightItem p { color: #8293a7; font-size: 10px; line-height: 1.5; margin: 0; }
 
 .controlRecommend { padding: 16px; border-radius: 8px; background: #112941; }
 .controlItem { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(30,58,95,0.4); }
 .controlItem:last-of-type { border-bottom: 0; }
-.controlIcon { font-size: 16px; }
+.controlIconWrap { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 6px; background: rgba(59,130,246,0.1); flex-shrink: 0; }
 .controlLabel { flex: 1; color: #c0cfe0; font-size: 11px; }
 .controlBadge { padding: 3px 10px; border-radius: 4px; color: #fff; font-size: 10px; font-weight: 600; }
 
@@ -96,7 +96,7 @@
 
 .deviceGrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 .deviceCard { padding: 12px; border-radius: 8px; background: #0a1f38; text-align: center; }
-.deviceIcon { font-size: 22px; margin-bottom: 6px; }
+.deviceIconWrap { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
 .deviceLabel { color: #8293a7; font-size: 10px; margin-bottom: 6px; }
 .deviceStatus { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .deviceToggleRow { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }

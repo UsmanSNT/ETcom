@@ -6,7 +6,7 @@ import styles from "./dashboard.module.css";
 type SensorConfig = {
   label: string;
   unit: string;
-  icon: string;
+  color: string;
   base: number;
   min: number;
   max: number;
@@ -15,11 +15,51 @@ type SensorConfig = {
 };
 
 const SENSORS: SensorConfig[] = [
-  { label: "온도", unit: "℃", icon: "🌡", base: 25.0, min: 23.5, max: 26.5, decimals: 1 },
-  { label: "습도", unit: "%", icon: "💧", base: 56.0, min: 50, max: 65, decimals: 1 },
-  { label: "CO₂", unit: "ppm", icon: "🌫", base: 709, min: 620, max: 800, decimals: 0 },
-  { label: "조도", unit: "lux", icon: "☀", base: 11566, min: 9000, max: 14000, decimals: 0, format: (v) => Math.round(v).toLocaleString() },
+  { label: "온도", unit: "℃", color: "#ef4444", base: 25.0, min: 23.5, max: 26.5, decimals: 1 },
+  { label: "습도", unit: "%", color: "#3b82f6", base: 56.0, min: 50, max: 65, decimals: 1 },
+  { label: "CO₂", unit: "ppm", color: "#8b5cf6", base: 709, min: 620, max: 800, decimals: 0 },
+  { label: "조도", unit: "lux", color: "#f59e0b", base: 11566, min: 9000, max: 14000, decimals: 0, format: (v) => Math.round(v).toLocaleString() },
 ];
+
+function ThermometerIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+      <line x1="11.5" y1="8" x2="11.5" y2="14" />
+    </svg>
+  );
+}
+
+function HumidityIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+    </svg>
+  );
+}
+
+function Co2Icon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6.5 18.5a4.5 4.5 0 0 1-.42-8.98 7 7 0 0 1 13.84 0A4.5 4.5 0 0 1 17.5 18.5H6.5z" />
+      <text x="12" y="16" fill="#8b5cf6" stroke="none" fontSize="6" fontWeight="700" textAnchor="middle">CO₂</text>
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+  );
+}
+
+const SENSOR_ICONS = [ThermometerIcon, HumidityIcon, Co2Icon, SunIcon];
 
 function randomWalk(prev: number, min: number, max: number, step: number) {
   return Math.min(max, Math.max(min, prev + (Math.random() - 0.5) * step));
@@ -110,10 +150,13 @@ export default function CollectDashboard() {
           const diffStr = s.format
             ? Math.abs(ch.diff).toFixed(0)
             : Math.abs(ch.diff).toFixed(s.decimals);
+          const Icon = SENSOR_ICONS[i];
           return (
             <div className={styles.sensorCard} key={s.label}>
               <div className={styles.sensorHeader}>
-                <span className={styles.sensorIcon}>{s.icon}</span>
+                <span className={styles.sensorIconWrap} style={{ background: `${s.color}18` }}>
+                  <Icon />
+                </span>
                 <span className={styles.sensorLabel}>{s.label}</span>
               </div>
               <div className={styles.sensorValue}>
@@ -121,7 +164,7 @@ export default function CollectDashboard() {
                 <small>{s.unit}</small>
               </div>
               <div className={`${styles.sensorChange} ${ch.up ? styles.changeUp : styles.changeDown}`}>
-                {ch.up ? "↑" : "↓"} {diffStr}{s.unit === "℃" ? "℃" : s.unit === "%" ? "%" : s.unit === "ppm" ? "ppm" : "lux"}
+                {ch.up ? "▲" : "▼"} {diffStr}{s.unit}
               </div>
             </div>
           );
@@ -167,10 +210,9 @@ export default function CollectDashboard() {
             </select>
           </div>
           <div className={styles.trendLegend}>
-            <span><i style={{ background: "#3b82f6" }} />온도(℃)</span>
-            <span><i style={{ background: "#22c55e" }} />습도(%)</span>
-            <span><i style={{ background: "#eab308" }} />CO₂(ppm)</span>
-            <span><i style={{ background: "#a855f7" }} />조도(lux)</span>
+            {SENSORS.map((s) => (
+              <span key={s.label}><i style={{ background: s.color }} />{s.label}({s.unit})</span>
+            ))}
           </div>
           <svg viewBox="0 0 600 200" className={styles.trendSvg}>
             {[0, 1, 2, 3, 4].map((i) => (
@@ -180,9 +222,7 @@ export default function CollectDashboard() {
               <text key={t} x={40 + i * 135} y="195" fill="#6b7f96" fontSize="10" textAnchor="middle">{t}</text>
             ))}
             {trendData.map((series, si) => {
-              const colors = ["#3b82f6", "#22c55e", "#eab308", "#a855f7"];
               const s = SENSORS[si];
-              const useRight = si >= 2;
               const minV = s.min;
               const maxV = s.max;
               const rangeV = maxV - minV || 1;
@@ -196,7 +236,7 @@ export default function CollectDashboard() {
                   key={si}
                   points={pts.join(" ")}
                   fill="none"
-                  stroke={colors[si]}
+                  stroke={s.color}
                   strokeWidth="1.5"
                   opacity="0.85"
                 />

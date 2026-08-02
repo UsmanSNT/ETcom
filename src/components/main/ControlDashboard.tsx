@@ -1,23 +1,78 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import styles from "./dashboard.module.css";
 
 type Device = {
-  icon: string;
+  icon: ReactNode;
   label: string;
   status: string;
   auto: boolean;
   detail: string;
 };
 
+function FanIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="2" />
+      <path d="M12 2C6.5 2 2 6.5 2 12c4-1 7-4 7-7 0 5 4 9 9 5 0-5-2.5-8-6-8z" />
+      <path d="M12 22c5.5 0 10-4.5 10-10-4 1-7 4-7 7 0-5-4-9-9-5 0 5 2.5 8 6 8z" />
+    </svg>
+  );
+}
+
+function LedIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 18h6" /><path d="M10 22h4" />
+      <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5" />
+    </svg>
+  );
+}
+
+function PumpIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+    </svg>
+  );
+}
+
+function HvacIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 12h10" /><path d="M12 2v10" />
+      <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25" />
+      <path d="M8 16l-3.2 3.2" /><path d="M14 16l3 3" />
+    </svg>
+  );
+}
+
+function WindowIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <line x1="12" y1="3" x2="12" y2="21" /><line x1="3" y1="12" x2="21" y2="12" />
+      <path d="M7 7l2 2" /><path d="M15 7l2 2" />
+    </svg>
+  );
+}
+
+function Co2GenIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6.5 18.5a4.5 4.5 0 0 1-.42-8.98 7 7 0 0 1 13.84 0A4.5 4.5 0 0 1 17.5 18.5H6.5z" />
+    </svg>
+  );
+}
+
 const INITIAL_DEVICES: Device[] = [
-  { icon: "💨", label: "환기 팬", status: "ON", auto: true, detail: "풍속 70%" },
-  { icon: "💡", label: "LED 조명", status: "OFF", auto: false, detail: "밝기 0%" },
-  { icon: "💧", label: "양액 펌프", status: "AUTO", auto: true, detail: "주기 15분 / 10초" },
-  { icon: "❄", label: "냉난방기", status: "AUTO", auto: true, detail: "설정 24.0℃" },
-  { icon: "🪟", label: "창문 개폐기", status: "CLOSE", auto: true, detail: "닫힘" },
-  { icon: "🌫", label: "CO₂ 발생기", status: "OFF", auto: false, detail: "CO₂ 800ppm" },
+  { icon: <FanIcon />, label: "환기 팬", status: "ON", auto: true, detail: "풍속 70%" },
+  { icon: <LedIcon />, label: "LED 조명", status: "OFF", auto: false, detail: "밝기 0%" },
+  { icon: <PumpIcon />, label: "양액 펌프", status: "AUTO", auto: true, detail: "주기 15분 / 10초" },
+  { icon: <HvacIcon />, label: "냉난방기", status: "AUTO", auto: true, detail: "설정 24.0℃" },
+  { icon: <WindowIcon />, label: "창문 개폐기", status: "CLOSE", auto: true, detail: "닫힘" },
+  { icon: <Co2GenIcon />, label: "CO₂ 발생기", status: "OFF", auto: false, detail: "CO₂ 800ppm" },
 ];
 
 function randomWalk(prev: number, min: number, max: number, step: number) {
@@ -55,14 +110,6 @@ export default function ControlDashboard() {
     return () => clearInterval(id);
   }, []);
 
-  const toggleDevice = (index: number) => {
-    setDevices((prev) => prev.map((d, i) => {
-      if (i !== index) return d;
-      const newStatus = d.status === "ON" ? "OFF" : d.status === "OFF" ? "ON" : d.status;
-      return { ...d, status: newStatus };
-    }));
-  };
-
   const toggleAuto = (index: number) => {
     setDevices((prev) => prev.map((d, i) => {
       if (i !== index) return d;
@@ -94,7 +141,7 @@ export default function ControlDashboard() {
           <div className={styles.deviceGrid}>
             {devices.map((d, i) => (
               <div className={styles.deviceCard} key={i}>
-                <div className={styles.deviceIcon}>{d.icon}</div>
+                <div className={styles.deviceIconWrap}>{d.icon}</div>
                 <div className={styles.deviceLabel}>{d.label}</div>
                 <div className={styles.deviceStatus} style={{ color: statusColor(d.status) }}>{d.status}</div>
                 <div className={styles.deviceToggleRow}>

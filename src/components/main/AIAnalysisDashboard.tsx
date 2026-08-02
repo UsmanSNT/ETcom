@@ -10,16 +10,71 @@ function randomWalk(prev: number, min: number, max: number, step: number) {
 const ANOMALY_INIT = { caution: 1, warning: 1, danger: 0, normal: 128 };
 
 const INSIGHTS = [
-  { icon: "🌡", title: "온도 상승 패턴 감지", desc: "최근 온도 상승 속도가 평소보다 15% 빠르게 나타나고 있습니다." },
-  { icon: "🌫", title: "CO₂ 농도 예측", desc: "향후 3시간 내 CO₂ 농도가 850ppm 이상으로 상승할 것으로 예측됩니다." },
-  { icon: "🌱", title: "생육 최적 구간", desc: "현재 환경은 작물 생육에 최적화된 상태입니다." },
+  {
+    title: "온도 상승 패턴 감지",
+    desc: "최근 온도 상승 속도가 평소보다 15% 빠르게 나타나고 있습니다.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: "CO₂ 농도 예측",
+    desc: "향후 3시간 내 CO₂ 농도가 850ppm 이상으로 상승할 것으로 예측됩니다.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6.5 18.5a4.5 4.5 0 0 1-.42-8.98 7 7 0 0 1 13.84 0A4.5 4.5 0 0 1 17.5 18.5H6.5z" />
+      </svg>
+    ),
+  },
+  {
+    title: "생육 최적 구간",
+    desc: "현재 환경은 작물 생육에 최적화된 상태입니다.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M7 20h10" /><path d="M10 20c5.5-2.5 6-9.5 1-12.5C10.5 10 10 14 10 14s-2-3.5-1-7c-4 2-5 8-2 13" />
+      </svg>
+    ),
+  },
 ];
 
 const CONTROLS = [
-  { icon: "💨", label: "환기 팬 속도 조절", status: "자동", color: "#3b82f6" },
-  { icon: "🌿", label: "CO₂ 공급 케어", status: "권장", color: "#f59e0b" },
-  { icon: "💡", label: "LED 밝기 조절", status: "권장", color: "#f59e0b" },
-  { icon: "🌡", label: "양액 온도 조절", status: "유지", color: "#22c55e" },
+  {
+    label: "환기 팬 속도 조절", status: "자동", color: "#3b82f6",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 12m0-1a1 1 0 1 0 0 2 1 1 0 1 0 0-2" />
+        <path d="M14.5 7.5a5 5 0 0 0-7 7l4.5 4.5a5 5 0 0 0 7-7L14.5 7.5z" />
+        <path d="M9.5 16.5a5 5 0 0 0 7-7L12 5a5 5 0 0 0-7 7l4.5 4.5z" />
+      </svg>
+    ),
+  },
+  {
+    label: "CO₂ 공급 케어", status: "권장", color: "#f59e0b",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6.5 18.5a4.5 4.5 0 0 1-.42-8.98 7 7 0 0 1 13.84 0A4.5 4.5 0 0 1 17.5 18.5H6.5z" />
+      </svg>
+    ),
+  },
+  {
+    label: "LED 밝기 조절", status: "권장", color: "#f59e0b",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 18h6" /><path d="M10 22h4" />
+        <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5" />
+      </svg>
+    ),
+  },
+  {
+    label: "양액 온도 조절", status: "유지", color: "#22c55e",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+      </svg>
+    ),
+  },
 ];
 
 export default function AIAnalysisDashboard() {
@@ -110,9 +165,8 @@ export default function AIAnalysisDashboard() {
           </div>
           <div className={styles.predLegend}>
             <span><i style={{ background: "#3b82f6" }} />실측 온도(℃)</span>
-            <span style={{ borderBottom: "2px dashed #22c55e", lineHeight: "0.6" }}> </span><span>AI 예측 온도(℃)</span>
-            <span style={{ borderBottom: "2px dashed #ef4444", lineHeight: "0.6" }}> </span><span>상한선</span>
-            <span style={{ borderBottom: "2px dashed #ef4444", lineHeight: "0.6", opacity: 0.5 }}> </span><span>하한선</span>
+            <span><i style={{ background: "#22c55e", height: 2, borderTop: "1px dashed #22c55e" }} />AI 예측 온도(℃)</span>
+            <span><i style={{ background: "transparent", borderTop: "1px dashed #ef4444", height: 2 }} />상한/하한선</span>
           </div>
           <svg viewBox="0 0 600 180" className={styles.trendSvg}>
             <line x1="40" y1="20" x2="560" y2="20" stroke="#ef4444" strokeWidth="1" strokeDasharray="6 3" opacity="0.6" />
@@ -153,7 +207,7 @@ export default function AIAnalysisDashboard() {
           <h3>AI 인사이트</h3>
           {INSIGHTS.map((ins, i) => (
             <div className={styles.insightItem} key={i}>
-              <span className={styles.insightIcon}>{ins.icon}</span>
+              <span className={styles.insightIconWrap}>{ins.icon}</span>
               <div>
                 <strong>{ins.title}</strong>
                 <p>{ins.desc}</p>
@@ -166,7 +220,7 @@ export default function AIAnalysisDashboard() {
           <h3>AI 추천 제어</h3>
           {CONTROLS.map((c, i) => (
             <div className={styles.controlItem} key={i}>
-              <span className={styles.controlIcon}>{c.icon}</span>
+              <span className={styles.controlIconWrap}>{c.icon}</span>
               <span className={styles.controlLabel}>{c.label}</span>
               <span className={styles.controlBadge} style={{ background: c.color }}>{c.status}</span>
             </div>
