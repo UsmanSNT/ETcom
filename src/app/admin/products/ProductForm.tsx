@@ -1,9 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImageUploader, type UploadedImage } from "../ImageUploader";
 import styles from "../admin.module.css";
+
+type CategoryOption = { id: string; nameKo: string; nameEn: string };
 
 export type ProductFormValues = {
   titleKo: string;
@@ -65,6 +67,14 @@ export function ProductForm({
     ogDescription: initial?.ogDescription ?? "",
   });
   const [saving, setSaving] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([]);
+
+  useEffect(() => {
+    fetch("/api/admin/product-categories")
+      .then((r) => r.json())
+      .then(setCategoryOptions)
+      .catch(() => {});
+  }, []);
 
   function update<K extends keyof ProductFormValues>(key: K, value: ProductFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -108,15 +118,24 @@ export function ProductForm({
         <ImageUploader value={values.images} onChange={(images) => update("images", images)} />
       </div>
 
-      <div className={styles.formRow}>
-        <div className={styles.field}>
-          <label className={styles.label}>카테고리 (한국어)</label>
-          <input className={styles.input} value={values.categoryKo} onChange={(e) => update("categoryKo", e.target.value)} placeholder="스마트팜" />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label}>카테고리 (영어)</label>
-          <input className={styles.input} value={values.categoryEn} onChange={(e) => update("categoryEn", e.target.value)} placeholder="Smart Farm" />
-        </div>
+      <div className={styles.field}>
+        <label className={styles.label}>카테고리</label>
+        <select
+          className={styles.input}
+          value={`${values.categoryKo}||${values.categoryEn}`}
+          onChange={(e) => {
+            const [ko, en] = e.target.value.split("||");
+            update("categoryKo", ko);
+            update("categoryEn", en);
+          }}
+        >
+          <option value="||">선택 없음</option>
+          {categoryOptions.map((c) => (
+            <option key={c.id} value={`${c.nameKo}||${c.nameEn}`}>
+              {c.nameKo} / {c.nameEn}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className={styles.field}>

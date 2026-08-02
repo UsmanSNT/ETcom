@@ -60,25 +60,19 @@ export default function ProductsPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const dynamicCategories = useMemo<CategoryInfo[]>(() => {
-    if (!products) return [];
-    const seen = new Set<string>();
-    const result: CategoryInfo[] = [];
-    for (const p of products) {
-      const key = `${p.categoryKo ?? ""}|${p.categoryEn ?? ""}`;
-      if ((p.categoryKo || p.categoryEn) && !seen.has(key)) {
-        seen.add(key);
-        result.push({ ko: p.categoryKo ?? "", en: p.categoryEn ?? "" });
-      }
-    }
-    return result;
-  }, [products]);
+  const [dynamicCategories, setDynamicCategories] = useState<CategoryInfo[]>([]);
 
   useEffect(() => {
     fetch("/api/products")
       .then((res) => res.json())
       .then(setProducts)
       .catch(() => setProducts([]));
+    fetch("/api/product-categories")
+      .then((res) => res.json())
+      .then((cats: Array<{ nameKo: string; nameEn: string }>) =>
+        setDynamicCategories(cats.map((c) => ({ ko: c.nameKo, en: c.nameEn })))
+      )
+      .catch(() => {});
   }, []);
 
   // The header's mobile burger (products page only) toggles this sidebar.

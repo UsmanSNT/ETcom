@@ -56,6 +56,15 @@ model ProductReview {
   @@index([productId, createdAt])
 }
 
+model ProductCategory {
+  id     String @id @default(cuid())
+  nameKo String
+  nameEn String
+  order  Int    @default(0)
+
+  @@index([order])
+}
+
 model PromotionCategory {
   id     String          @id @default(cuid())
   slug   String          @unique
