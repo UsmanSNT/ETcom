@@ -64,6 +64,46 @@ export default function ContactPage() {
       </section>
 
       <div className={styles.container}>
+        <div className={styles.tabs}>
+          <button type="button" className={`${styles.tab} ${styles.tabActive}`}>
+            <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="4" width="6" height="6" rx="1" />
+              <rect x="14" y="4" width="6" height="6" rx="1" />
+              <rect x="4" y="14" width="6" height="6" rx="1" />
+              <rect x="14" y="14" width="6" height="6" rx="1" />
+            </svg>
+            <span className={styles.tabText}>
+              <strong>{t.contact.breadcrumb}</strong>
+            </span>
+          </button>
+          <a href="#directions" className={styles.tab}>
+            <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
+            </svg>
+            <span className={styles.tabText}>
+              <strong>{t.contact.directionsLabel}</strong>
+            </span>
+          </a>
+          <a href="#inquiry" className={styles.tab}>
+            <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
+              <rect x="2.5" y="4.5" width="19" height="15" rx="1.5" />
+              <path d="m3.5 6 8.5 7 8.5-7" />
+            </svg>
+            <span className={styles.tabText}>
+              <strong>{t.contact.formTitle}</strong>
+            </span>
+          </a>
+          <a href="#faq" className={styles.tab}>
+            <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9 9a3 3 0 1 1 3.5 2.96V14M12 17h.01" />
+            </svg>
+            <span className={styles.tabText}>
+              <strong>{t.contact.faqLabel}</strong>
+            </span>
+          </a>
+        </div>
+
         <div className={styles.infoGrid}>
           <div className={styles.infoCard}>
             <div className={styles.infoHead}>
@@ -98,7 +138,7 @@ export default function ContactPage() {
         </div>
 
         <div className={styles.mainGrid}>
-          <div className={styles.card}>
+          <div className={styles.card} id="directions">
             <div className={styles.directionsLabel}>{t.contact.directionsLabel}</div>
             <div className={styles.mapArt}>
               <iframe
@@ -125,7 +165,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className={styles.card}>
+          <div className={styles.card} id="inquiry">
             <div className={styles.colLabel}>{t.contact.formTitle}</div>
             <div className={styles.colDesc}>{t.contact.formDesc}</div>
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -194,7 +234,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className={styles.bottomGrid}>
+        <div className={styles.bottomGrid} id="faq">
           <div>
             <div className={styles.colLabel} style={{ fontSize: 16 }}>
               {t.contact.faqLabel}

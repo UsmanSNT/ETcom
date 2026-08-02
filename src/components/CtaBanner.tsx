@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./CtaBanner.module.css";
 
@@ -8,6 +11,7 @@ export function CtaBanner({
   btnLabel,
   variant = "dark",
   backgroundImage,
+  configKey,
 }: {
   title1: string;
   title2?: string;
@@ -15,13 +19,28 @@ export function CtaBanner({
   btnLabel: string;
   variant?: "dark" | "light";
   backgroundImage?: string;
+  configKey?: string;
 }) {
+  const [configImage, setConfigImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!configKey) return;
+    fetch("/api/site-config")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data[configKey]) setConfigImage(data[configKey]);
+      })
+      .catch(() => {});
+  }, [configKey]);
+
+  const bgImage = configImage || backgroundImage;
+
   return (
     <section
-      className={`${styles.banner} ${variant === "light" ? styles.bannerLight : ""} ${backgroundImage ? styles.bannerImage : ""}`}
+      className={`${styles.banner} ${variant === "light" ? styles.bannerLight : ""} ${bgImage ? styles.bannerImage : ""}`}
       style={
-        backgroundImage
-          ? { backgroundImage: `linear-gradient(90deg, rgba(1, 18, 38, .86), rgba(1, 18, 38, .32)), url("${backgroundImage}")` }
+        bgImage
+          ? { backgroundImage: `linear-gradient(90deg, rgba(1, 18, 38, .86), rgba(1, 18, 38, .32)), url("${bgImage}")` }
           : undefined
       }
     >

@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/admin/promotion", label: "홍보센터 관리" },
   { href: "/admin/resources", label: "자료실 파일 관리" },
   { href: "/admin/contacts", label: "문의 관리" },
+  { href: "/admin/settings", label: "사이트 설정" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

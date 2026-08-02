@@ -133,6 +133,13 @@ model PageVisit {
   @@index([path, createdAt])
 }
 
+model SiteConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
 model DownloadResource {
   id          String   @id @default(cuid())
   slot        String?  @unique

@@ -85,6 +85,7 @@ export default function AboutPage() {
         title2={t.about.ctaTitle2}
         btnLabel={t.about.ctaBtn}
         backgroundImage="/images/about_img-2.png"
+        configKey="ctaBannerImage"
       />
     </div>
   );
