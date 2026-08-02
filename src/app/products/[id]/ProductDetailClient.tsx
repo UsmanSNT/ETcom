@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { StarRatingDisplay } from "@/components/StarRating";
@@ -220,13 +220,7 @@ export function ProductDetailClient({
           {product.price && <div className={styles.price}>₩{product.price.toLocaleString()}</div>}
           <p className={styles.desc}>{locale === "ko" ? product.descriptionKo : product.descriptionEn}</p>
 
-          <div className={styles.reviewBox}>
-            <div className={styles.reviewBoxTitle}>{locale === "ko" ? "제품 문의" : "Product Inquiry"}</div>
-            <p className={styles.reviewHint}>{locale === "ko" ? "이 제품에 대해 궁금한 점이 있으신가요? 전문 엔지니어가 신속히 답변드립니다." : "Have questions about this product? Our engineers will respond quickly."}</p>
-            <Link href="/contact" className={styles.reviewSubmitBtn} style={{ display: "inline-flex", textDecoration: "none", textAlign: "center", justifyContent: "center" }}>
-              {locale === "ko" ? "문의하기" : "Contact Us"} →
-            </Link>
-          </div>
+          <ProductInquiryForm productTitle={title} locale={locale} />
         </div>
       </div>
 
@@ -303,6 +297,81 @@ export function ProductDetailClient({
         </div>
       )}
     </div>
+    </div>
+  );
+}
+
+function ProductInquiryForm({ productTitle, locale }: { productTitle: string; locale: string }) {
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: fd.get("name"),
+          email: fd.get("email"),
+          phone: fd.get("phone"),
+          message: fd.get("message"),
+          type: "product",
+          company: "",
+          consent: true,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("success");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div className={styles.inquiryBox}>
+      <div className={styles.inquiryTitle}>
+        {locale === "ko" ? "제품 문의" : "Product Inquiry"}
+      </div>
+      <p className={styles.inquiryDesc}>
+        {locale === "ko"
+          ? "이 제품에 대해 궁금한 점이 있으시면 아래 양식을 작성해 주세요."
+          : "Fill out the form below for any questions about this product."}
+      </p>
+      {status === "success" ? (
+        <div className={styles.inquirySuccess}>
+          {locale === "ko" ? "문의가 접수되었습니다. 빠르게 답변드리겠습니다." : "Your inquiry has been submitted. We'll respond shortly."}
+        </div>
+      ) : (
+        <form className={styles.inquiryForm} onSubmit={handleSubmit}>
+          <input type="hidden" name="product" value={productTitle} />
+          <div className={styles.inquiryRow}>
+            <input className={styles.inquiryInput} name="name" placeholder={locale === "ko" ? "이름 *" : "Name *"} required />
+            <input className={styles.inquiryInput} name="phone" placeholder={locale === "ko" ? "연락처 *" : "Phone *"} required />
+          </div>
+          <input className={styles.inquiryInput} name="email" type="email" placeholder={locale === "ko" ? "이메일 *" : "Email *"} required />
+          <textarea
+            className={styles.inquiryTextarea}
+            name="message"
+            rows={3}
+            placeholder={locale === "ko" ? "문의 내용을 입력해주세요" : "Enter your inquiry"}
+            required
+          />
+          <button className={styles.inquirySubmit} type="submit" disabled={status === "loading"}>
+            {status === "loading"
+              ? (locale === "ko" ? "전송 중..." : "Sending...")
+              : (locale === "ko" ? "문의하기" : "Submit Inquiry")} →
+          </button>
+          {status === "error" && (
+            <p className={styles.inquiryError}>
+              {locale === "ko" ? "전송에 실패했습니다. 다시 시도해주세요." : "Failed to send. Please try again."}
+            </p>
+          )}
+        </form>
+      )}
     </div>
   );
 }
