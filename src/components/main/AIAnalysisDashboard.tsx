@@ -1,0 +1,222 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import styles from "./dashboard.module.css";
+
+function randomWalk(prev: number, min: number, max: number, step: number) {
+  return Math.min(max, Math.max(min, prev + (Math.random() - 0.5) * step));
+}
+
+const ANOMALY_INIT = { caution: 1, warning: 1, danger: 0, normal: 128 };
+
+const INSIGHTS = [
+  { icon: "🌡", title: "온도 상승 패턴 감지", desc: "최근 온도 상승 속도가 평소보다 15% 빠르게 나타나고 있습니다." },
+  { icon: "🌫", title: "CO₂ 농도 예측", desc: "향후 3시간 내 CO₂ 농도가 850ppm 이상으로 상승할 것으로 예측됩니다." },
+  { icon: "🌱", title: "생육 최적 구간", desc: "현재 환경은 작물 생육에 최적화된 상태입니다." },
+];
+
+const CONTROLS = [
+  { icon: "💨", label: "환기 팬 속도 조절", status: "자동", color: "#3b82f6" },
+  { icon: "🌿", label: "CO₂ 공급 케어", status: "권장", color: "#f59e0b" },
+  { icon: "💡", label: "LED 밝기 조절", status: "권장", color: "#f59e0b" },
+  { icon: "🌡", label: "양액 온도 조절", status: "유지", color: "#22c55e" },
+];
+
+export default function AIAnalysisDashboard() {
+  const [anomaly, setAnomaly] = useState(ANOMALY_INIT);
+  const [timePeriod, setTimePeriod] = useState("24시간");
+  const [modelPeriod, setModelPeriod] = useState("주간");
+
+  const [tempHistory] = useState(() => {
+    const data: number[] = [];
+    let v = 20;
+    for (let i = 0; i < 24; i++) {
+      v = randomWalk(v, 18, 28, 1.5);
+      data.push(v);
+    }
+    return data;
+  });
+
+  const [predHistory] = useState(() => {
+    const data: number[] = [];
+    let v = 21;
+    for (let i = 0; i < 24; i++) {
+      v = randomWalk(v, 18, 28, 0.8);
+      data.push(v);
+    }
+    return data;
+  });
+
+  const [accuracy, setAccuracy] = useState(93.6);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setAnomaly((prev) => ({
+        caution: Math.max(0, prev.caution + (Math.random() > 0.7 ? 1 : Math.random() > 0.5 ? -1 : 0)),
+        warning: Math.max(0, prev.warning + (Math.random() > 0.8 ? 1 : Math.random() > 0.6 ? -1 : 0)),
+        danger: Math.max(0, prev.danger + (Math.random() > 0.95 ? 1 : 0)),
+        normal: 128 + Math.floor((Math.random() - 0.5) * 4),
+      }));
+      setAccuracy((p) => randomWalk(p, 91, 96, 0.3));
+    }, 4000);
+    return () => clearInterval(id);
+  }, []);
+
+  const total = anomaly.caution + anomaly.warning + anomaly.danger;
+  const upperBound = 35;
+  const lowerBound = 10;
+  const currentTemp = tempHistory[tempHistory.length - 1];
+
+  const radarLabels = ["온도 예측", "병해 예측", "습도 예측", "CO₂ 예측", "조도 예측"];
+  const radarValues = [0.88, 0.72, 0.91, 0.85, 0.78];
+  const radarAngles = radarLabels.map((_, i) => (i / radarLabels.length) * Math.PI * 2 - Math.PI / 2);
+  const radarR = 55;
+  const cx = 90, cy = 75;
+
+  return (
+    <div className={styles.aiWrap}>
+      <div className={styles.aiTopRow}>
+        <div className={styles.anomalyCard}>
+          <h3>AI 이상 탐지</h3>
+          <div className={styles.anomalyContent}>
+            <div className={styles.donutWrap}>
+              <svg viewBox="0 0 120 120" className={styles.donut}>
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#1e3a5f" strokeWidth="12" />
+                <circle cx="60" cy="60" r="45" fill="none" stroke="#3b82f6" strokeWidth="12"
+                  strokeDasharray={`${(total / (total + anomaly.normal)) * 283} 283`}
+                  strokeDashoffset="0" transform="rotate(-90 60 60)" />
+                <text x="60" y="55" textAnchor="middle" fill="white" fontSize="24" fontWeight="bold">{total}</text>
+                <text x="60" y="72" textAnchor="middle" fill="#8293a7" fontSize="10">건</text>
+                <text x="60" y="85" textAnchor="middle" fill="#8293a7" fontSize="9">이상 감지</text>
+              </svg>
+            </div>
+            <div className={styles.anomalyLegend}>
+              <div><span className={styles.dotOrange} />주의<b>{anomaly.caution} 건</b></div>
+              <div><span className={styles.dotYellow} />경고<b>{anomaly.warning} 건</b></div>
+              <div><span className={styles.dotRed} />위험<b>{anomaly.danger} 건</b></div>
+              <div><span className={styles.dotGreen} />정상<b>{anomaly.normal} 건</b></div>
+            </div>
+          </div>
+          <button className={styles.outlineBtn}>이상 내역 보기 →</button>
+        </div>
+
+        <div className={styles.predictionChart}>
+          <div className={styles.trendHeader}>
+            <h3>AI 예측 - 환경 변화 추이</h3>
+            <select value={timePeriod} onChange={(e) => setTimePeriod(e.target.value)}>
+              <option>24시간</option>
+              <option>12시간</option>
+            </select>
+          </div>
+          <div className={styles.predLegend}>
+            <span><i style={{ background: "#3b82f6" }} />실측 온도(℃)</span>
+            <span style={{ borderBottom: "2px dashed #22c55e", lineHeight: "0.6" }}> </span><span>AI 예측 온도(℃)</span>
+            <span style={{ borderBottom: "2px dashed #ef4444", lineHeight: "0.6" }}> </span><span>상한선</span>
+            <span style={{ borderBottom: "2px dashed #ef4444", lineHeight: "0.6", opacity: 0.5 }}> </span><span>하한선</span>
+          </div>
+          <svg viewBox="0 0 600 180" className={styles.trendSvg}>
+            <line x1="40" y1="20" x2="560" y2="20" stroke="#ef4444" strokeWidth="1" strokeDasharray="6 3" opacity="0.6" />
+            <line x1="40" y1="155" x2="560" y2="155" stroke="#ef4444" strokeWidth="1" strokeDasharray="6 3" opacity="0.4" />
+            {[0, 1, 2, 3].map((i) => (
+              <line key={i} x1="40" y1={20 + i * 45} x2="560" y2={20 + i * 45} stroke="#1e3a5f" strokeWidth="0.3" />
+            ))}
+            <polyline
+              points={tempHistory.map((v, i) => `${40 + (i / 23) * 520},${20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}`).join(" ")}
+              fill="none" stroke="#3b82f6" strokeWidth="2"
+            />
+            {tempHistory.map((v, i) => (
+              <circle key={i} cx={40 + (i / 23) * 520} cy={20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}
+                r="3" fill="#3b82f6" />
+            ))}
+            <polyline
+              points={predHistory.map((v, i) => `${40 + (i / 23) * 520},${20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}`).join(" ")}
+              fill="none" stroke="#22c55e" strokeWidth="1.5" strokeDasharray="5 3"
+            />
+            {["00:00", "06:00", "12:00", "18:00", "24:00"].map((t, i) => (
+              <text key={t} x={40 + i * 130} y="175" fill="#6b7f96" fontSize="10" textAnchor="middle">{t}</text>
+            ))}
+            {[10, 20, 30, 40].map((v, i) => (
+              <text key={v} x="35" y={155 - i * 45 + 4} fill="#6b7f96" fontSize="9" textAnchor="end">{v}</text>
+            ))}
+            <g>
+              <rect x="380" y={20 + ((upperBound - currentTemp) / (upperBound - lowerBound)) * 135 - 14} width="90" height="20" rx="4" fill="#0f2742" stroke="#3b82f6" strokeWidth="0.5" />
+              <text x="425" y={20 + ((upperBound - currentTemp) / (upperBound - lowerBound)) * 135} fill="white" fontSize="10" textAnchor="middle">
+                현재 {currentTemp.toFixed(1)}°C
+              </text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div className={styles.aiBottomRow}>
+        <div className={styles.insightCard}>
+          <h3>AI 인사이트</h3>
+          {INSIGHTS.map((ins, i) => (
+            <div className={styles.insightItem} key={i}>
+              <span className={styles.insightIcon}>{ins.icon}</span>
+              <div>
+                <strong>{ins.title}</strong>
+                <p>{ins.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.controlRecommend}>
+          <h3>AI 추천 제어</h3>
+          {CONTROLS.map((c, i) => (
+            <div className={styles.controlItem} key={i}>
+              <span className={styles.controlIcon}>{c.icon}</span>
+              <span className={styles.controlLabel}>{c.label}</span>
+              <span className={styles.controlBadge} style={{ background: c.color }}>{c.status}</span>
+            </div>
+          ))}
+          <button className={styles.outlineBtn}>제어 적용하기 →</button>
+        </div>
+
+        <div className={styles.modelPerf}>
+          <div className={styles.trendHeader}>
+            <h3>AI 모델 성능</h3>
+            <select value={modelPeriod} onChange={(e) => setModelPeriod(e.target.value)}>
+              <option>주간</option>
+              <option>월간</option>
+            </select>
+          </div>
+          <div className={styles.perfContent}>
+            <div className={styles.perfStats}>
+              <div>
+                <span>예측 정확도</span>
+                <strong>{accuracy.toFixed(1)} %</strong>
+              </div>
+              <div className={styles.perfMeta}>
+                <div><span>학습 데이터</span><b>128,560 건</b></div>
+                <div><span>모델 버전</span><b>v2.3.7</b></div>
+                <div><span>최근 학습일</span><b>2026.07.28 02:15</b></div>
+              </div>
+            </div>
+            <svg viewBox="0 0 180 150" className={styles.radarSvg}>
+              {[0.25, 0.5, 0.75, 1].map((scale) => (
+                <polygon key={scale}
+                  points={radarAngles.map((a) => `${cx + Math.cos(a) * radarR * scale},${cy + Math.sin(a) * radarR * scale}`).join(" ")}
+                  fill="none" stroke="#1e3a5f" strokeWidth="0.5"
+                />
+              ))}
+              {radarAngles.map((a, i) => (
+                <line key={i} x1={cx} y1={cy} x2={cx + Math.cos(a) * radarR} y2={cy + Math.sin(a) * radarR} stroke="#1e3a5f" strokeWidth="0.5" />
+              ))}
+              <polygon
+                points={radarValues.map((v, i) => `${cx + Math.cos(radarAngles[i]) * radarR * v},${cy + Math.sin(radarAngles[i]) * radarR * v}`).join(" ")}
+                fill="rgba(59,130,246,0.2)" stroke="#3b82f6" strokeWidth="1.5"
+              />
+              {radarLabels.map((label, i) => {
+                const lx = cx + Math.cos(radarAngles[i]) * (radarR + 18);
+                const ly = cy + Math.sin(radarAngles[i]) * (radarR + 18);
+                return <text key={i} x={lx} y={ly} fill="#8293a7" fontSize="8" textAnchor="middle" dominantBaseline="middle">{label}</text>;
+              })}
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

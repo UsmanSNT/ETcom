@@ -17,6 +17,9 @@ import {
   SensorIcon,
   SwitchIcon,
 } from "@/components/icons/SolutionIcons";
+import CollectDashboard from "@/components/main/CollectDashboard";
+import AIAnalysisDashboard from "@/components/main/AIAnalysisDashboard";
+import ControlDashboard from "@/components/main/ControlDashboard";
 import styles from "./page.module.css";
 
 type Product = {
@@ -172,6 +175,7 @@ export default function Home() {
     SENSOR_CONFIGS.map((s) => [s.base]),
   );
   const [activeMenu, setActiveMenu] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const [warningActive, setWarningActive] = useState(false);
   const warningTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -260,10 +264,15 @@ export default function Home() {
                 [SensorIcon, t.home.aiStep1Title, t.home.aiStep1Desc],
                 [NetworkIcon, t.home.aiStep2Title, t.home.aiStep2Desc],
                 [SwitchIcon, t.home.aiStep3Title, t.home.aiStep3Desc],
-              ].map(([Icon, title, description]) => {
+              ].map(([Icon, title, description], stepIndex) => {
                 const StepIcon = Icon as typeof SensorIcon;
                 return (
-                  <div className={styles.aiStep} key={String(title)}>
+                  <div
+                    className={`${styles.aiStep} ${activeStep === stepIndex ? styles.aiStepActive : ""}`}
+                    key={String(title)}
+                    onClick={() => setActiveStep(stepIndex)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <StepIcon className={styles.aiStepIcon} />
                     <div>
                       <strong>
@@ -282,81 +291,10 @@ export default function Home() {
           </div>
 
           <div className={styles.dashboardCard}>
-            <ScrollRow as="aside" className={styles.dashboardMenu}>
-              {menuItems.map((item, index) => (
-                <span
-                  className={index === activeMenu ? styles.menuActive : ""}
-                  key={item}
-                  onClick={() => setActiveMenu(index)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <i className={styles.menuIcon} aria-hidden="true">{MENU_ICONS[index]}</i>
-                  {item}
-                </span>
-              ))}
-            </ScrollRow>
-            <div className={`${styles.dashboardContent} ${styles.dashboardFade}`} key={activeMenu}>
-              <div className={styles.statGrid}>
-                {SENSOR_CONFIGS.map((cfg, i) => {
-                  const current = sensorHistories[i][sensorHistories[i].length - 1];
-                  const display = cfg.format ? cfg.format(current) : current.toFixed(cfg.decimals);
-                  return (
-                    <div className={styles.statTile} key={cfg.label}>
-                      <p>{sensorLabels[i]}</p>
-                      <strong>
-                        {display}
-                        <small>{cfg.unit}</small>
-                      </strong>
-                      <SparkLine history={sensorHistories[i]} min={cfg.min} max={cfg.max} />
-                    </div>
-                  );
-                })}
-              </div>
-              <div className={styles.dashboardBottom}>
-                <div className={`${styles.predictionCard} ${warningActive ? styles.predictionWarning : ""}`}>
-                  <p>{t.home.dashPredictTitle}</p>
-                  <strong>{warningActive ? t.home.dashPredictWarnHead : t.home.dashPredictOkHead}</strong>
-                  <span>{warningActive ? t.home.dashPredictWarnBody : t.home.dashPredictOkBody}</span>
-                </div>
-                <div className={styles.chartCard}>
-                  <div className={styles.chartHeading}>
-                    <span>{t.home.dashChartTitle}</span>
-                    <small>{t.home.dashChartLegend}</small>
-                  </div>
-                  {(() => {
-                    const { min, max } = SENSOR_CONFIGS[0];
-                    const actual = sensorHistories[0];
-                    const predicted = forecast(actual, 4, min, max);
-                    // Draw actual and forecast on one continuous x-axis so the
-                    // dashed forecast visibly continues the solid trend line.
-                    const combined = [...actual, ...predicted];
-                    const pts = seriesPath(combined, min, max, 360, 88);
-                    const join = actual.length - 1;
-                    const toD = (arr: { x: number; y: number }[]) =>
-                      `M${arr.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" L")}`;
-                    const actualPts = pts.slice(0, actual.length);
-                    const forecastPts = pts.slice(join); // include join point for continuity
-                    const nowPt = pts[join];
-                    return (
-                      <svg viewBox="0 0 360 88" aria-label="24시간 온도 예측 그래프">
-                        <path className={styles.gridLine} d="M0 22H360M0 48H360M0 74H360" />
-                        {actual.length >= 2 && <path className={styles.mainChart} d={toD(actualPts)} />}
-                        <path className={styles.forecastChart} d={toD(forecastPts)} />
-                        <circle cx={nowPt.x} cy={nowPt.y} r="4" />
-                        <circle
-                          className={styles.forecastDot}
-                          cx={pts[pts.length - 1].x}
-                          cy={pts[pts.length - 1].y}
-                          r="3.5"
-                        />
-                      </svg>
-                    );
-                  })()}
-                  <div className={styles.chartTimes}>
-                    <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
-                  </div>
-                </div>
-              </div>
+            <div className={`${styles.dashboardContent} ${styles.dashboardFade}`} key={activeStep}>
+              {activeStep === 0 && <CollectDashboard />}
+              {activeStep === 1 && <AIAnalysisDashboard />}
+              {activeStep === 2 && <ControlDashboard />}
             </div>
           </div>
         </div>
