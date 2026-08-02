@@ -7,14 +7,9 @@ import { StarRatingDisplay } from "@/components/StarRating";
 import {
   CameraIcon,
   CloseIcon,
-  CubeIcon,
   GridIcon,
   HeadsetIcon,
-  LeafIcon,
-  LedIcon,
-  NetworkIcon,
   SearchIcon,
-  SensorIcon,
   ShieldIcon,
   TruckIcon,
   WarrantyIcon,
@@ -48,15 +43,7 @@ const TRUST_ITEMS = [
   { icon: WarrantyIcon, titleKey: "trust4Title", descKey: "trust4Desc" },
 ] as const;
 
-const SIDEBAR_CATEGORIES = [
-  { ko: "스마트팜", en: "Smart Farm", icon: LeafIcon },
-  { ko: "환경 센서", en: "Environmental Sensors", icon: SensorIcon },
-  { ko: "모니터링 장치", en: "Monitoring Devices", icon: ShieldIcon },
-  { ko: "위치추적기", en: "GPS Trackers", icon: HeadsetIcon },
-  { ko: "LED", en: "LED", icon: LedIcon },
-  { ko: "OEM/ODM", en: "OEM/ODM", icon: CubeIcon },
-  { ko: "액세서리", en: "Accessories", icon: NetworkIcon },
-] as const;
+type CategoryInfo = { ko: string; en: string };
 
 const PAGE_SIZE = 8;
 
@@ -72,6 +59,20 @@ export default function ProductsPage() {
   const [imageSearchStatus, setImageSearchStatus] = useState<"idle" | "loading" | "error">("idle");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const dynamicCategories = useMemo<CategoryInfo[]>(() => {
+    if (!products) return [];
+    const seen = new Set<string>();
+    const result: CategoryInfo[] = [];
+    for (const p of products) {
+      const key = `${p.categoryKo ?? ""}|${p.categoryEn ?? ""}`;
+      if ((p.categoryKo || p.categoryEn) && !seen.has(key)) {
+        seen.add(key);
+        result.push({ ko: p.categoryKo ?? "", en: p.categoryEn ?? "" });
+      }
+    }
+    return result;
+  }, [products]);
 
   useEffect(() => {
     fetch("/api/products")
@@ -179,7 +180,7 @@ export default function ProductsPage() {
             <span className={styles.sidebarIcon}><GridIcon /></span>
             <span>{locale === "ko" ? "전체 제품" : "All Products"}</span>
           </button>
-          {SIDEBAR_CATEGORIES.map(({ ko, en, icon: CategoryIcon }) => {
+          {dynamicCategories.map(({ ko, en }) => {
             const name = locale === "ko" ? ko : en;
             return (
               <button
@@ -188,9 +189,6 @@ export default function ProductsPage() {
                 onClick={() => setActiveCategory(name)}
                 key={name}
               >
-                <span className={styles.sidebarIcon}>
-                  <CategoryIcon />
-                </span>
                 <span>{name}</span>
                 <b aria-hidden="true">›</b>
               </button>
@@ -290,7 +288,7 @@ export default function ProductsPage() {
               >
                 {t.products.all} ({products?.length ?? 0})
               </button>
-              {SIDEBAR_CATEGORIES.slice(0, 6).map(({ ko, en }) => {
+              {dynamicCategories.map(({ ko, en }) => {
                 const name = locale === "ko" ? ko : en;
                 const count = products?.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === name).length ?? 0;
                 return (

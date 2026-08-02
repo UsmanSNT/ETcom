@@ -33,10 +33,14 @@ type RelatedProduct = {
   imageUrl: string | null;
 };
 
+type Category = { ko: string; en: string };
+
 export function ProductDetailClient({
+  categories,
   product,
   relatedProducts,
 }: {
+  categories: Category[];
   product: Product;
   relatedProducts: RelatedProduct[];
 }) {
@@ -98,8 +102,34 @@ export function ProductDetailClient({
   const panelImageWidth = frameSize.width * ZOOM_SCALE;
   const panelImageHeight = frameSize.height * ZOOM_SCALE;
 
+  const currentCategory = locale === "ko" ? product.categoryKo : product.categoryEn;
+
   return (
-    <div className={styles.container}>
+    <div className={styles.pageLayout}>
+      <aside className={styles.categorySidebar}>
+        <nav aria-label={locale === "ko" ? "제품 카테고리" : "Product categories"}>
+          <Link
+            href="/products"
+            className={styles.catItem}
+          >
+            {locale === "ko" ? "전체 제품" : "All Products"}
+          </Link>
+          {categories.map((cat) => {
+            const name = locale === "ko" ? cat.ko : cat.en;
+            const isActive = name === currentCategory;
+            return (
+              <Link
+                key={name}
+                href={`/products?category=${encodeURIComponent(name)}`}
+                className={`${styles.catItem} ${isActive ? styles.catItemActive : ""}`}
+              >
+                {name}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+      <div className={styles.container}>
       <div className={styles.detailLayout}>
         <div className={styles.gallery}>
           {images.length > 1 && (
@@ -272,6 +302,7 @@ export function ProductDetailClient({
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

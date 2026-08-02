@@ -60,6 +60,15 @@ export default async function ProductDetailPage({
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) notFound();
+  const allCategories = await prisma.product.findMany({
+    where: { isPublished: true },
+    select: { categoryKo: true, categoryEn: true },
+    distinct: ["categoryKo", "categoryEn"],
+  });
+  const categories = allCategories
+    .filter((c) => c.categoryKo || c.categoryEn)
+    .map((c) => ({ ko: c.categoryKo ?? "", en: c.categoryEn ?? "" }));
+
   const relatedProducts = await prisma.product.findMany({
     where: { isPublished: true, id: { not: product.id } },
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
@@ -100,6 +109,7 @@ export default async function ProductDetailPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <ProductDetailClient
+        categories={categories}
         product={{
           ...product,
           images: product.images.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
