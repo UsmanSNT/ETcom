@@ -4,7 +4,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { PageHero } from "@/components/PageHero";
 import { CoreCompetencies } from "@/components/CoreCompetencies";
 import { CtaBanner } from "@/components/CtaBanner";
-import { LeafIcon, TruckIcon, CapIcon, ChipIcon, AiIcon, NetworkIcon, CloudIcon } from "@/components/icons/SolutionIcons";
+import { LeafIcon, TruckIcon, CapIcon, ChipIcon } from "@/components/icons/SolutionIcons";
 import styles from "./page.module.css";
 
 const AREA_ICONS = [LeafIcon, TruckIcon, CapIcon, ChipIcon];
@@ -13,14 +13,6 @@ const AREA_KEYS = [
   { title: "area2Title", items: "area2Items" },
   { title: "area3Title", items: "area3Items" },
   { title: "area4Title", items: "area4Items" },
-] as const;
-
-const TECH_ICONS = [AiIcon, NetworkIcon, ChipIcon, CloudIcon];
-const TECH_KEYS = [
-  { title: "tech1Title", desc: "tech1Desc" },
-  { title: "tech2Title", desc: "tech2Desc" },
-  { title: "tech3Title", desc: "tech3Desc" },
-  { title: "tech4Title", desc: "tech4Desc" },
 ] as const;
 
 export default function BusinessPage() {
@@ -67,25 +59,6 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      <section className={styles.techSection}>
-        <div className={styles.techLabel}>{t.business.techLabel}</div>
-        <div className={styles.techGrid}>
-          {TECH_KEYS.map(({ title, desc }, i) => {
-            const Icon = TECH_ICONS[i];
-            return (
-              <div key={title} className={styles.techItem}>
-                <div className={styles.techIconBox}>
-                  <Icon className={styles.techIcon} />
-                </div>
-                <div className={styles.techText}>
-                  <div className={styles.techTitle}>{t.business[title]}</div>
-                  <div className={styles.techDesc}>{t.business[desc]}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
 
       <section className={styles.industriesSection}>
         <div className={styles.industriesLabel}>{t.business.industriesLabel}</div>

@@ -83,7 +83,8 @@
 .sectionLabel { color: #3d4755; font-size: 11px; font-weight: 700; }
 .sectionHeader { display: flex; justify-content: space-between; align-items: center; }
 .sectionHeader > a { font-size: 11px; font-weight: 700; }
-.solutionsGrid { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 38px; }
+.solutionsGrid { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 38px; }
+.solutionSub { display: block; margin-top: 4px; color: #708096; font-size: 10px; font-weight: 500; }
 .solutionItem { min-height: 98px; display: grid; grid-template-columns: 1fr auto; align-items: end; justify-items: center; padding: 0 25px; border-right: 1px solid #d9dde2; }
 .solutionItem:last-child { border-right: 0; }
 .solutionIcon { grid-column: 1 / 3; align-self: start; width: 48px; height: 48px; color: #07152b; }

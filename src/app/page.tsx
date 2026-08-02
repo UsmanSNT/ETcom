@@ -6,7 +6,6 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { ScrollRow } from "@/components/ScrollRow";
 import {
   CapIcon,
-  ChipIcon,
   CloudIcon,
   CubeIcon,
   FactoryIcon,
@@ -40,12 +39,11 @@ type Post = {
 };
 
 const solutions = [
-  { key: "smartFarm", icon: LeafIcon },
-  { key: "industrialIot", icon: FactoryIcon },
-  { key: "embedded", icon: ChipIcon },
-  { key: "platformCloud", icon: CloudIcon },
-  { key: "education", icon: CapIcon },
-  { key: "oem", icon: CubeIcon },
+  { key: "smartFarm", icon: LeafIcon, subLabel: "스마트팜" },
+  { key: "industrialIot", icon: FactoryIcon, subLabel: "산업용 IoT 솔루션" },
+  { key: "platformCloud", icon: CloudIcon, subLabel: "임베디드 & AI 솔루션" },
+  { key: "education", icon: CapIcon, subLabel: "교육기자재" },
+  { key: "oem", icon: CubeIcon, subLabel: "OEM / ODM" },
 ] as const;
 
 const fallbackProducts = [
@@ -303,10 +301,11 @@ export default function Home() {
       <section className={styles.contentSection}>
         <p className={styles.sectionLabel}>{t.home.sectionSolutions}</p>
         <div className={styles.solutionsGrid}>
-          {solutions.map(({ key, icon: Icon }) => (
+          {solutions.map(({ key, icon: Icon, subLabel }) => (
             <Link href="/business" className={styles.solutionItem} key={key}>
               <Icon className={styles.solutionIcon} />
               <span>{t.solutions[key]}</span>
+              <small className={styles.solutionSub}>{subLabel}</small>
               <b aria-hidden="true">→</b>
             </Link>
           ))}

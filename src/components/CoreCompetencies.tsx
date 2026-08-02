@@ -1,5 +1,5 @@
 import { useLanguage } from "./LanguageProvider";
-import { AiIcon, CloudIcon, ChipIcon, NetworkIcon, CubeIcon, HeadsetIcon } from "./icons/SolutionIcons";
+import { AiIcon, CloudIcon, ChipIcon, NetworkIcon, CubeIcon } from "./icons/SolutionIcons";
 import styles from "./CoreCompetencies.module.css";
 
 const ITEMS = [
@@ -8,7 +8,6 @@ const ITEMS = [
   { icon: ChipIcon, titleKey: "embedded", descKey: "embeddedDesc" },
   { icon: NetworkIcon, titleKey: "iotConnect", descKey: "iotConnectDesc" },
   { icon: CubeIcon, titleKey: "solution", descKey: "solutionDesc" },
-  { icon: HeadsetIcon, titleKey: "support", descKey: "supportDesc" },
 ] as const;
 
 export function CoreCompetencies() {
