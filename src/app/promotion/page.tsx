@@ -105,41 +105,39 @@ export default function PromotionPage() {
         </div>
       </section>
 
-      <div className={styles.container}>
-        <div className={styles.tabs}>
+      <nav className={styles.tabBar}>
+        <div className={styles.tabBarInner}>
           <button
             type="button"
             className={`${styles.tab} ${activeCategory === "all" ? styles.tabActive : ""}`}
             onClick={() => setActiveCategory("all")}
           >
             <PromotionCategoryIcon type="all" />
-            <span className={styles.tabText}>
-              <strong>{t.products.all}</strong>
-              <b>{posts?.length ?? 0}</b>
-            </span>
+            <span>{t.products.all} {posts?.length ?? 0}</span>
           </button>
-          {PROMOTION_TABS.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              className={`${styles.tab} ${activeCategory === tab.key ? styles.tabActive : ""}`}
-              onClick={() => setActiveCategory(tab.key)}
-            >
-              <PromotionCategoryIcon type={tab.key} />
-              <span className={styles.tabText}>
-                <strong>{locale === "ko" ? tab.ko : tab.en}</strong>
-                <b>
-                  {posts?.filter(
-                    (post) =>
-                      post.category.slug === tab.key ||
-                      post.category.nameKo === tab.ko ||
-                      post.category.nameEn === tab.en,
-                  ).length ?? 0}
-                </b>
-              </span>
-            </button>
-          ))}
+          {PROMOTION_TABS.map((tab) => {
+            const count = posts?.filter(
+              (post) =>
+                post.category.slug === tab.key ||
+                post.category.nameKo === tab.ko ||
+                post.category.nameEn === tab.en,
+            ).length ?? 0;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                className={`${styles.tab} ${activeCategory === tab.key ? styles.tabActive : ""}`}
+                onClick={() => setActiveCategory(tab.key)}
+              >
+                <PromotionCategoryIcon type={tab.key} />
+                <span>{locale === "ko" ? tab.ko : tab.en} {count}</span>
+              </button>
+            );
+          })}
         </div>
+      </nav>
+
+      <div className={styles.container}>
 
         {activeCategory === "all" ? (
           <div className={styles.featuredSections}>
