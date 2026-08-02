@@ -604,9 +604,9 @@
 .tabs {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 16px;
-  margin-bottom: 26px;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .tab {
