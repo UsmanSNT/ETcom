@@ -7,7 +7,6 @@ import { StarRatingDisplay } from "@/components/StarRating";
 import {
   CameraIcon,
   CloseIcon,
-  GridIcon,
   HeadsetIcon,
   SearchIcon,
   ShieldIcon,
@@ -105,6 +104,23 @@ export default function ProductsPage() {
     setImagePreview(null);
   }
 
+  // Categories come from the admin-managed list; if it's empty, fall back to the
+  // distinct categories found on the products themselves so the tabs still show.
+  const categories = useMemo<CategoryInfo[]>(() => {
+    if (dynamicCategories.length > 0) return dynamicCategories;
+    if (!products) return [];
+    // De-duplicate on the name shown in the current locale so tabs never repeat.
+    const map = new Map<string, CategoryInfo>();
+    for (const p of products) {
+      if (!p.categoryKo && !p.categoryEn) continue;
+      const ko = p.categoryKo ?? p.categoryEn ?? "";
+      const en = p.categoryEn ?? p.categoryKo ?? "";
+      const key = locale === "ko" ? ko : en;
+      if (!map.has(key)) map.set(key, { ko, en });
+    }
+    return [...map.values()];
+  }, [dynamicCategories, products, locale]);
+
   const filtered = useMemo(() => {
     if (imageSearchResults) return imageSearchResults;
     if (!products) return [];
@@ -165,31 +181,6 @@ export default function ProductsPage() {
       )}
 
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
-        <nav className={styles.sidebarNav} aria-label="Product categories">
-          <button
-            type="button"
-            className={`${styles.sidebarItem} ${activeCategory === "all" ? styles.sidebarItemActive : ""}`}
-            onClick={() => setActiveCategory("all")}
-          >
-            <span className={styles.sidebarIcon}><GridIcon /></span>
-            <span>{locale === "ko" ? "전체 제품" : "All Products"}</span>
-          </button>
-          {dynamicCategories.map(({ ko, en }) => {
-            const name = locale === "ko" ? ko : en;
-            return (
-              <button
-                type="button"
-                className={`${styles.sidebarItem} ${activeCategory === name ? styles.sidebarItemActive : ""}`}
-                onClick={() => setActiveCategory(name)}
-                key={name}
-              >
-                <span>{name}</span>
-                <b aria-hidden="true">›</b>
-              </button>
-            );
-          })}
-        </nav>
-
         <div className={styles.sidebarContact}>
           <HeadsetIcon />
           <strong>{t.products.inquiryTitle}</strong>
@@ -282,7 +273,7 @@ export default function ProductsPage() {
               >
                 {t.products.all} ({products?.length ?? 0})
               </button>
-              {dynamicCategories.map(({ ko, en }) => {
+              {categories.map(({ ko, en }) => {
                 const name = locale === "ko" ? ko : en;
                 const count = products?.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === name).length ?? 0;
                 return (

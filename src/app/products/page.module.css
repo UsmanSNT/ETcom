@@ -597,7 +597,11 @@
 .imageSearchBanner button svg { width: 11px; height: 11px; }
 
 .toolbar {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--brand-gray-100);
@@ -608,7 +612,8 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 8px;
-  margin-bottom: 20px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .tab {
@@ -631,10 +636,9 @@
 .sortRow {
   display: flex;
   align-items: center;
-  flex-direction: row-reverse;
-  justify-content: space-between;
-  gap: 20px;
-  width: 100%;
+  justify-content: flex-end;
+  gap: 12px;
+  flex: 0 0 auto;
   font-size: 13px;
   color: var(--brand-text-muted);
 }
@@ -965,6 +969,13 @@
     align-items: stretch;
   }
 
+  /* Constrain the ScrollRow wrapper to the toolbar width so the tabs scroll
+     sideways inside it instead of overflowing the page. */
+  .toolbar > :first-child {
+    width: 100%;
+    min-width: 0;
+  }
+
   .tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -986,5 +997,6 @@
 
   .sortRow {
     width: 100%;
+    justify-content: space-between;
   }
 }
