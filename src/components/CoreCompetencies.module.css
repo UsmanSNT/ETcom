@@ -19,6 +19,7 @@
 }
 
 .item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,14 +39,26 @@
   color: var(--brand-navy);
 }
 
-.desc {
-  font-size: 12px;
-  color: var(--brand-text-muted);
-  line-height: 1.5;
-}
-
 @media (min-width: 900px) {
   .grid {
     grid-template-columns: repeat(5, 1fr);
+  }
+
+  /* Soft, centered vertical divider between items (not full height) */
+  .item + .item::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--brand-border, rgba(0, 0, 0, 0.12)) 20%,
+      var(--brand-border, rgba(0, 0, 0, 0.12)) 80%,
+      transparent
+    );
   }
 }

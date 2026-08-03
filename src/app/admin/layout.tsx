@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 import styles from "./admin.module.css";
 
 const NAV_ITEMS = [
-  { href: "/admin", label: "대시보드" },
-  { href: "/admin/business", label: "사업 영역 관리" },
-  { href: "/admin/products", label: "제품소개 관리" },
-  { href: "/admin/promotion", label: "홍보센터 관리" },
-  { href: "/admin/resources", label: "자료실 파일 관리" },
-  { href: "/admin/contacts", label: "문의 관리" },
-  { href: "/admin/settings", label: "사이트 설정" },
+  { href: "/admin", label: "Dashboard" },
+  { href: "/admin/business", label: "Business Areas" },
+  { href: "/admin/products", label: "Products" },
+  { href: "/admin/promotion", label: "Promotions" },
+  { href: "/admin/resources", label: "Resources" },
+  { href: "/admin/contacts", label: "Inquiries" },
+  { href: "/admin/settings", label: "Site Settings" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
         ))}
         <button className={styles.logout} onClick={handleLogout}>
-          로그아웃
+          Logout
         </button>
       </aside>
       <div className={styles.content}>{children}</div>

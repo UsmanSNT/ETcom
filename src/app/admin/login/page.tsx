@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        setError(body.error === "invalid credentials" ? "이메일 또는 비밀번호가 올바르지 않습니다." : "로그인에 실패했습니다.");
+        setError(body.error === "invalid credentials" ? "Invalid email or password." : "Login failed.");
         return;
       }
       router.push("/admin");
@@ -39,22 +39,22 @@ export default function AdminLoginPage() {
   return (
     <div className={styles.loginWrap}>
       <form className={styles.loginCard} onSubmit={handleSubmit}>
-        <div className={styles.loginTitle}>관리자 로그인</div>
+        <div className={styles.loginTitle}>Admin Login</div>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="email">
-            이메일
+            Email
           </label>
           <input className={styles.input} id="email" name="email" type="email" required />
         </div>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="password">
-            비밀번호
+            Password
           </label>
           <input className={styles.input} id="password" name="password" type="password" required />
         </div>
         {error && <div className={styles.errorText}>{error}</div>}
         <button className={`${styles.btn} ${styles.btnPrimary}`} type="submit" disabled={loading}>
-          로그인
+          Login
         </button>
       </form>
     </div>

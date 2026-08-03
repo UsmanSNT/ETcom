@@ -3,11 +3,11 @@ import { AiIcon, CloudIcon, ChipIcon, NetworkIcon, CubeIcon } from "./icons/Solu
 import styles from "./CoreCompetencies.module.css";
 
 const ITEMS = [
-  { icon: AiIcon, titleKey: "aiData", descKey: "aiDataDesc" },
-  { icon: CloudIcon, titleKey: "platform", descKey: "platformDesc" },
-  { icon: ChipIcon, titleKey: "embedded", descKey: "embeddedDesc" },
-  { icon: NetworkIcon, titleKey: "iotConnect", descKey: "iotConnectDesc" },
-  { icon: CubeIcon, titleKey: "solution", descKey: "solutionDesc" },
+  { icon: AiIcon, titleKey: "aiData" },
+  { icon: CloudIcon, titleKey: "platform" },
+  { icon: ChipIcon, titleKey: "embedded" },
+  { icon: NetworkIcon, titleKey: "iotConnect" },
+  { icon: CubeIcon, titleKey: "solution" },
 ] as const;
 
 export function CoreCompetencies() {
@@ -17,11 +17,10 @@ export function CoreCompetencies() {
     <section className={styles.section}>
       <div className={styles.label}>{t.core.label}</div>
       <div className={styles.grid}>
-        {ITEMS.map(({ icon: Icon, titleKey, descKey }) => (
+        {ITEMS.map(({ icon: Icon, titleKey }) => (
           <div key={titleKey} className={styles.item}>
             <Icon className={styles.icon} />
             <div className={styles.title}>{t.core[titleKey]}</div>
-            <div className={styles.desc}>{t.core[descKey]}</div>
           </div>
         ))}
       </div>
