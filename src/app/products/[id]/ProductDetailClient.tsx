@@ -35,14 +35,19 @@ type RelatedProduct = {
   imageUrl: string | null;
 };
 
-type Category = { ko: string; en: string };
+type HierarchicalCategory = {
+  id: string;
+  nameKo: string;
+  nameEn: string;
+  children: { id: string; nameKo: string; nameEn: string }[];
+};
 
 export function ProductDetailClient({
-  categories,
+  hierarchicalCategories,
   product,
   relatedProducts,
 }: {
-  categories: Category[];
+  hierarchicalCategories: HierarchicalCategory[];
   product: Product;
   relatedProducts: RelatedProduct[];
 }) {
@@ -57,6 +62,7 @@ export function ProductDetailClient({
         : [],
     [product.images, product.thumbnailUrl],
   );
+  const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState(0);
   const [zoomed, setZoomed] = useState(false);
   const [hoverZoom, setHoverZoom] = useState(false);
@@ -104,29 +110,57 @@ export function ProductDetailClient({
   const panelImageWidth = frameSize.width * ZOOM_SCALE;
   const panelImageHeight = frameSize.height * ZOOM_SCALE;
 
-  const currentCategory = locale === "ko" ? product.categoryKo : product.categoryEn;
-
   return (
     <div className={styles.pageLayout}>
       <aside className={styles.categorySidebar}>
-        <nav aria-label={locale === "ko" ? "제품 카테고리" : "Product categories"}>
+        <nav className={shopStyles.sidebarNav} aria-label={locale === "ko" ? "제품 카테고리" : "Product categories"}>
           <Link
             href="/products"
-            className={styles.catItem}
+            className={shopStyles.sidebarAllBtn}
           >
-            {locale === "ko" ? "전체 제품" : "All Products"}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            {locale === "ko" ? "전체" : "All"}
           </Link>
-          {categories.map((cat) => {
-            const name = locale === "ko" ? cat.ko : cat.en;
-            const isActive = name === currentCategory;
+          {hierarchicalCategories.map((cat) => {
+            const name = locale === "ko" ? cat.nameKo : cat.nameEn;
+            const hasChildren = cat.children.length > 0;
+            const expanded = expandedCats.has(cat.id);
             return (
-              <Link
-                key={name}
-                href={`/products?category=${encodeURIComponent(name)}`}
-                className={`${styles.catItem} ${isActive ? styles.catItemActive : ""}`}
-              >
-                {name}
-              </Link>
+              <div key={cat.id}>
+                <button
+                  type="button"
+                  className={shopStyles.sidebarItem}
+                  onClick={() => {
+                    if (hasChildren) {
+                      setExpandedCats((prev) => {
+                        if (prev.has(cat.id)) return new Set();
+                        return new Set([cat.id]);
+                      });
+                    }
+                  }}
+                >
+                  <span className={shopStyles.sidebarItemLabel}>{name}</span>
+                  {hasChildren && (
+                    <span className={`${shopStyles.sidebarItemArrow} ${expanded ? shopStyles.sidebarItemArrowOpen : ""}`}>›</span>
+                  )}
+                </button>
+                {hasChildren && expanded && (
+                  <div className={shopStyles.sidebarSub}>
+                    {cat.children.map((sub) => {
+                      const subName = locale === "ko" ? sub.nameKo : sub.nameEn;
+                      return (
+                        <Link
+                          key={sub.id}
+                          href={`/products?category=${encodeURIComponent(subName)}`}
+                          className={shopStyles.sidebarSubItem}
+                        >
+                          {subName}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </nav>

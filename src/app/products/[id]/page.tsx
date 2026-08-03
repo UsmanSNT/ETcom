@@ -60,23 +60,19 @@ export default async function ProductDetailPage({
   const { id } = await params;
   const product = await getProduct(id);
   if (!product) notFound();
-  let categories: Array<{ ko: string; en: string }> = [];
-  try {
-    const savedCategories = await prisma.productCategory.findMany({
-      orderBy: { order: "asc" },
-      select: { nameKo: true, nameEn: true },
-    });
-    categories = savedCategories.map((c) => ({ ko: c.nameKo, en: c.nameEn }));
-  } catch {
-    const allCats = await prisma.product.findMany({
-      where: { isPublished: true },
-      select: { categoryKo: true, categoryEn: true },
-      distinct: ["categoryKo", "categoryEn"],
-    });
-    categories = allCats
-      .filter((c) => c.categoryKo || c.categoryEn)
-      .map((c) => ({ ko: c.categoryKo ?? "", en: c.categoryEn ?? "" }));
-  }
+  const hierarchicalCategories = await prisma.productCategory.findMany({
+    where: { parentId: null },
+    orderBy: { order: "asc" },
+    select: {
+      id: true,
+      nameKo: true,
+      nameEn: true,
+      children: {
+        orderBy: { order: "asc" },
+        select: { id: true, nameKo: true, nameEn: true },
+      },
+    },
+  });
 
   const relatedProducts = await prisma.product.findMany({
     where: { isPublished: true, id: { not: product.id } },
@@ -118,7 +114,7 @@ export default async function ProductDetailPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <ProductDetailClient
-        categories={categories}
+        hierarchicalCategories={hierarchicalCategories}
         product={{
           ...product,
           images: product.images.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),

@@ -77,7 +77,7 @@ export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<"popularity" | "latest">("popularity");
+  const [sortBy, setSortBy] = useState<"recommend" | "popularity" | "priceLow" | "priceHigh" | "rating" | "latest">("recommend");
   const [imageSearchResults, setImageSearchResults] = useState<Product[] | null>(null);
   const [imageSearchStatus, setImageSearchStatus] = useState<"idle" | "loading" | "error">("idle");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -128,10 +128,8 @@ export default function ProductsPage() {
 
   function toggleExpand(catId: string) {
     setExpandedCategories((prev) => {
-      const next = new Set(prev);
-      if (next.has(catId)) next.delete(catId);
-      else next.add(catId);
-      return next;
+      if (prev.has(catId)) return new Set();
+      return new Set([catId]);
     });
   }
 
@@ -180,10 +178,20 @@ export default function ProductsPage() {
       );
     }
     list = [...list].sort((a, b) => {
-      if (sortBy === "latest") {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      switch (sortBy) {
+        case "latest":
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case "popularity":
+          return b.popularityScore - a.popularityScore;
+        case "priceLow":
+          return (a.price ?? 0) - (b.price ?? 0);
+        case "priceHigh":
+          return (b.price ?? 0) - (a.price ?? 0);
+        case "rating":
+          return (b.avgRating ?? 0) - (a.avgRating ?? 0) || b.reviewCount - a.reviewCount;
+        default:
+          return b.popularityScore - a.popularityScore || b.reviewCount - a.reviewCount;
       }
-      return b.popularityScore - a.popularityScore || (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
     });
     return list;
   }, [products, activeCategory, search, sortBy, locale, imageSearchResults, hierarchicalCategories]);
@@ -237,32 +245,22 @@ export default function ProductsPage() {
             const isActive = activeCategory === cat.id;
             return (
               <div key={cat.id}>
-                {expanded ? (
-                  <button
-                    type="button"
-                    className={styles.sidebarCatHeader}
-                    onClick={() => { toggleExpand(cat.id); setActiveCategory(cat.id); }}
-                  >
-                    {name}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={`${styles.sidebarItem} ${isActive ? styles.sidebarItemActive : ""}`}
-                    onClick={() => {
-                      setActiveCategory(cat.id);
-                      if (hasChildren) toggleExpand(cat.id);
-                    }}
-                  >
-                    <span className={styles.sidebarIcon}>
-                      <CatIcon name={cat.nameEn} />
-                    </span>
-                    <span className={styles.sidebarItemLabel}>{name}</span>
-                    {hasChildren && (
-                      <span className={styles.sidebarItemArrow}>›</span>
-                    )}
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className={`${styles.sidebarItem} ${isActive ? styles.sidebarItemActive : ""}`}
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    if (hasChildren) toggleExpand(cat.id);
+                  }}
+                >
+                  <span className={styles.sidebarIcon}>
+                    <CatIcon name={cat.nameEn} />
+                  </span>
+                  <span className={styles.sidebarItemLabel}>{name}</span>
+                  {hasChildren && (
+                    <span className={`${styles.sidebarItemArrow} ${expanded ? styles.sidebarItemArrowOpen : ""}`}>›</span>
+                  )}
+                </button>
                 {hasChildren && expanded && (
                   <div className={styles.sidebarSub}>
                     {cat.children.map((sub) => {
@@ -368,44 +366,33 @@ export default function ProductsPage() {
         )}
 
         {imageSearchResults === null && (
-          <div className={styles.toolbar}>
-            <ScrollRow className={styles.tabs}>
-              <button
-                type="button"
-                className={`${styles.tab} ${activeCategory === "all" ? styles.tabActive : ""}`}
-                onClick={() => setActiveCategory("all")}
-              >
-                {t.products.all} ({products?.length ?? 0})
-              </button>
-              {hierarchicalCategories.map((cat) => {
-                const name = locale === "ko" ? cat.nameKo : cat.nameEn;
-                return (
+          <>
+            <div className={styles.filterBar}>
+              <div className={styles.filterCount}>
+                상품 <strong>{filtered.length}</strong>개
+              </div>
+              <div className={styles.filterSorts}>
+                {([
+                  ["recommend", "추천순"],
+                  ["popularity", "판매인기순"],
+                  ["priceLow", "낮은가격순"],
+                  ["priceHigh", "높은가격순"],
+                  ["rating", "상품평순"],
+                  ["latest", "등록일순"],
+                ] as const).map(([key, label]) => (
                   <button
-                    key={cat.id}
+                    key={key}
                     type="button"
-                    className={`${styles.tab} ${activeCategory === cat.id ? styles.tabActive : ""}`}
-                    onClick={() => setActiveCategory(cat.id)}
+                    className={`${styles.filterSortBtn} ${sortBy === key ? styles.filterSortBtnActive : ""}`}
+                    onClick={() => setSortBy(key)}
                   >
-                    {name}
+                    {sortBy === key && <span className={styles.filterCheck}>✓</span>}
+                    {label}
                   </button>
-                );
-              })}
-            </ScrollRow>
-            <div className={styles.sortRow}>
-              <span>
-                {filtered.length}
-                {t.products.countSuffix}
-              </span>
-              <select
-                className={styles.sortSelect}
-                value={sortBy}
-                onChange={(event) => setSortBy(event.target.value as "popularity" | "latest")}
-              >
-                <option value="popularity">{t.products.sortPopularity}</option>
-                <option value="latest">{t.products.sort}</option>
-              </select>
+                ))}
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {products && filtered.length === 0 ? (
