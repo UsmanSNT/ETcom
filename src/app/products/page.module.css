@@ -17,18 +17,30 @@
   background: #fff;
 }
 
-.sidebarTitle {
-  margin: 0 6px 18px;
-  color: var(--brand-navy);
-  font-size: 14px;
-  font-weight: 800;
-}
-
 .sidebarNav {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
 }
+
+.sidebarAllBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--brand-navy);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 6px;
+}
+
+.sidebarAllBtn svg { width: 18px; height: 18px; }
 
 .sidebarItem {
   width: 100%;
@@ -36,7 +48,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 12px;
+  padding: 10px 14px;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -45,28 +57,88 @@
   font-size: 13px;
   font-weight: 600;
   text-align: left;
-  white-space: nowrap;
   cursor: pointer;
 }
 
 .sidebarItem:hover { background: #f5f7fa; }
 .sidebarItemActive { background: #f0f3f7; color: var(--brand-navy); font-weight: 800; }
+
+.sidebarItemLabel { flex: 1; }
+
+.sidebarItemArrow {
+  margin-left: auto;
+  font-size: 14px;
+  color: #aab4c1;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+
+.sidebarItemArrowOpen {
+  transform: rotate(90deg);
+  color: var(--brand-navy);
+}
+
 .sidebarIcon {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #f0f3f7;
   color: #53657c;
 }
 
 .sidebarIcon svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   display: block;
   stroke-width: 1.65;
 }
-.sidebarItem small { color: #8b96a5; font-size: 10px; }
-.sidebarItem b { margin-left: auto; color: #7b8796; font-size: 18px; font-weight: 400; }
+
+.sidebarSub {
+  display: flex;
+  flex-direction: column;
+  padding-left: 18px;
+  margin-bottom: 4px;
+}
+
+.sidebarSubItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 14px 8px 32px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #5a6878;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebarSubItem:hover { background: #f5f7fa; color: var(--brand-navy); }
+.sidebarSubItemActive { background: #eef2f7; color: var(--brand-navy); font-weight: 700; }
+
+.sidebarCatHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 10px;
+  background: #3cc;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
 
 .sidebarContact {
   margin-top: 34px;

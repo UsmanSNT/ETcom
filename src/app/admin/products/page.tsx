@@ -17,14 +17,18 @@ type Category = {
   nameKo: string;
   nameEn: string;
   order: number;
+  parentId?: string | null;
   children: Category[];
 };
+
+const emptyForm = () => ({ nameKo: "", nameEn: "", order: 0, parentId: "" });
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [catForm, setCatForm] = useState({ nameKo: "", nameEn: "", order: 0, parentId: "" });
+  const [catForm, setCatForm] = useState(emptyForm());
   const [editingCat, setEditingCat] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
   async function loadProducts() {
     const res = await fetch("/api/admin/products");
@@ -62,8 +66,7 @@ export default function AdminProductsPage() {
         body: JSON.stringify(catForm),
       });
     }
-    setCatForm({ nameKo: "", nameEn: "", order: 0, parentId: "" });
-    setEditingCat(null);
+    resetForm();
     loadCategories();
   }
 
@@ -73,116 +76,160 @@ export default function AdminProductsPage() {
     loadCategories();
   }
 
-  function startEditCategory(cat: Category) {
-    setEditingCat(cat.id);
-    setCatForm({ nameKo: cat.nameKo, nameEn: cat.nameEn, order: cat.order, parentId: "" });
+  function resetForm() {
+    setCatForm(emptyForm());
+    setEditingCat(null);
+    setShowForm(false);
   }
+
+  function startNew(parentId?: string) {
+    setEditingCat(null);
+    setCatForm({ ...emptyForm(), parentId: parentId ?? "" });
+    setShowForm(true);
+  }
+
+  function startEdit(cat: Category, parentId?: string) {
+    setEditingCat(cat.id);
+    setCatForm({ nameKo: cat.nameKo, nameEn: cat.nameEn, order: cat.order, parentId: parentId ?? "" });
+    setShowForm(true);
+  }
+
+  const formParentLabel = catForm.parentId
+    ? (() => {
+        const p = categories.find((c) => c.id === catForm.parentId);
+        return p ? `${p.nameKo} / ${p.nameEn}` : "";
+      })()
+    : "";
 
   return (
     <div>
-      <h1 className={styles.pageTitle}>Category Management</h1>
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-          <input
-            className={styles.input}
-            placeholder="Category (Korean)"
-            value={catForm.nameKo}
-            onChange={(e) => setCatForm({ ...catForm, nameKo: e.target.value })}
-            style={{ flex: 1, minWidth: 140 }}
-          />
-          <input
-            className={styles.input}
-            placeholder="Category (English)"
-            value={catForm.nameEn}
-            onChange={(e) => setCatForm({ ...catForm, nameEn: e.target.value })}
-            style={{ flex: 1, minWidth: 140 }}
-          />
-          <input
-            className={styles.input}
-            type="number"
-            placeholder="Order"
-            value={catForm.order}
-            onChange={(e) => setCatForm({ ...catForm, order: Number(e.target.value) })}
-            style={{ width: 70 }}
-          />
-          {!editingCat && (
-            <select
-              className={styles.input}
-              value={catForm.parentId}
-              onChange={(e) => setCatForm({ ...catForm, parentId: e.target.value })}
-              style={{ minWidth: 160 }}
-            >
-              <option value="">Top-level category</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.nameKo} / {c.nameEn}</option>
-              ))}
-            </select>
-          )}
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSaveCategory}>
-            {editingCat ? "Save" : "Add"}
+      <div className={styles.toolbar}>
+        <h1 className={styles.pageTitle} style={{ marginBottom: 0 }}>Category Management</h1>
+        {!showForm && (
+          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => startNew()}>
+            + New Category
           </button>
-          {editingCat && (
-            <button
-              className={styles.btn}
-              onClick={() => {
-                setEditingCat(null);
-                setCatForm({ nameKo: "", nameEn: "", order: 0, parentId: "" });
-              }}
-            >
-              Cancel
-            </button>
-          )}
+        )}
+      </div>
+
+      {showForm && (
+        <div className={styles.card} style={{ marginBottom: 20 }}>
+          <div className={styles.form}>
+            <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
+              {editingCat ? "Edit Category" : catForm.parentId ? `Add Subcategory to "${formParentLabel}"` : "New Top-level Category"}
+            </h2>
+
+            {!editingCat && (
+              <div className={styles.field}>
+                <label className={styles.label}>Parent Category</label>
+                <select
+                  className={styles.select || styles.input}
+                  value={catForm.parentId}
+                  onChange={(e) => setCatForm({ ...catForm, parentId: e.target.value })}
+                >
+                  <option value="">None (top-level)</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.nameKo} / {c.nameEn}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <div className={styles.formRow}>
+              <div className={styles.field}>
+                <label className={styles.label}>Name (Korean)</label>
+                <input
+                  className={styles.input}
+                  placeholder="e.g. 교육용키트"
+                  value={catForm.nameKo}
+                  onChange={(e) => setCatForm({ ...catForm, nameKo: e.target.value })}
+                />
+              </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Name (English)</label>
+                <input
+                  className={styles.input}
+                  placeholder="e.g. Education Kits"
+                  value={catForm.nameEn}
+                  onChange={(e) => setCatForm({ ...catForm, nameEn: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Sort Order</label>
+              <input
+                className={styles.input}
+                type="number"
+                value={catForm.order}
+                onChange={(e) => setCatForm({ ...catForm, order: Number(e.target.value) })}
+                style={{ maxWidth: 120 }}
+              />
+            </div>
+
+            <div className={styles.actions}>
+              <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSaveCategory}>
+                {editingCat ? "Save Changes" : "Add Category"}
+              </button>
+              <button className={styles.btn} onClick={resetForm}>Cancel</button>
+            </div>
+          </div>
         </div>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Category (KO)</th>
-              <th>Category (EN)</th>
-              <th>Order</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.map((cat) => (
-              <>
-                <tr key={cat.id}>
-                  <td style={{ fontWeight: 700 }}>{cat.nameKo}</td>
-                  <td style={{ fontWeight: 700 }}>{cat.nameEn}</td>
-                  <td>{cat.order}</td>
+      )}
+
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Category (KO)</th>
+            <th>Category (EN)</th>
+            <th>Order</th>
+            <th>Subcategories</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.map((cat) => (
+            <React.Fragment key={cat.id}>
+              <tr>
+                <td style={{ fontWeight: 700 }}>{cat.nameKo}</td>
+                <td style={{ fontWeight: 700 }}>{cat.nameEn}</td>
+                <td>{cat.order}</td>
+                <td>{cat.children?.length ?? 0}</td>
+                <td>
+                  <div className={styles.actions}>
+                    <button className={styles.btn} onClick={() => startNew(cat.id)} title="Add subcategory">+ Sub</button>
+                    <button className={styles.btn} onClick={() => startEdit(cat)}>Edit</button>
+                    <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDeleteCategory(cat.id)}>Delete</button>
+                  </div>
+                </td>
+              </tr>
+              {cat.children?.map((sub) => (
+                <tr key={sub.id} style={{ background: "#f9fafb" }}>
+                  <td style={{ paddingLeft: 32, color: "#5a6878" }}>└ {sub.nameKo}</td>
+                  <td style={{ paddingLeft: 32, color: "#5a6878" }}>└ {sub.nameEn}</td>
+                  <td>{sub.order}</td>
+                  <td></td>
                   <td>
                     <div className={styles.actions}>
-                      <button className={styles.btn} onClick={() => startEditCategory(cat)}>Edit</button>
-                      <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDeleteCategory(cat.id)}>Delete</button>
+                      <button className={styles.btn} onClick={() => startEdit(sub, cat.id)}>Edit</button>
+                      <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDeleteCategory(sub.id)}>Delete</button>
                     </div>
                   </td>
                 </tr>
-                {cat.children?.map((sub) => (
-                  <tr key={sub.id}>
-                    <td style={{ paddingLeft: 28 }}>└ {sub.nameKo}</td>
-                    <td style={{ paddingLeft: 28 }}>└ {sub.nameEn}</td>
-                    <td>{sub.order}</td>
-                    <td>
-                      <div className={styles.actions}>
-                        <button className={styles.btn} onClick={() => startEditCategory(sub)}>Edit</button>
-                        <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDeleteCategory(sub.id)}>Delete</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </>
-            ))}
-            {categories.length === 0 && (
-              <tr>
-                <td colSpan={4} style={{ textAlign: "center", color: "#888", padding: 20 }}>
-                  No categories registered
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </React.Fragment>
+          ))}
+          {categories.length === 0 && (
+            <tr>
+              <td colSpan={5} style={{ textAlign: "center", color: "#888", padding: 20 }}>
+                No categories registered
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
-      <div className={styles.toolbar}>
+      <div className={styles.toolbar} style={{ marginTop: 32 }}>
         <h1 className={styles.pageTitle} style={{ marginBottom: 0 }}>
           Product Management
         </h1>
