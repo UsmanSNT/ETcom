@@ -77,6 +77,9 @@
 .infoSection {
   background: #07152b;
   color: #fff;
+  min-height: 116px;
+  display: flex;
+  align-items: center;
 }
 
 .infoGrid {
