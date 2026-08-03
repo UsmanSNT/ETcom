@@ -135,6 +135,7 @@
 
 @media (max-width: 1050px) {
   .heroCopy { padding-left: 0; }
+  .dashboardCard { height: auto; overflow: visible; }
   .aiInner { grid-template-columns: 1fr; gap: 40px; }
   .aiIntro { gap: 32px; }
   .solutionsGrid, .productsGrid { grid-template-columns: repeat(3, 1fr); }
@@ -163,7 +164,7 @@
   .textLink { margin-top: 32px; }
   .aiSection { padding: 45px 20px; }
   .aiIntro { grid-template-columns: 1fr; gap: 24px; }
-  .dashboardCard { grid-template-columns: 1fr; padding: 14px; }
+  .dashboardCard { grid-template-columns: 1fr; padding: 14px; height: auto; overflow: visible; }
   .dashboardMenu {
     flex-direction: row;
     flex-wrap: nowrap;
