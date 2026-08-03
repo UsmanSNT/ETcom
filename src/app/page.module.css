@@ -97,8 +97,8 @@
 .productVisual { width: 100%; height: 168px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e5e8ec; }
 .productCard:last-child .productVisual { border-right: 0; }
 .productVisual img { width: 100%; height: 100%; object-fit: contain; }
-.productLabel { display: flex; align-items: center; gap: 6px; }
-.productLabel span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.productLabel { display: flex; align-items: flex-start; gap: 6px; }
+.productLabel span { font-size: 12px; line-height: 1.45; word-break: keep-all; }
 .productPhoto {
   width: 100%; height: 118px;
   background-image: url("/images/products-reference.png");

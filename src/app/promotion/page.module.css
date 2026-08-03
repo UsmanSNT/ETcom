@@ -179,7 +179,8 @@
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  background: #f8f9fb;
 }
 
 .listBody {
@@ -330,8 +331,8 @@
 .thumb {
   width: 100%;
   aspect-ratio: 16 / 10;
-  background: var(--brand-gray-50);
-  object-fit: cover;
+  background: #f8f9fb;
+  object-fit: contain;
   display: block;
 }
 

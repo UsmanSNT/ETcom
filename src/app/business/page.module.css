@@ -173,28 +173,60 @@
 .industriesGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 .industryCard {
-  border-radius: 10px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 28px 16px 22px;
+  border-radius: 12px;
   border: 1px solid var(--brand-gray-100);
+  background: #fff;
+  text-align: center;
+  transition: box-shadow .2s, border-color .2s;
+}
+
+.industryCard:hover {
+  border-color: #c8d2de;
+  box-shadow: 0 4px 16px rgba(7, 21, 43, .06);
 }
 
 .industryImg {
   display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background: var(--brand-gray-50);
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  background: transparent;
+}
+
+.industryIconWrap {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.industryIconWrap svg {
+  width: 64px;
+  height: 64px;
+}
+
+.industryDash {
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
 }
 
 .industryLabel {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   color: var(--brand-navy);
-  padding: 10px;
+  letter-spacing: -0.02em;
 }
 
 @media (min-width: 900px) {
@@ -203,5 +235,6 @@
   }
   .industriesGrid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
 }

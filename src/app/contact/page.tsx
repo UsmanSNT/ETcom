@@ -1,17 +1,29 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { PhoneIcon, MailIcon, PinIcon, HeadsetIcon, PlusIcon, CarIcon, TrainIcon, BusIcon } from "@/components/icons/SolutionIcons";
+import { PhoneIcon, MailIcon, HeadsetIcon, PlusIcon, CartIcon } from "@/components/icons/SolutionIcons";
 
-const DIRECTION_ICONS = [CarIcon, TrainIcon, BusIcon];
+type FaqData = { id: string; questionKo: string; questionEn: string; answerKo: string; answerEn: string };
 import styles from "./page.module.css";
 
 export default function ContactPage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showConsentDetail, setShowConsentDetail] = useState(false);
+  const [dbFaqs, setDbFaqs] = useState<FaqData[] | null>(null);
+
+  useEffect(() => {
+    fetch("/api/faq")
+      .then((res) => res.json())
+      .then((data: FaqData[]) => { if (Array.isArray(data)) setDbFaqs(data); })
+      .catch(() => {});
+  }, []);
+
+  const faqs = dbFaqs && dbFaqs.length > 0
+    ? dbFaqs.map((f) => ({ q: locale === "ko" ? f.questionKo : f.questionEn, a: locale === "ko" ? f.answerKo : f.answerEn }))
+    : t.contact.faqs;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -83,13 +95,6 @@ export default function ContactPage() {
           </div>
           <div className={styles.infoCard}>
             <div className={styles.infoHead}>
-              <PinIcon className={styles.infoIcon} />
-              <span className={styles.infoLabel}>{t.contact.infoAddressLabel}</span>
-            </div>
-            <div className={`${styles.infoValue} ${styles.infoValueNeutral}`}>{t.footer.address}</div>
-          </div>
-          <div className={styles.infoCard}>
-            <div className={styles.infoHead}>
               <HeadsetIcon className={styles.infoIcon} />
               <span className={styles.infoLabel}>{t.contact.infoSupportLabel}</span>
             </div>
@@ -102,28 +107,47 @@ export default function ContactPage() {
         <div className={styles.mainGrid}>
           <div className={styles.card} id="directions">
             <div className={styles.directionsLabel}>{t.contact.directionsLabel}</div>
+            <div className={styles.mapLink}>
+              <a href={`https://map.google.com/?q=${encodeURIComponent("전라북도 익산시 서동로 590")}`} target="_blank" rel="noopener noreferrer">
+                {t.contact.mapOpen} ↗
+              </a>
+            </div>
             <div className={styles.mapArt}>
               <iframe
                 className={styles.mapFrame}
                 title="ETCOMPANY location"
-                src={`https://www.google.com/maps?q=${encodeURIComponent("전라북도 익산시 약촌로 132")}&output=embed`}
+                src={`https://www.google.com/maps?q=${encodeURIComponent("전라북도 익산시 서동로 590")}&output=embed`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-            <div className={styles.directionsList}>
-              {t.contact.directions.map((d, i) => {
-                const Icon = DIRECTION_ICONS[i];
-                return (
-                  <div key={d.mode} className={styles.directionRow}>
-                    <div className={styles.directionIconBox}>
-                      <Icon className={styles.directionIcon} />
-                    </div>
-                    <span className={styles.directionLabel}>{d.mode}</span>
-                    <span className={styles.directionDesc}>{d.desc}</span>
-                  </div>
-                );
-              })}
+            <div className={styles.locationsList}>
+              <div className={styles.locationRow}>
+                <div className={styles.locationIconBox}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={styles.locationIcon}>
+                    <path d="M3 21h18" />
+                    <path d="M5 21V7l7-4 7 4v14" />
+                    <path d="M9 21v-4h6v4" />
+                    <path d="M9 10h1M14 10h1M9 14h1M14 14h1" />
+                  </svg>
+                </div>
+                <div className={styles.locationInfo}>
+                  <strong>{t.contact.hqTitle}</strong>
+                  <span>{t.contact.hqAddress}</span>
+                </div>
+              </div>
+              <div className={styles.locationRow}>
+                <div className={styles.locationIconBox}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={styles.locationIcon}>
+                    <path d="M9 3h6M10 3v7.4L6.2 18.8A2 2 0 0 0 8 22h8a2 2 0 0 0 1.8-3.2L14 10.4V3" />
+                    <path d="M8.5 17h7" />
+                  </svg>
+                </div>
+                <div className={styles.locationInfo}>
+                  <strong>{t.contact.labTitle}</strong>
+                  <span>{t.contact.labAddress}</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -202,7 +226,7 @@ export default function ContactPage() {
               {t.contact.faqLabel}
             </div>
             <div>
-              {t.contact.faqs.map((faq, i) => (
+              {faqs.map((faq, i) => (
                 <div key={faq.q} className={styles.faqItem}>
                   <button
                     type="button"
@@ -225,16 +249,20 @@ export default function ContactPage() {
             <div className={styles.channelsGrid} style={{ marginTop: 16 }}>
               <div className={styles.channelCard}>
                 <HeadsetIcon className={styles.channelIcon} />
+                <div className={styles.channelLabel}>{t.contact.channelPhone}</div>
                 <div className={styles.channelText}>{t.footer.tel}</div>
               </div>
               <div className={styles.channelCard}>
                 <MailIcon className={styles.channelIcon} />
+                <div className={styles.channelLabel}>E-mail</div>
                 <div className={styles.channelText}>{t.footer.email}</div>
               </div>
-              <div className={styles.channelCard}>
-                <PinIcon className={styles.channelIcon} />
-                <div className={styles.channelText}>{t.footer.address}</div>
-              </div>
+              <a className={styles.channelCard} href="https://etmall.co.kr" target="_blank" rel="noopener noreferrer">
+                <CartIcon className={styles.channelIcon} />
+                <div className={styles.channelLabel}>{t.contact.channelShop}</div>
+                <div className={styles.channelText}>ETMALL</div>
+                <div className={styles.channelLink}>etmall.co.kr</div>
+              </a>
             </div>
           </div>
         </div>

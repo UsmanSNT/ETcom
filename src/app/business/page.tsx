@@ -39,6 +39,97 @@ type IndustryData = {
   imageUrl: string | null;
 };
 
+const INDUSTRY_ICONS: { color: string; icon: React.ReactNode }[] = [
+  {
+    color: "#22c55e",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 56V32" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M32 40c-8-2-14-8-14-18 12 0 18 6 18 18" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <path d="M32 32c6-2 12-8 12-16-10 0-16 6-16 16" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      </svg>
+    ),
+  },
+  {
+    color: "#3b82f6",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="18" y="20" width="28" height="20" rx="2" stroke="#3b82f6" strokeWidth="2.5" />
+        <path d="M46 28h6l4 6v6h-10" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="24" cy="42" r="4" stroke="#3b82f6" strokeWidth="2.5" />
+        <circle cx="46" cy="42" r="4" stroke="#3b82f6" strokeWidth="2.5" />
+        <path d="M28 40h14" stroke="#3b82f6" strokeWidth="2.5" />
+        <path d="M8 28h10M8 24h6M8 32h4" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    color: "#475569",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 52h48" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M14 52V22h20v30" stroke="#475569" strokeWidth="2.5" strokeLinejoin="round" />
+        <path d="M34 52V30h12v22" stroke="#475569" strokeWidth="2.5" strokeLinejoin="round" />
+        <rect x="19" y="28" width="4" height="4" rx="0.5" stroke="#475569" strokeWidth="2" />
+        <rect x="27" y="28" width="4" height="4" rx="0.5" stroke="#475569" strokeWidth="2" />
+        <rect x="19" y="36" width="4" height="4" rx="0.5" stroke="#475569" strokeWidth="2" />
+        <rect x="27" y="36" width="4" height="4" rx="0.5" stroke="#475569" strokeWidth="2" />
+        <rect x="38" y="36" width="4" height="4" rx="0.5" stroke="#475569" strokeWidth="2" />
+        <path d="M46 16V12h4v10" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    color: "#16a34a",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M28.5 14l-16 28h12l-4 14 20-28h-14l6-14z" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <path d="M44 38c5.5-3 10-9 10-18-10 0-16 5-18 12" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    color: "#7c3aed",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 28l20-10 20 10" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M18 31v10c0 4 6 8 14 8s14-4 14-8V31" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M52 28v16" stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="52" cy="46" r="2" fill="#7c3aed" />
+      </svg>
+    ),
+  },
+  {
+    color: "#0d9488",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="28" width="16" height="24" rx="1" stroke="#0d9488" strokeWidth="2.5" />
+        <rect x="26" y="16" width="16" height="36" rx="1" stroke="#0d9488" strokeWidth="2.5" />
+        <rect x="42" y="24" width="12" height="28" rx="1" stroke="#0d9488" strokeWidth="2.5" />
+        <path d="M15 34h6M15 40h6M31 22h6M31 28h6M31 34h6M31 40h6M47 30h4M47 36h4" stroke="#0d9488" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    color: "#1e3a5f",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 10l20 12v18c0 8-8 14-20 16C20 54 12 48 12 40V22l20-12z" stroke="#1e3a5f" strokeWidth="2.5" strokeLinejoin="round" />
+        <path d="M24 34l6 6 12-12" stroke="#1e3a5f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    color: "#dc2626",
+    icon: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="14" y="14" width="36" height="36" rx="6" stroke="#dc2626" strokeWidth="2.5" />
+        <path d="M32 22v20M22 32h20" stroke="#dc2626" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+];
+
 export default function BusinessPage() {
   const { t, locale } = useLanguage();
   const [areas, setAreas] = useState<AreaData[]>(FALLBACK_AREAS);
@@ -116,16 +207,18 @@ export default function BusinessPage() {
       <section className={styles.industriesSection}>
         <div className={styles.industriesLabel}>{t.business.industriesLabel}</div>
         <div className={styles.industriesGrid}>
-          {industryCards.map((industry) => (
-            <div key={industry.key} className={styles.industryCard}>
-              {industry.imageUrl ? (
-                <img src={industry.imageUrl} alt={industry.name} className={styles.industryImg} />
-              ) : (
-                <div className={styles.industryImg} />
-              )}
-              <div className={styles.industryLabel}>{industry.name}</div>
-            </div>
-          ))}
+          {industryCards.map((industry, idx) => {
+            const iconData = INDUSTRY_ICONS[idx % INDUSTRY_ICONS.length];
+            return (
+              <div key={industry.key} className={styles.industryCard}>
+                <div className={styles.industryIconWrap}>
+                  {iconData.icon}
+                </div>
+                <div className={styles.industryLabel}>{industry.name}</div>
+                <div className={styles.industryDash} style={{ background: iconData.color }} />
+              </div>
+            );
+          })}
         </div>
       </section>
 

@@ -1,9 +1,9 @@
 .pageLayout {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
-  max-width: 1440px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   gap: 32px;
 }
 

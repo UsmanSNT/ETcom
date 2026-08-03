@@ -44,6 +44,7 @@ const PROMOTION_TABS = [
   { key: "events", ko: "전시회/행사", en: "Exhibitions / Events" },
   { key: "media", ko: "미디어", en: "Media" },
   { key: "resources", ko: "자료실", en: "Resources" },
+  { key: "patents-certifications", ko: "특허·인증", en: "Patents · Certifications" },
 ] as const;
 
 export default function PromotionPage() {
@@ -275,6 +276,14 @@ function PromotionCategoryIcon({ type }: { type: string }) {
     return (
       <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
         <path d="M4 8h16v12H4zM8 4h8l2 4H6l2-4zM12 11v6M9.5 14.5 12 17l2.5-2.5" />
+      </svg>
+    );
+  }
+  if (type === "patents-certifications") {
+    return (
+      <svg className={styles.tabIcon} viewBox="0 0 24 24" fill="none">
+        <path d="M12 15l-3 3v-4.5M12 15l3 3v-4.5M9 12a3 3 0 1 1 6 0 3 3 0 0 1-6 0z" />
+        <path d="M5 7h14v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7zM9 4h6v3H9z" />
       </svg>
     );
   }

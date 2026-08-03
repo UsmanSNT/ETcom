@@ -1,0 +1,17 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function GET() {
+  const faqs = await prisma.faq.findMany({
+    where: { isPublished: true },
+    orderBy: { order: "asc" },
+    select: {
+      id: true,
+      questionKo: true,
+      questionEn: true,
+      answerKo: true,
+      answerEn: true,
+    },
+  });
+  return NextResponse.json(faqs);
+}
