@@ -1,16 +1,16 @@
 .banner {
   background: var(--brand-navy);
   color: #fff;
-  padding: 48px 24px;
+  padding: 80px 24px;
 }
 
 .bannerImage {
   width: min(1330px, 100%);
-  min-height: 280px;
+  min-height: 340px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 60px 40px;
+  padding: 80px 48px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -45,19 +45,20 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 28px;
 }
 
 .title {
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 800;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .desc {
-  font-size: 13px;
+  font-size: 15px;
   opacity: 0.65;
-  margin-top: 4px;
+  margin-top: 6px;
+  line-height: 1.7;
 }
 
 .btn {
@@ -68,9 +69,9 @@
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  padding: 12px 22px;
+  padding: 14px 28px;
   border-radius: 8px;
 }
 
@@ -79,5 +80,28 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 767px) {
+  .banner {
+    padding: 56px 20px;
+  }
+
+  .bannerImage {
+    padding: 56px 24px;
+    min-height: 280px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .desc {
+    font-size: 14px;
   }
 }
