@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
       thumbnailUrl: null,
       categoryKo: body.categoryKo ?? null,
       categoryEn: body.categoryEn ?? null,
+      categoryId: body.categoryId || null,
       price: body.price ? Number(body.price) : null,
       isPublished: body.isPublished ?? true,
       order: body.order ?? 0,

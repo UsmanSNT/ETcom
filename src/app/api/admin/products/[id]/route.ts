@@ -27,6 +27,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       thumbnailUrl: null,
       categoryKo: body.categoryKo ?? null,
       categoryEn: body.categoryEn ?? null,
+      categoryId: body.categoryId || null,
       price: body.price ? Number(body.price) : null,
       isPublished: body.isPublished,
       order: body.order,

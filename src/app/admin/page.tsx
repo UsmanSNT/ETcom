@@ -23,41 +23,41 @@ export default function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className={styles.pageTitle}>Dashboard</h1>
+      <h1 className={styles.pageTitle}>대시보드</h1>
 
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Total Visits</div>
+          <div className={styles.statLabel}>총 방문수</div>
           <div className={styles.statValue}>{stats?.totalVisits ?? "-"}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Visits (Last 7 Days)</div>
+          <div className={styles.statLabel}>방문수 (최근 7일)</div>
           <div className={styles.statValue}>{stats?.visits7d ?? "-"}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>New Inquiries</div>
+          <div className={styles.statLabel}>신규 문의</div>
           <div className={styles.statValue}>{stats?.newInquiries ?? "-"}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Registered Products</div>
+          <div className={styles.statLabel}>등록된 제품</div>
           <div className={styles.statValue}>{stats?.totalProducts ?? "-"}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Promotion Posts</div>
+          <div className={styles.statLabel}>홍보 게시글</div>
           <div className={styles.statValue}>{stats?.totalPosts ?? "-"}</div>
         </div>
       </div>
 
       <h2 className={styles.pageTitle} style={{ fontSize: 18 }}>
-        Recent Inquiries
+        최근 문의
       </h2>
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Message</th>
-            <th>Date</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>메시지</th>
+            <th>날짜</th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@ export default function AdminDashboardPage() {
               <td>{i.name}</td>
               <td>{i.email}</td>
               <td>{i.message.slice(0, 40)}</td>
-              <td>{new Date(i.createdAt).toLocaleDateString("en-US")}</td>
+              <td>{new Date(i.createdAt).toLocaleDateString("ko-KR")}</td>
             </tr>
           ))}
         </tbody>

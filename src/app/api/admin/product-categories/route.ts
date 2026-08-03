@@ -8,7 +8,11 @@ export async function GET(req: NextRequest) {
   }
   try {
     const categories = await prisma.productCategory.findMany({
+      where: { parentId: null },
       orderBy: { order: "asc" },
+      include: {
+        children: { orderBy: { order: "asc" } },
+      },
     });
     return NextResponse.json(categories);
   } catch {
@@ -21,12 +25,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const body = await req.json();
-  const { nameKo, nameEn, order } = body;
+  const { nameKo, nameEn, order, parentId } = body;
   if (!nameKo || !nameEn) {
     return NextResponse.json({ error: "nameKo and nameEn required" }, { status: 400 });
   }
   const category = await prisma.productCategory.create({
-    data: { nameKo, nameEn, order: order ?? 0 },
+    data: { nameKo, nameEn, order: order ?? 0, parentId: parentId || null },
   });
   return NextResponse.json(category, { status: 201 });
 }

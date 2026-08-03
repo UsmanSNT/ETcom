@@ -42,7 +42,12 @@ const TRUST_ITEMS = [
   { icon: WarrantyIcon, titleKey: "trust4Title", descKey: "trust4Desc" },
 ] as const;
 
-type CategoryInfo = { ko: string; en: string };
+type HierarchicalCategory = {
+  id: string;
+  nameKo: string;
+  nameEn: string;
+  children: { id: string; nameKo: string; nameEn: string }[];
+};
 
 const PAGE_SIZE = 8;
 
@@ -58,8 +63,9 @@ export default function ProductsPage() {
   const [imageSearchStatus, setImageSearchStatus] = useState<"idle" | "loading" | "error">("idle");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
-  const [dynamicCategories, setDynamicCategories] = useState<CategoryInfo[]>([]);
+  const [hierarchicalCategories, setHierarchicalCategories] = useState<HierarchicalCategory[]>([]);
 
   useEffect(() => {
     fetch("/api/products")
@@ -68,13 +74,10 @@ export default function ProductsPage() {
       .catch(() => setProducts([]));
     fetch("/api/product-categories")
       .then((res) => res.json())
-      .then((cats: Array<{ nameKo: string; nameEn: string }>) =>
-        setDynamicCategories(cats.map((c) => ({ ko: c.nameKo, en: c.nameEn })))
-      )
+      .then((cats: HierarchicalCategory[]) => setHierarchicalCategories(cats))
       .catch(() => {});
   }, []);
 
-  // The header's mobile burger (products page only) toggles this sidebar.
   useEffect(() => {
     const toggle = () => setSidebarOpen((v) => !v);
     window.addEventListener("etc:toggle-product-sidebar", toggle);
@@ -104,29 +107,47 @@ export default function ProductsPage() {
     setImagePreview(null);
   }
 
-  // Categories come from the admin-managed list; if it's empty, fall back to the
-  // distinct categories found on the products themselves so the tabs still show.
-  const categories = useMemo<CategoryInfo[]>(() => {
-    if (dynamicCategories.length > 0) return dynamicCategories;
-    if (!products) return [];
-    // De-duplicate on the name shown in the current locale so tabs never repeat.
-    const map = new Map<string, CategoryInfo>();
-    for (const p of products) {
-      if (!p.categoryKo && !p.categoryEn) continue;
-      const ko = p.categoryKo ?? p.categoryEn ?? "";
-      const en = p.categoryEn ?? p.categoryKo ?? "";
-      const key = locale === "ko" ? ko : en;
-      if (!map.has(key)) map.set(key, { ko, en });
+  function toggleExpand(catId: string) {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(catId)) next.delete(catId);
+      else next.add(catId);
+      return next;
+    });
+  }
+
+  function getCategoryNames(catId: string): { ko: string; en: string } | null {
+    for (const parent of hierarchicalCategories) {
+      if (parent.id === catId) return { ko: parent.nameKo, en: parent.nameEn };
+      for (const child of parent.children) {
+        if (child.id === catId) return { ko: child.nameKo, en: child.nameEn };
+      }
     }
-    return [...map.values()];
-  }, [dynamicCategories, products, locale]);
+    return null;
+  }
 
   const filtered = useMemo(() => {
     if (imageSearchResults) return imageSearchResults;
     if (!products) return [];
     let list = products;
     if (activeCategory !== "all") {
-      list = list.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === activeCategory);
+      const names = getCategoryNames(activeCategory);
+      if (names) {
+        const parentCat = hierarchicalCategories.find((c) => c.id === activeCategory);
+        if (parentCat) {
+          const allNames = [
+            { ko: parentCat.nameKo, en: parentCat.nameEn },
+            ...parentCat.children.map((c) => ({ ko: c.nameKo, en: c.nameEn })),
+          ];
+          list = list.filter((p) =>
+            allNames.some((n) => p.categoryKo === n.ko || p.categoryEn === n.en)
+          );
+        } else {
+          list = list.filter(
+            (p) => p.categoryKo === names.ko || p.categoryEn === names.en
+          );
+        }
+      }
     }
     const query = search.trim().toLowerCase();
     if (query) {
@@ -146,7 +167,7 @@ export default function ProductsPage() {
       return b.popularityScore - a.popularityScore || (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
     });
     return list;
-  }, [products, activeCategory, search, sortBy, locale, imageSearchResults]);
+  }, [products, activeCategory, search, sortBy, locale, imageSearchResults, hierarchicalCategories]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -181,6 +202,57 @@ export default function ProductsPage() {
       )}
 
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
+        <div className={styles.sidebarTitle}>{t.products.categoriesTitle ?? "Categories"}</div>
+        <nav className={styles.sidebarNav}>
+          <button
+            type="button"
+            className={`${styles.sidebarItem} ${activeCategory === "all" ? styles.sidebarItemActive : ""}`}
+            onClick={() => setActiveCategory("all")}
+          >
+            {t.products.all} ({products?.length ?? 0})
+          </button>
+          {hierarchicalCategories.map((cat) => {
+            const name = locale === "ko" ? cat.nameKo : cat.nameEn;
+            const expanded = expandedCategories.has(cat.id);
+            const hasChildren = cat.children.length > 0;
+            return (
+              <div key={cat.id}>
+                <button
+                  type="button"
+                  className={`${styles.sidebarItem} ${activeCategory === cat.id ? styles.sidebarItemActive : ""}`}
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    if (hasChildren) toggleExpand(cat.id);
+                  }}
+                >
+                  <span>{name}</span>
+                  {hasChildren && (
+                    <b style={{ transform: expanded ? "rotate(90deg)" : "none", transition: "transform .2s", fontSize: 14 }}>›</b>
+                  )}
+                </button>
+                {hasChildren && expanded && (
+                  <div style={{ paddingLeft: 16 }}>
+                    {cat.children.map((sub) => {
+                      const subName = locale === "ko" ? sub.nameKo : sub.nameEn;
+                      return (
+                        <button
+                          key={sub.id}
+                          type="button"
+                          className={`${styles.sidebarItem} ${activeCategory === sub.id ? styles.sidebarItemActive : ""}`}
+                          onClick={() => setActiveCategory(sub.id)}
+                          style={{ fontSize: 12, minHeight: 36, paddingLeft: 8 }}
+                        >
+                          {subName}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </nav>
+
         <div className={styles.sidebarContact}>
           <HeadsetIcon />
           <strong>{t.products.inquiryTitle}</strong>
@@ -273,17 +345,16 @@ export default function ProductsPage() {
               >
                 {t.products.all} ({products?.length ?? 0})
               </button>
-              {categories.map(({ ko, en }) => {
-                const name = locale === "ko" ? ko : en;
-                const count = products?.filter((p) => (locale === "ko" ? p.categoryKo : p.categoryEn) === name).length ?? 0;
+              {hierarchicalCategories.map((cat) => {
+                const name = locale === "ko" ? cat.nameKo : cat.nameEn;
                 return (
                   <button
-                    key={name}
+                    key={cat.id}
                     type="button"
-                    className={`${styles.tab} ${activeCategory === name ? styles.tabActive : ""}`}
-                    onClick={() => setActiveCategory(name)}
+                    className={`${styles.tab} ${activeCategory === cat.id ? styles.tabActive : ""}`}
+                    onClick={() => setActiveCategory(cat.id)}
                   >
-                    {name} ({count})
+                    {name}
                   </button>
                 );
               })}

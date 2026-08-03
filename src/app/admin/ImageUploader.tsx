@@ -29,7 +29,7 @@ export function ImageUploader({
     const selected = Array.from(event.target.files ?? []);
     if (selected.length === 0) return;
     if (value.length + selected.length > MAX_IMAGES) {
-      setError(`Up to ${MAX_IMAGES} images allowed.`);
+      setError(`최대 ${MAX_IMAGES}장까지 업로드할 수 있습니다.`);
       event.target.value = "";
       return;
     }
@@ -43,16 +43,16 @@ export function ImageUploader({
       const body = await response.json();
       if (!response.ok) {
         const messages: Record<string, string> = {
-          "unsupported file type": "Only JPG, PNG, WEBP, GIF formats are supported.",
-          "file too large": "Each image must be under 5MB.",
-          "too many files": "Up to 5 images allowed.",
+          "unsupported file type": "JPG, PNG, WEBP, GIF 형식만 지원합니다.",
+          "file too large": "이미지당 최대 5MB까지 가능합니다.",
+          "too many files": "최대 5장까지 업로드할 수 있습니다.",
         };
-        setError(messages[body.error] ?? "Error uploading image.");
+        setError(messages[body.error] ?? "이미지 업로드 중 오류가 발생했습니다.");
         return;
       }
       onChange([...value, ...body.images].map((image, order) => ({ ...image, order })));
     } catch {
-      setError("Error uploading image.");
+      setError("이미지 업로드 중 오류가 발생했습니다.");
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -73,13 +73,13 @@ export function ImageUploader({
         <div className={styles.uploaderGrid}>
           {value.map((image, index) => (
             <div className={styles.uploaderPreviewWrap} key={image.id}>
-              <img src={image.url} alt={`Image ${index + 1}`} className={styles.uploaderPreview} />
-              {index === 0 && <span className={styles.uploaderPrimary}>Primary</span>}
+              <img src={image.url} alt={`이미지 ${index + 1}`} className={styles.uploaderPreview} />
+              {index === 0 && <span className={styles.uploaderPrimary}>대표</span>}
               <button
                 type="button"
                 className={styles.uploaderRemove}
                 onClick={() => removeImage(image)}
-                aria-label={`Delete ${image.fileName}`}
+                aria-label={`${image.fileName} 삭제`}
               >
                 ×
               </button>
@@ -97,10 +97,10 @@ export function ImageUploader({
           disabled={uploading || value.length >= MAX_IMAGES}
         />
         <span className={styles.uploaderStatus}>
-          {uploading ? "Uploading..." : `Images ${value.length}/${MAX_IMAGES}`}
+          {uploading ? "업로드 중..." : `이미지 ${value.length}/${MAX_IMAGES}`}
         </span>
       </div>
-      <p className={styles.uploaderHint}>You can select multiple images. The first one will be used as the primary image.</p>
+      <p className={styles.uploaderHint}>여러 장을 선택할 수 있으며, 첫 번째 이미지가 대표 이미지로 사용됩니다.</p>
       {error && <div className={styles.errorText}>{error}</div>}
     </div>
   );

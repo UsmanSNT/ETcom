@@ -4,8 +4,17 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const categories = await prisma.productCategory.findMany({
+      where: { parentId: null },
       orderBy: { order: "asc" },
-      select: { id: true, nameKo: true, nameEn: true },
+      select: {
+        id: true,
+        nameKo: true,
+        nameEn: true,
+        children: {
+          orderBy: { order: "asc" },
+          select: { id: true, nameKo: true, nameEn: true },
+        },
+      },
     });
     return NextResponse.json(categories);
   } catch {

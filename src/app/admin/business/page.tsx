@@ -17,10 +17,10 @@ type BusinessArea = {
 };
 
 const ICON_OPTIONS = [
-  { value: "leaf", label: "Smart Farm" },
-  { value: "truck", label: "Industrial IoT" },
-  { value: "cap", label: "Education" },
-  { value: "chip", label: "Embedded & AI" },
+  { value: "leaf", label: "스마트팜" },
+  { value: "truck", label: "산업용 IoT" },
+  { value: "cap", label: "교육" },
+  { value: "chip", label: "임베디드 & AI" },
 ];
 
 const emptyForm = (): Omit<BusinessArea, "id"> & { id?: string } => ({
@@ -107,7 +107,7 @@ export default function AdminBusinessPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this business area?")) return;
+    if (!confirm("이 사업 분야를 삭제하시겠습니까?")) return;
     await fetch(`/api/admin/business-areas?id=${id}`, { method: "DELETE" });
     load();
   }
@@ -115,19 +115,19 @@ export default function AdminBusinessPage() {
   return (
     <div>
       <div className={styles.toolbar}>
-        <h1 className={styles.pageTitle}>Business Area Management</h1>
+        <h1 className={styles.pageTitle}>사업 분야 관리</h1>
         {!editing && (
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ Add New Area</button>
+          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ 신규 등록</button>
         )}
       </div>
 
       {editing && (
         <div className={styles.card}>
           <div className={styles.form}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{form.id ? "Edit Area" : "Add New Area"}</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{form.id ? "사업 분야 수정" : "신규 등록"}</h2>
 
             <div className={styles.field}>
-              <label className={styles.label}>Icon</label>
+              <label className={styles.label}>아이콘</label>
               <select className={styles.select} value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })}>
                 {ICON_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -137,62 +137,62 @@ export default function AdminBusinessPage() {
 
             <div className={styles.formRow}>
               <div className={styles.field}>
-                <label className={styles.label}>Title (Korean)</label>
+                <label className={styles.label}>제목 (한국어)</label>
                 <input className={styles.input} value={form.titleKo} onChange={(e) => setForm({ ...form, titleKo: e.target.value })} />
               </div>
               <div className={styles.field}>
-                <label className={styles.label}>Title (English)</label>
+                <label className={styles.label}>제목 (영어)</label>
                 <input className={styles.input} value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} />
               </div>
             </div>
 
             <div className={styles.formRow}>
               <div className={styles.field}>
-                <label className={styles.label}>Items (Korean)</label>
+                <label className={styles.label}>항목 (한국어)</label>
                 {form.itemsKo.map((item, i) => (
                   <div key={i} style={{ display: "flex", gap: 6, marginBottom: 4 }}>
-                    <input className={styles.input} style={{ flex: 1 }} value={item} onChange={(e) => updateItems("Ko", i, e.target.value)} placeholder={`Item ${i + 1}`} />
+                    <input className={styles.input} style={{ flex: 1 }} value={item} onChange={(e) => updateItems("Ko", i, e.target.value)} placeholder={`항목 ${i + 1}`} />
                     {form.itemsKo.length > 1 && (
                       <button type="button" className={`${styles.btn} ${styles.btnDanger}`} onClick={() => removeItem("Ko", i)} style={{ padding: "6px 10px" }}>×</button>
                     )}
                   </div>
                 ))}
-                <button type="button" className={styles.btn} onClick={() => addItem("Ko")}>+ Add</button>
+                <button type="button" className={styles.btn} onClick={() => addItem("Ko")}>+ 추가</button>
               </div>
               <div className={styles.field}>
-                <label className={styles.label}>Items (English)</label>
+                <label className={styles.label}>항목 (영어)</label>
                 {form.itemsEn.map((item, i) => (
                   <div key={i} style={{ display: "flex", gap: 6, marginBottom: 4 }}>
-                    <input className={styles.input} style={{ flex: 1 }} value={item} onChange={(e) => updateItems("En", i, e.target.value)} placeholder={`Item ${i + 1}`} />
+                    <input className={styles.input} style={{ flex: 1 }} value={item} onChange={(e) => updateItems("En", i, e.target.value)} placeholder={`항목 ${i + 1}`} />
                     {form.itemsEn.length > 1 && (
                       <button type="button" className={`${styles.btn} ${styles.btnDanger}`} onClick={() => removeItem("En", i)} style={{ padding: "6px 10px" }}>×</button>
                     )}
                   </div>
                 ))}
-                <button type="button" className={styles.btn} onClick={() => addItem("En")}>+ Add</button>
+                <button type="button" className={styles.btn} onClick={() => addItem("En")}>+ 추가</button>
               </div>
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Sort Order</label>
+              <label className={styles.label}>정렬 순서</label>
               <input className={styles.input} type="number" value={form.order} onChange={(e) => setForm({ ...form, order: Number(e.target.value) })} style={{ maxWidth: 120 }} />
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Image</label>
+              <label className={styles.label}>이미지</label>
               <ImageUploader value={form.images} onChange={(images) => setForm({ ...form, images })} />
             </div>
 
             <div className={styles.checkboxRow}>
               <input type="checkbox" checked={form.isPublished} onChange={(e) => setForm({ ...form, isPublished: e.target.checked })} />
-              <label className={styles.label}>Published</label>
+              <label className={styles.label}>공개</label>
             </div>
 
             <div className={styles.actions}>
               <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSave} disabled={saving}>
-                {saving ? "Saving..." : form.id ? "Save Changes" : "Add"}
+                {saving ? "저장 중..." : form.id ? "변경 사항 저장" : "등록"}
               </button>
-              <button className={styles.btn} onClick={cancel}>Cancel</button>
+              <button className={styles.btn} onClick={cancel}>취소</button>
             </div>
           </div>
         </div>
@@ -201,13 +201,13 @@ export default function AdminBusinessPage() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Order</th>
-            <th>Image</th>
-            <th>Title (KO)</th>
-            <th>Title (EN)</th>
-            <th>Items</th>
-            <th>Published</th>
-            <th>Actions</th>
+            <th>순서</th>
+            <th>이미지</th>
+            <th>제목(KO)</th>
+            <th>제목(EN)</th>
+            <th>항목</th>
+            <th>공개</th>
+            <th>관리</th>
           </tr>
         </thead>
         <tbody>
@@ -227,14 +227,14 @@ export default function AdminBusinessPage() {
               <td>{area.isPublished ? "✓" : "—"}</td>
               <td>
                 <div className={styles.actions}>
-                  <button className={styles.btn} onClick={() => startEdit(area)}>Edit</button>
-                  <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDelete(area.id)}>Delete</button>
+                  <button className={styles.btn} onClick={() => startEdit(area)}>수정</button>
+                  <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDelete(area.id)}>삭제</button>
                 </div>
               </td>
             </tr>
           ))}
           {areas.length === 0 && (
-            <tr><td colSpan={7} style={{ textAlign: "center", padding: 24, opacity: 0.5 }}>No business areas registered.</td></tr>
+            <tr><td colSpan={7} style={{ textAlign: "center", padding: 24, opacity: 0.5 }}>등록된 사업 분야가 없습니다.</td></tr>
           )}
         </tbody>
       </table>

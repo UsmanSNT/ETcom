@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { dictionaries } from "@/lib/i18n/dictionaries";
 import { ScrollRow } from "@/components/ScrollRow";
 import {
   CapIcon,
@@ -152,10 +151,6 @@ const MENU_ICONS = [
 
 export default function Home() {
   const { t, locale } = useLanguage();
-  // The AI dashboard section stays Korean-only for now (its dashboards are
-  // hardcoded Korean), so pull its copy straight from the Korean dictionary
-  // regardless of the selected language.
-  const koHome = dictionaries.ko.home;
   const menuItems = [
     t.home.dashMenu1,
     t.home.dashMenu2,
@@ -254,23 +249,23 @@ export default function Home() {
         <div className={styles.aiInner}>
           <div className={styles.aiIntro}>
             <div className={styles.aiIntroLeft}>
-              <p className={styles.aiLabel}>{koHome.aiExperienceLabel}</p>
+              <p className={styles.aiLabel}>{t.home.aiExperienceLabel}</p>
               <h2 className={styles.aiTitle}>
-                {koHome.aiExperienceTitle1}
+                {t.home.aiExperienceTitle1}
                 <br />
-                {koHome.aiExperienceTitle2}
+                {t.home.aiExperienceTitle2}
               </h2>
-              <p className={styles.aiDesc}>{koHome.aiExperienceDesc}</p>
+              <p className={styles.aiDesc}>{t.home.aiExperienceDesc}</p>
               <Link href="/business" className={styles.aiMore}>
-                {koHome.aiMore} <span aria-hidden="true">→</span>
+                {t.home.aiMore} <span aria-hidden="true">→</span>
               </Link>
             </div>
 
             <div className={styles.aiSteps}>
               {[
-                [SensorIcon, koHome.aiStep1Title, koHome.aiStep1Desc],
-                [NetworkIcon, koHome.aiStep2Title, koHome.aiStep2Desc],
-                [SwitchIcon, koHome.aiStep3Title, koHome.aiStep3Desc],
+                [SensorIcon, t.home.aiStep1Title, t.home.aiStep1Desc],
+                [NetworkIcon, t.home.aiStep2Title, t.home.aiStep2Desc],
+                [SwitchIcon, t.home.aiStep3Title, t.home.aiStep3Desc],
               ].map(([Icon, title, description], stepIndex) => {
                 const StepIcon = Icon as typeof SensorIcon;
                 return (

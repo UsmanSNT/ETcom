@@ -10,10 +10,10 @@ const NAV_ITEMS = [
   { href: "/admin/business", label: "Business Areas" },
   { href: "/admin/key-industries", label: "Key Industries" },
   { href: "/admin/products", label: "Products" },
-  { href: "/admin/promotion", label: "Promotions" },
+  { href: "/admin/promotion", label: "Promotion" },
   { href: "/admin/resources", label: "Resources" },
-  { href: "/admin/contacts", label: "Inquiries" },
-  { href: "/admin/settings", label: "Site Settings" },
+  { href: "/admin/contacts", label: "Contacts" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

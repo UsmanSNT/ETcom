@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ImageUploader, type UploadedImage } from "../ImageUploader";
 import styles from "../admin.module.css";
 
-type CategoryOption = { id: string; nameKo: string; nameEn: string };
+type CategoryOption = { id: string; nameKo: string; nameEn: string; children?: CategoryOption[] };
 
 export type ProductFormValues = {
   titleKo: string;
@@ -15,6 +15,7 @@ export type ProductFormValues = {
   images: UploadedImage[];
   categoryKo: string;
   categoryEn: string;
+  categoryId: string;
   price: number | null;
   isPublished: boolean;
   order: number;
@@ -35,6 +36,7 @@ const EMPTY: ProductFormValues = {
   images: [],
   categoryKo: "",
   categoryEn: "",
+  categoryId: "",
   price: null,
   isPublished: true,
   order: 0,
@@ -59,6 +61,7 @@ export function ProductForm({
     ...EMPTY,
     ...initial,
     images: initial?.images ?? [],
+    categoryId: initial?.categoryId ?? "",
     seoTitle: initial?.seoTitle ?? "",
     seoDescription: initial?.seoDescription ?? "",
     slug: initial?.slug ?? "",
@@ -78,6 +81,19 @@ export function ProductForm({
 
   function update<K extends keyof ProductFormValues>(key: K, value: ProductFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function handleCategoryChange(categoryId: string) {
+    let ko = "";
+    let en = "";
+    for (const parent of categoryOptions) {
+      if (parent.id === categoryId) { ko = parent.nameKo; en = parent.nameEn; break; }
+      for (const child of parent.children ?? []) {
+        if (child.id === categoryId) { ko = child.nameKo; en = child.nameEn; break; }
+      }
+      if (ko) break;
+    }
+    setValues((prev) => ({ ...prev, categoryId, categoryKo: ko, categoryEn: en }));
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -104,67 +120,68 @@ export function ProductForm({
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.formRow}>
         <div className={styles.field}>
-          <label className={styles.label}>제목 (한국어)</label>
+          <label className={styles.label}>Title (Korean)</label>
           <input className={styles.input} value={values.titleKo} onChange={(e) => update("titleKo", e.target.value)} required />
         </div>
         <div className={styles.field}>
-          <label className={styles.label}>제목 (영어)</label>
+          <label className={styles.label}>Title (English)</label>
           <input className={styles.input} value={values.titleEn} onChange={(e) => update("titleEn", e.target.value)} required />
         </div>
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>썸네일 이미지</label>
+        <label className={styles.label}>Images</label>
         <ImageUploader value={values.images} onChange={(images) => update("images", images)} />
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>카테고리</label>
+        <label className={styles.label}>Category</label>
         <select
           className={styles.input}
-          value={`${values.categoryKo}||${values.categoryEn}`}
-          onChange={(e) => {
-            const [ko, en] = e.target.value.split("||");
-            update("categoryKo", ko);
-            update("categoryEn", en);
-          }}
+          value={values.categoryId}
+          onChange={(e) => handleCategoryChange(e.target.value)}
         >
-          <option value="||">선택 없음</option>
-          {categoryOptions.map((c) => (
-            <option key={c.id} value={`${c.nameKo}||${c.nameEn}`}>
-              {c.nameKo} / {c.nameEn}
-            </option>
+          <option value="">No category</option>
+          {categoryOptions.map((parent) => (
+            <optgroup key={parent.id} label={`${parent.nameKo} / ${parent.nameEn}`}>
+              <option value={parent.id}>{parent.nameKo} (all)</option>
+              {parent.children?.map((child) => (
+                <option key={child.id} value={child.id}>
+                  {child.nameKo} / {child.nameEn}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>가격 (원, 표시용)</label>
+        <label className={styles.label}>Price (KRW, display only)</label>
         <input
           className={styles.input}
           type="number"
           value={values.price ?? ""}
           onChange={(e) => update("price", e.target.value ? Number(e.target.value) : null)}
-          placeholder="예: 198000"
+          placeholder="e.g. 198000"
         />
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>상세설명 (한국어)</label>
+        <label className={styles.label}>Description (Korean)</label>
         <textarea className={styles.textarea} value={values.descriptionKo} onChange={(e) => update("descriptionKo", e.target.value)} />
       </div>
       <div className={styles.field}>
-        <label className={styles.label}>상세설명 (영어)</label>
+        <label className={styles.label}>Description (English)</label>
         <textarea className={styles.textarea} value={values.descriptionEn} onChange={(e) => update("descriptionEn", e.target.value)} />
       </div>
 
       <div className={styles.formRow}>
         <div className={styles.field}>
-          <label className={styles.label}>SEO 제목</label>
+          <label className={styles.label}>SEO Title</label>
           <input className={styles.input} value={values.seoTitle} onChange={(e) => update("seoTitle", e.target.value)} />
         </div>
         <div className={styles.field}>
-          <label className={styles.label}>정렬 순서</label>
+          <label className={styles.label}>Sort Order</label>
           <input
             className={styles.input}
             type="number"
@@ -174,12 +191,12 @@ export function ProductForm({
         </div>
       </div>
       <div className={styles.field}>
-        <label className={styles.label}>SEO 설명</label>
+        <label className={styles.label}>SEO Description</label>
         <textarea className={styles.textarea} value={values.seoDescription} onChange={(e) => update("seoDescription", e.target.value)} />
       </div>
 
       <div className={styles.seoPanel}>
-        <h2 className={styles.seoPanelTitle}>SEO 및 소셜 미디어 설정</h2>
+        <h2 className={styles.seoPanelTitle}>SEO & Social Media Settings</h2>
         <div className={styles.formRow}>
           <div className={styles.field}>
             <label className={styles.label}>URL slug</label>
@@ -192,17 +209,17 @@ export function ProductForm({
         </div>
         <div className={styles.formRow}>
           <div className={styles.field}>
-            <label className={styles.label}>Open Graph 제목</label>
+            <label className={styles.label}>Open Graph Title</label>
             <input className={styles.input} value={values.ogTitle} onChange={(e) => update("ogTitle", e.target.value)} maxLength={60} />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Open Graph 설명</label>
+            <label className={styles.label}>Open Graph Description</label>
             <input className={styles.input} value={values.ogDescription} onChange={(e) => update("ogDescription", e.target.value)} maxLength={160} />
           </div>
         </div>
         <div className={styles.checkboxRow}>
           <input type="checkbox" id="noIndex" checked={values.noIndex} onChange={(e) => update("noIndex", e.target.checked)} />
-          <label htmlFor="noIndex">검색 엔진에 노출하지 않기 (noindex)</label>
+          <label htmlFor="noIndex">Hide from search engines (noindex)</label>
         </div>
       </div>
 
@@ -213,11 +230,11 @@ export function ProductForm({
           checked={values.isPublished}
           onChange={(e) => update("isPublished", e.target.checked)}
         />
-        <label htmlFor="isPublished">공개</label>
+        <label htmlFor="isPublished">Published</label>
       </div>
 
       <button className={`${styles.btn} ${styles.btnPrimary}`} type="submit" disabled={saving}>
-        저장
+        Save
       </button>
     </form>
   );

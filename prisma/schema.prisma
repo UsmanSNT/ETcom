@@ -26,6 +26,8 @@ model Product {
   descriptionEn  String   @db.Text
   categoryKo     String?
   categoryEn     String?
+  categoryId     String?
+  category       ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   price          Int?
   isPublished    Boolean  @default(true)
   order          Int      @default(0)
@@ -57,12 +59,17 @@ model ProductReview {
 }
 
 model ProductCategory {
-  id     String @id @default(cuid())
-  nameKo String
-  nameEn String
-  order  Int    @default(0)
+  id       String            @id @default(cuid())
+  nameKo   String
+  nameEn   String
+  order    Int               @default(0)
+  parentId String?
+  parent   ProductCategory?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children ProductCategory[] @relation("CategoryTree")
+  products Product[]
 
   @@index([order])
+  @@index([parentId])
 }
 
 model PromotionCategory {

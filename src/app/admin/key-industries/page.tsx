@@ -65,7 +65,7 @@ export default function AdminKeyIndustriesPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this industry?")) return;
+    if (!confirm("이 적용 분야를 삭제하시겠습니까?")) return;
     await fetch(`/api/admin/key-industries?id=${id}`, { method: "DELETE" });
     load();
   }
@@ -73,48 +73,48 @@ export default function AdminKeyIndustriesPage() {
   return (
     <div>
       <div className={styles.toolbar}>
-        <h1 className={styles.pageTitle}>Key Industries Management</h1>
+        <h1 className={styles.pageTitle}>주요 적용 분야 관리</h1>
         {!editing && (
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ Add New Industry</button>
+          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ 신규 등록</button>
         )}
       </div>
 
       {editing && (
         <div className={styles.card}>
           <div className={styles.form}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{form.id ? "Edit Industry" : "Add New Industry"}</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{form.id ? "적용 분야 수정" : "신규 등록"}</h2>
 
             <div className={styles.formRow}>
               <div className={styles.field}>
-                <label className={styles.label}>Title (Korean)</label>
+                <label className={styles.label}>제목 (한국어)</label>
                 <input className={styles.input} value={form.titleKo} onChange={(e) => setForm({ ...form, titleKo: e.target.value })} placeholder="농업 / 스마트팜" />
               </div>
               <div className={styles.field}>
-                <label className={styles.label}>Title (English)</label>
+                <label className={styles.label}>제목 (영어)</label>
                 <input className={styles.input} value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} placeholder="Agriculture / Smart Farm" />
               </div>
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Sort Order</label>
+              <label className={styles.label}>정렬 순서</label>
               <input className={styles.input} type="number" value={form.order} onChange={(e) => setForm({ ...form, order: Number(e.target.value) })} style={{ maxWidth: 120 }} />
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>Image</label>
+              <label className={styles.label}>이미지</label>
               <ImageUploader value={form.images} onChange={(images) => setForm({ ...form, images })} />
             </div>
 
             <div className={styles.checkboxRow}>
               <input type="checkbox" checked={form.isPublished} onChange={(e) => setForm({ ...form, isPublished: e.target.checked })} />
-              <label className={styles.label}>Published</label>
+              <label className={styles.label}>공개</label>
             </div>
 
             <div className={styles.actions}>
               <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSave} disabled={saving}>
-                {saving ? "Saving..." : form.id ? "Save Changes" : "Add"}
+                {saving ? "저장 중..." : form.id ? "변경 사항 저장" : "등록"}
               </button>
-              <button className={styles.btn} onClick={cancel}>Cancel</button>
+              <button className={styles.btn} onClick={cancel}>취소</button>
             </div>
           </div>
         </div>
@@ -123,12 +123,12 @@ export default function AdminKeyIndustriesPage() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Order</th>
-            <th>Image</th>
-            <th>Title (KO)</th>
-            <th>Title (EN)</th>
-            <th>Published</th>
-            <th>Actions</th>
+            <th>순서</th>
+            <th>이미지</th>
+            <th>제목(KO)</th>
+            <th>제목(EN)</th>
+            <th>공개</th>
+            <th>관리</th>
           </tr>
         </thead>
         <tbody>
@@ -147,14 +147,14 @@ export default function AdminKeyIndustriesPage() {
               <td>{industry.isPublished ? "✓" : "—"}</td>
               <td>
                 <div className={styles.actions}>
-                  <button className={styles.btn} onClick={() => startEdit(industry)}>Edit</button>
-                  <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDelete(industry.id)}>Delete</button>
+                  <button className={styles.btn} onClick={() => startEdit(industry)}>수정</button>
+                  <button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => handleDelete(industry.id)}>삭제</button>
                 </div>
               </td>
             </tr>
           ))}
           {industries.length === 0 && (
-            <tr><td colSpan={6} style={{ textAlign: "center", padding: 24, opacity: 0.5 }}>No industries registered.</td></tr>
+            <tr><td colSpan={6} style={{ textAlign: "center", padding: 24, opacity: 0.5 }}>등록된 적용 분야가 없습니다.</td></tr>
           )}
         </tbody>
       </table>

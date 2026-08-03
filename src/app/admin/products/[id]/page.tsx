@@ -22,7 +22,7 @@ export default function EditProductPage() {
 
   return (
     <div>
-      <h1 className={styles.pageTitle}>제품 수정</h1>
+      <h1 className={styles.pageTitle}>Edit Product</h1>
       <ProductForm productId={params.id} initial={initial} />
     </div>
   );
