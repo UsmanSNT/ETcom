@@ -113,11 +113,14 @@ model ImageAsset {
   promotionPost   PromotionPost? @relation(fields: [promotionPostId], references: [id], onDelete: Cascade)
   businessAreaId  String?
   businessArea    BusinessArea?  @relation(fields: [businessAreaId], references: [id], onDelete: Cascade)
+  keyIndustryId   String?
+  keyIndustry     KeyIndustry?   @relation(fields: [keyIndustryId], references: [id], onDelete: Cascade)
   createdAt       DateTime       @default(now())
 
   @@index([productId, order])
   @@index([promotionPostId, order])
   @@index([businessAreaId, order])
+  @@index([keyIndustryId, order])
 }
 
 model ContactInquiry {
@@ -159,6 +162,19 @@ model BusinessArea {
   itemsKo     String[]
   itemsEn     String[]
   icon        String       @default("leaf")
+  order       Int          @default(0)
+  isPublished Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  images      ImageAsset[]
+
+  @@index([isPublished, order])
+}
+
+model KeyIndustry {
+  id          String       @id @default(cuid())
+  titleKo     String
+  titleEn     String
   order       Int          @default(0)
   isPublished Boolean      @default(true)
   createdAt   DateTime     @default(now())

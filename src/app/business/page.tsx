@@ -32,9 +32,17 @@ const FALLBACK_AREAS: AreaData[] = [
   { id: "4", titleKo: "임베디드 & AI 솔루션", titleEn: "Embedded & AI Solutions", itemsKo: ["AI 모델 개발 및 경량화", "임베디드 하드웨어 설계", "IoT 플랫폼 연동", "모바일 / 웹 대시보드"], itemsEn: ["AI Model Development", "Embedded Hardware Design", "IoT Platform Integration", "Mobile / Web Dashboard"], icon: "chip", imageUrl: null },
 ];
 
+type IndustryData = {
+  id: string;
+  titleKo: string;
+  titleEn: string;
+  imageUrl: string | null;
+};
+
 export default function BusinessPage() {
   const { t, locale } = useLanguage();
   const [areas, setAreas] = useState<AreaData[]>(FALLBACK_AREAS);
+  const [industries, setIndustries] = useState<IndustryData[] | null>(null);
 
   useEffect(() => {
     fetch("/api/business-areas")
@@ -43,7 +51,20 @@ export default function BusinessPage() {
         if (data.length > 0) setAreas(data);
       })
       .catch(() => {});
+
+    fetch("/api/key-industries")
+      .then((res) => res.json())
+      .then((data: IndustryData[]) => {
+        if (Array.isArray(data)) setIndustries(data);
+      })
+      .catch(() => {});
   }, []);
+
+  // Use DB-managed industries when available; otherwise fall back to static i18n labels.
+  const industryCards =
+    industries && industries.length > 0
+      ? industries.map((i) => ({ key: i.id, name: locale === "ko" ? i.titleKo : i.titleEn, imageUrl: i.imageUrl }))
+      : t.business.industries.map((name) => ({ key: name, name, imageUrl: null as string | null }));
 
   return (
     <div>
@@ -95,10 +116,14 @@ export default function BusinessPage() {
       <section className={styles.industriesSection}>
         <div className={styles.industriesLabel}>{t.business.industriesLabel}</div>
         <div className={styles.industriesGrid}>
-          {t.business.industries.map((name) => (
-            <div key={name} className={styles.industryCard}>
-              <div className={styles.industryImg} />
-              <div className={styles.industryLabel}>{name}</div>
+          {industryCards.map((industry) => (
+            <div key={industry.key} className={styles.industryCard}>
+              {industry.imageUrl ? (
+                <img src={industry.imageUrl} alt={industry.name} className={styles.industryImg} />
+              ) : (
+                <div className={styles.industryImg} />
+              )}
+              <div className={styles.industryLabel}>{industry.name}</div>
             </div>
           ))}
         </div>

@@ -8,6 +8,7 @@ import styles from "./admin.module.css";
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/business", label: "Business Areas" },
+  { href: "/admin/key-industries", label: "Key Industries" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/promotion", label: "Promotions" },
   { href: "/admin/resources", label: "Resources" },
