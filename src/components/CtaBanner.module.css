@@ -5,8 +5,7 @@
 }
 
 .bannerImage {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: 100%;
   min-height: 340px;
   display: flex;
   align-items: center;
