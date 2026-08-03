@@ -45,7 +45,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       tx.imageAsset.updateMany({
         where: {
           id: imageId,
-          OR: [{ productId: id }, { productId: null, promotionPostId: null }],
+          OR: [{ productId: id }, { productId: null, promotionPostId: null, businessAreaId: null }],
         },
         data: { productId: id, promotionPostId: null, order },
       }),

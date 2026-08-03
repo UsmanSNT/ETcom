@@ -7,6 +7,7 @@ import styles from "./admin.module.css";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "대시보드" },
+  { href: "/admin/business", label: "사업 영역 관리" },
   { href: "/admin/products", label: "제품소개 관리" },
   { href: "/admin/promotion", label: "홍보센터 관리" },
   { href: "/admin/resources", label: "자료실 파일 관리" },

@@ -111,10 +111,13 @@ model ImageAsset {
   product         Product?       @relation(fields: [productId], references: [id], onDelete: Cascade)
   promotionPostId String?
   promotionPost   PromotionPost? @relation(fields: [promotionPostId], references: [id], onDelete: Cascade)
+  businessAreaId  String?
+  businessArea    BusinessArea?  @relation(fields: [businessAreaId], references: [id], onDelete: Cascade)
   createdAt       DateTime       @default(now())
 
   @@index([productId, order])
   @@index([promotionPostId, order])
+  @@index([businessAreaId, order])
 }
 
 model ContactInquiry {
@@ -147,6 +150,22 @@ model SiteConfig {
   key       String   @unique
   value     String   @db.Text
   updatedAt DateTime @updatedAt
+}
+
+model BusinessArea {
+  id          String       @id @default(cuid())
+  titleKo     String
+  titleEn     String
+  itemsKo     String[]
+  itemsEn     String[]
+  icon        String       @default("leaf")
+  order       Int          @default(0)
+  isPublished Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  images      ImageAsset[]
+
+  @@index([isPublished, order])
 }
 
 model DownloadResource {

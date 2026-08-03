@@ -36,7 +36,7 @@
 .aiMore { display: flex; align-items: center; gap: 16px; font-size: 13px; font-weight: 700; color: #fff; }
 
 .dashboardCard {
-  min-height: 380px; display: grid; grid-template-columns: 1fr; gap: 14px; padding: 24px 20px 20px;
+  height: 520px; display: grid; grid-template-columns: 1fr; gap: 14px; padding: 20px; overflow: hidden;
   border: 1px solid #637184; border-radius: 8px; background: rgba(4, 22, 42, .78); box-shadow: 0 16px 40px rgba(0,0,0,.18);
 }
 .dashboardMenu { display: flex; flex-direction: column; gap: 5px; }

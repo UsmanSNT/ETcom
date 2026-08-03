@@ -2,7 +2,7 @@
   position: relative;
   width: min(1330px, 100%);
   min-height: 0;
-  aspect-ratio: 1572 / 656;
+  aspect-ratio: 1572 / 580;
   margin: 0 auto;
   padding: 48px 64px;
   display: flex;
@@ -59,11 +59,15 @@
 
 .tabBar {
   background: #07152b;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
 }
 
 .tabBarInner {
   display: flex;
   align-items: stretch;
+  justify-content: center;
   max-width: 1330px;
   margin: 0 auto;
   overflow-x: auto;
@@ -76,7 +80,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 22px;
+  padding: 28px 32px;
   border: none;
   border-bottom: 2px solid transparent;
   background: transparent;

@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     } });
     await Promise.all(imageIds.map((id, order) =>
       tx.imageAsset.updateMany({
-        where: { id, productId: null, promotionPostId: null },
+        where: { id, productId: null, promotionPostId: null, businessAreaId: null },
         data: { promotionPostId: created.id, order },
       }),
     ));

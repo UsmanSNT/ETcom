@@ -33,6 +33,9 @@
 .areaImg {
   aspect-ratio: 16 / 10;
   background: linear-gradient(135deg, #1a2b45, #0e1a2b);
+  object-fit: cover;
+  width: 100%;
+  display: block;
 }
 
 .areaBody {
