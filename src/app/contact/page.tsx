@@ -218,22 +218,22 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div>
+          <div className={styles.channelsCol}>
             <div className={styles.colLabel} style={{ fontSize: 16 }}>
               {t.contact.infoSupportLabel}
             </div>
             <div className={styles.channelsGrid} style={{ marginTop: 16 }}>
               <div className={styles.channelCard}>
-                <HeadsetIcon width={20} height={20} style={{ margin: "0 auto 8px", color: "var(--brand-navy)" }} />
-                <div style={{ fontSize: 12, fontWeight: 700, color: "var(--brand-navy)" }}>{t.footer.tel}</div>
+                <HeadsetIcon className={styles.channelIcon} />
+                <div className={styles.channelText}>{t.footer.tel}</div>
               </div>
               <div className={styles.channelCard}>
-                <MailIcon width={20} height={20} style={{ margin: "0 auto 8px", color: "var(--brand-navy)" }} />
-                <div style={{ fontSize: 12, fontWeight: 700, color: "var(--brand-navy)" }}>{t.footer.email}</div>
+                <MailIcon className={styles.channelIcon} />
+                <div className={styles.channelText}>{t.footer.email}</div>
               </div>
               <div className={styles.channelCard}>
-                <PinIcon width={20} height={20} style={{ margin: "0 auto 8px", color: "var(--brand-navy)" }} />
-                <div style={{ fontSize: 12, fontWeight: 700, color: "var(--brand-navy)" }}>{t.footer.address}</div>
+                <PinIcon className={styles.channelIcon} />
+                <div className={styles.channelText}>{t.footer.address}</div>
               </div>
             </div>
           </div>

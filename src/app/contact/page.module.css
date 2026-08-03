@@ -406,6 +406,11 @@
   line-height: 1.6;
 }
 
+.channelsCol {
+  display: flex;
+  flex-direction: column;
+}
+
 .channelsGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -414,13 +419,28 @@
 
 .channelCard {
   min-width: 0;
-}
-
-.channelCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   border: 1px solid var(--brand-gray-100);
   border-radius: 10px;
-  padding: 16px 12px;
+  padding: 20px 12px;
   text-align: center;
+}
+
+.channelIcon {
+  width: 34px;
+  height: 34px;
+  color: var(--brand-navy);
+}
+
+.channelText {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand-navy);
+  line-height: 1.4;
 }
 
 @media (min-width: 900px) {
@@ -442,6 +462,10 @@
   }
   .bottomGrid {
     grid-template-columns: 1.4fr 1fr;
+  }
+  /* Let the channel cards grow taller to match the neighbouring FAQ column. */
+  .channelsGrid {
+    flex: 1;
   }
 }
 
