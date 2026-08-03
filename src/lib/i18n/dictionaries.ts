@@ -59,11 +59,11 @@ export const dictionaries = {
       sectionPartners: "OUR PARTNERS",
     },
     solutions: {
-      smartFarm: "SMART FARM",
-      industrialIot: "INDUSTRIAL IoT",
-      embedded: "EMBEDDED SOLUTION",
-      platformCloud: "PLATFORM & CLOUD",
-      education: "EDUCATION SOLUTION",
+      smartFarm: "스마트팜",
+      industrialIot: "산업용 IoT 솔루션",
+      embedded: "임베디드 솔루션",
+      platformCloud: "임베디드 & AI 솔루션",
+      education: "교육기자재",
       oem: "OEM / ODM",
     },
     core: {
