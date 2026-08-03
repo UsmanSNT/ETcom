@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import styles from "../admin.module.css";
 
 type Product = {
@@ -189,7 +189,7 @@ export default function AdminProductsPage() {
         </thead>
         <tbody>
           {categories.map((cat) => (
-            <React.Fragment key={cat.id}>
+            <Fragment key={cat.id}>
               <tr>
                 <td style={{ fontWeight: 700 }}>{cat.nameKo}</td>
                 <td style={{ fontWeight: 700 }}>{cat.nameEn}</td>
@@ -217,7 +217,7 @@ export default function AdminProductsPage() {
                   </td>
                 </tr>
               ))}
-            </React.Fragment>
+            </Fragment>
           ))}
           {categories.length === 0 && (
             <tr>
