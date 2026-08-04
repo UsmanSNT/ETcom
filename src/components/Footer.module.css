@@ -396,6 +396,36 @@
   }
 }
 
+/* Tablet footer: avoid squeezing all desktop columns into a narrow row. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .footer {
+    width: 100%;
+    padding: 40px clamp(28px, 5vw, 52px) 26px;
+  }
+
+  .inner {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .9fr);
+    grid-template-rows: auto auto;
+    gap: 32px 40px;
+  }
+
+  .brandCol {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .contactCard {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .linkCols {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
 /* ── Mobile ── */
 
 /* Partners marquee (mobile) */
@@ -405,6 +435,28 @@
 }
 
 @media (max-width: 767px) {
+  .footer {
+    width: 100%;
+    padding: 32px clamp(16px, 5vw, 24px) 88px;
+  }
+
+  .inner,
+  .bottom {
+    width: 100%;
+  }
+
+  .contactCardBody {
+    flex-wrap: wrap;
+  }
+
+  .contactInfo {
+    min-width: 0;
+  }
+
+  .bottomLinks {
+    flex-wrap: wrap;
+  }
+
   .partnersGrid {
     display: none;
   }

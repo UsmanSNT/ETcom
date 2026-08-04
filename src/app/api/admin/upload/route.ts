@@ -5,7 +5,7 @@ import { computeImageHash } from "@/lib/imageHash";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const MAX_FILES = 5;
+const MAX_FILES = 30;
 
 export async function POST(req: NextRequest) {
   if (!getAdminFromRequest(req)) {

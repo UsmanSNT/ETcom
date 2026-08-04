@@ -13,10 +13,12 @@ export type ProductFormValues = {
   descriptionKo: string;
   descriptionEn: string;
   images: UploadedImage[];
+  detailImages: UploadedImage[];
   categoryKo: string;
   categoryEn: string;
   categoryId: string;
   price: number | null;
+  purchaseUrl: string;
   isPublished: boolean;
   order: number;
   seoTitle: string;
@@ -34,10 +36,12 @@ const EMPTY: ProductFormValues = {
   descriptionKo: "",
   descriptionEn: "",
   images: [],
+  detailImages: [],
   categoryKo: "",
   categoryEn: "",
   categoryId: "",
   price: null,
+  purchaseUrl: "",
   isPublished: true,
   order: 0,
   seoTitle: "",
@@ -61,6 +65,7 @@ export function ProductForm({
     ...EMPTY,
     ...initial,
     images: initial?.images ?? [],
+    detailImages: initial?.detailImages ?? [],
     categoryId: initial?.categoryId ?? "",
     seoTitle: initial?.seoTitle ?? "",
     seoDescription: initial?.seoDescription ?? "",
@@ -163,6 +168,27 @@ export function ProductForm({
           value={values.price ?? ""}
           onChange={(e) => update("price", e.target.value ? Number(e.target.value) : null)}
           placeholder="e.g. 198000"
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>구매 링크 (etmall.co.kr) — Purchase URL</label>
+        <input
+          className={styles.input}
+          type="url"
+          value={values.purchaseUrl}
+          onChange={(e) => update("purchaseUrl", e.target.value)}
+          placeholder="https://etmall.co.kr/product/..."
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>상세설명 이미지 / Detail Description Images (max 30)</label>
+        <ImageUploader
+          value={values.detailImages}
+          onChange={(imgs) => update("detailImages", imgs)}
+          maxImages={30}
+          showPrimary={false}
         />
       </div>
 

@@ -11,9 +11,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!body) {
     return NextResponse.json({ error: "invalid body" }, { status: 400 });
   }
-  const imageIds = getImageIds(body.images);
+  const imageIds = getImageIds(body.images, 5);
   if (imageIds === null) {
     return NextResponse.json({ error: "up to 5 images allowed" }, { status: 400 });
+  }
+  const detailImageIds = getImageIds(body.detailImages, 30);
+  if (detailImageIds === null) {
+    return NextResponse.json({ error: "up to 30 detail images allowed" }, { status: 400 });
   }
 
   const product = await prisma.$transaction(async (tx) => {
@@ -29,6 +33,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       categoryEn: body.categoryEn ?? null,
       categoryId: body.categoryId || null,
       price: body.price ? Number(body.price) : null,
+      purchaseUrl: cleanText(body.purchaseUrl),
       isPublished: body.isPublished,
       order: body.order,
       seoTitle: body.seoTitle ?? null,
@@ -46,22 +51,42 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       tx.imageAsset.updateMany({
         where: {
           id: imageId,
-          OR: [{ productId: id }, { productId: null, promotionPostId: null, businessAreaId: null }],
+          OR: [{ productId: id }, { productId: null, detailProductId: null, promotionPostId: null, businessAreaId: null }],
         },
-        data: { productId: id, promotionPostId: null, order },
+        data: { productId: id, promotionPostId: null, detailProductId: null, order },
+      }),
+    ));
+    await tx.imageAsset.deleteMany({
+      where: { detailProductId: id, ...(detailImageIds.length ? { id: { notIn: detailImageIds } } : {}) },
+    });
+    await Promise.all(detailImageIds.map((imageId, order) =>
+      tx.imageAsset.updateMany({
+        where: {
+          id: imageId,
+          OR: [{ detailProductId: id }, { productId: null, detailProductId: null, promotionPostId: null, businessAreaId: null }],
+        },
+        data: { detailProductId: id, productId: null, promotionPostId: null, order },
       }),
     ));
     return tx.product.findUniqueOrThrow({
       where: { id },
-      include: { images: { orderBy: { order: "asc" }, select: { id: true, fileName: true, mimeType: true, size: true, order: true } } },
+      include: {
+        images: { orderBy: { order: "asc" }, select: { id: true, fileName: true, mimeType: true, size: true, order: true } },
+        detailImages: { orderBy: { order: "asc" }, select: { id: true, fileName: true, mimeType: true, size: true, order: true } },
+      },
     });
   });
 
-  return NextResponse.json({ ...product, images: product.images.map((image) => ({ ...image, url: `/api/images/${image.id}` })) });
+  const addUrl = (img: { id: string }) => ({ ...img, url: `/api/images/${img.id}` });
+  return NextResponse.json({
+    ...product,
+    images: product.images.map(addUrl),
+    detailImages: product.detailImages.map(addUrl),
+  });
 }
 
-function getImageIds(images: unknown): string[] | null {
-  if (!Array.isArray(images) || images.length > 5) return images === undefined ? [] : null;
+function getImageIds(images: unknown, max: number): string[] | null {
+  if (!Array.isArray(images) || images.length > max) return images === undefined ? [] : null;
   const ids = images.map((image) => image && typeof image === "object" && "id" in image ? String(image.id) : "");
   return ids.every(Boolean) && new Set(ids).size === ids.length ? ids : null;
 }

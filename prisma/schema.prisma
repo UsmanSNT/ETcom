@@ -29,6 +29,7 @@ model Product {
   categoryId     String?
   category       ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   price          Int?
+  purchaseUrl    String?
   isPublished    Boolean  @default(true)
   order          Int      @default(0)
   seoTitle       String?
@@ -40,7 +41,8 @@ model Product {
   noIndex        Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  images         ImageAsset[]
+  images         ImageAsset[]    @relation("ProductGallery")
+  detailImages   ImageAsset[]    @relation("ProductDetail")
   reviews        ProductReview[]
 
   @@index([isPublished, order])
@@ -115,7 +117,9 @@ model ImageAsset {
   imageHash       String?
   order           Int            @default(0)
   productId       String?
-  product         Product?       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product         Product?       @relation("ProductGallery", fields: [productId], references: [id], onDelete: Cascade)
+  detailProductId String?
+  detailProduct   Product?       @relation("ProductDetail", fields: [detailProductId], references: [id], onDelete: Cascade)
   promotionPostId String?
   promotionPost   PromotionPost? @relation(fields: [promotionPostId], references: [id], onDelete: Cascade)
   businessAreaId  String?
@@ -125,6 +129,7 @@ model ImageAsset {
   createdAt       DateTime       @default(now())
 
   @@index([productId, order])
+  @@index([detailProductId, order])
   @@index([promotionPostId, order])
   @@index([businessAreaId, order])
   @@index([keyIndustryId, order])

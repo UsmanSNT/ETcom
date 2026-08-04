@@ -22,7 +22,9 @@ type Product = {
   categoryKo: string | null;
   categoryEn: string | null;
   price: number | null;
+  purchaseUrl: string | null;
   images: Array<{ id: string; url: string }>;
+  detailImages: Array<{ id: string; url: string }>;
   avgRating: number | null;
   reviewCount: number;
 };
@@ -64,6 +66,7 @@ export function ProductDetailClient({
     [product.images, product.thumbnailUrl],
   );
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selected, setSelected] = useState(0);
   const [zoomed, setZoomed] = useState(false);
   const [hoverZoom, setHoverZoom] = useState(false);
@@ -73,6 +76,12 @@ export function ProductDetailClient({
 
   const [avgRating] = useState(product.avgRating);
   const [reviewCount] = useState(product.reviewCount);
+
+  useEffect(() => {
+    const toggle = () => setSidebarOpen((v) => !v);
+    window.addEventListener("etc:toggle-product-sidebar", toggle);
+    return () => window.removeEventListener("etc:toggle-product-sidebar", toggle);
+  }, []);
 
   useEffect(() => {
     if (!zoomed) return;
@@ -113,7 +122,13 @@ export function ProductDetailClient({
 
   return (
     <div className={styles.pageLayout}>
-      <aside className={styles.categorySidebar}>
+      {sidebarOpen && (
+        <div className={styles.sidebarOverlay} onClick={() => setSidebarOpen(false)} />
+      )}
+      <aside
+        className={styles.categorySidebar}
+        style={sidebarOpen ? { transform: "translateX(0)", boxShadow: "4px 0 24px rgba(0,0,0,.12)" } : undefined}
+      >
         <nav className={shopStyles.sidebarNav} aria-label={locale === "ko" ? "제품 카테고리" : "Product categories"}>
           <Link
             href="/products"
@@ -272,8 +287,43 @@ export function ProductDetailClient({
           <p className={styles.desc}>{locale === "ko" ? product.descriptionKo : product.descriptionEn}</p>
 
           <ProductInquiryForm productTitle={title} locale={locale} />
+
+          {product.purchaseUrl && (
+            <a
+              href={product.purchaseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.purchaseBtn}
+            >
+              {locale === "ko" ? "제품 구매하기" : "Purchase Product"} →
+            </a>
+          )}
         </div>
       </div>
+
+      {((locale === "ko" ? product.descriptionKo : product.descriptionEn) || product.detailImages.length > 0) && (
+        <section className={styles.detailDescSection}>
+          <h2 className={styles.detailDescTitle}>
+            {locale === "ko" ? "상세설명" : "Product Details"}
+          </h2>
+          {(locale === "ko" ? product.descriptionKo : product.descriptionEn) && (
+            <div className={styles.detailDescText}>
+              {locale === "ko" ? product.descriptionKo : product.descriptionEn}
+            </div>
+          )}
+          <div className={styles.detailDescImages}>
+            {product.detailImages.map((img, idx) => (
+              <img
+                key={img.id}
+                src={img.url}
+                alt={`${title} ${locale === "ko" ? "상세" : "detail"} ${idx + 1}`}
+                className={styles.detailDescImg}
+                loading="lazy"
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {relatedProducts.length > 0 && (
         <section className={styles.relatedSection}>

@@ -10,6 +10,7 @@ async function getProduct(id: string) {
     where: { OR: [{ id }, { slug: id }] },
     include: {
       images: { orderBy: { order: "asc" }, select: { id: true } },
+      detailImages: { orderBy: { order: "asc" }, select: { id: true } },
       reviews: { select: { rating: true } },
     },
   });
@@ -118,6 +119,7 @@ export default async function ProductDetailPage({
         product={{
           ...product,
           images: product.images.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
+          detailImages: product.detailImages.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
           avgRating: product.reviews.length
             ? product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length
             : null,

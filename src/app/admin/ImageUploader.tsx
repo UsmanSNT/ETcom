@@ -12,14 +12,18 @@ export type UploadedImage = {
   order: number;
 };
 
-const MAX_IMAGES = 5;
+const DEFAULT_maxImages = 5;
 
 export function ImageUploader({
   value,
   onChange,
+  maxImages = DEFAULT_maxImages,
+  showPrimary = true,
 }: {
   value: UploadedImage[];
   onChange: (images: UploadedImage[]) => void;
+  maxImages?: number;
+  showPrimary?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -28,8 +32,8 @@ export function ImageUploader({
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const selected = Array.from(event.target.files ?? []);
     if (selected.length === 0) return;
-    if (value.length + selected.length > MAX_IMAGES) {
-      setError(`최대 ${MAX_IMAGES}장까지 업로드할 수 있습니다.`);
+    if (value.length + selected.length > maxImages) {
+      setError(`최대 ${maxImages}장까지 업로드할 수 있습니다.`);
       event.target.value = "";
       return;
     }
@@ -45,7 +49,7 @@ export function ImageUploader({
         const messages: Record<string, string> = {
           "unsupported file type": "JPG, PNG, WEBP, GIF 형식만 지원합니다.",
           "file too large": "이미지당 최대 5MB까지 가능합니다.",
-          "too many files": "최대 5장까지 업로드할 수 있습니다.",
+          "too many files": "한 번에 최대 30장까지 업로드할 수 있습니다.",
         };
         setError(messages[body.error] ?? "이미지 업로드 중 오류가 발생했습니다.");
         return;
@@ -74,7 +78,7 @@ export function ImageUploader({
           {value.map((image, index) => (
             <div className={styles.uploaderPreviewWrap} key={image.id}>
               <img src={image.url} alt={`이미지 ${index + 1}`} className={styles.uploaderPreview} />
-              {index === 0 && <span className={styles.uploaderPrimary}>대표</span>}
+              {showPrimary && index === 0 && <span className={styles.uploaderPrimary}>대표</span>}
               <button
                 type="button"
                 className={styles.uploaderRemove}
@@ -94,13 +98,17 @@ export function ImageUploader({
           accept="image/png,image/jpeg,image/webp,image/gif"
           multiple
           onChange={handleFileChange}
-          disabled={uploading || value.length >= MAX_IMAGES}
+          disabled={uploading || value.length >= maxImages}
         />
         <span className={styles.uploaderStatus}>
-          {uploading ? "업로드 중..." : `이미지 ${value.length}/${MAX_IMAGES}`}
+          {uploading ? "업로드 중..." : `이미지 ${value.length}/${maxImages}`}
         </span>
       </div>
-      <p className={styles.uploaderHint}>여러 장을 선택할 수 있으며, 첫 번째 이미지가 대표 이미지로 사용됩니다.</p>
+      <p className={styles.uploaderHint}>
+        {showPrimary
+          ? "여러 장을 선택할 수 있으며, 첫 번째 이미지가 대표 이미지로 사용됩니다."
+          : "여러 장을 한 번에 선택할 수 있으며, 업로드한 순서대로 상세설명에 표시됩니다."}
+      </p>
       {error && <div className={styles.errorText}>{error}</div>}
     </div>
   );

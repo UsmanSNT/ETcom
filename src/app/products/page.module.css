@@ -1039,7 +1039,16 @@
   }
 }
 
-@media (max-width: 1099px) {
+/* Medium screens: sidebar stays visible but narrower */
+@media (max-width: 1099px) and (min-width: 701px) {
+  .shopLayout {
+    grid-template-columns: 190px minmax(0, 1fr);
+    max-width: none;
+  }
+}
+
+/* Mobile only: sidebar becomes a drawer */
+@media (max-width: 700px) {
   .shopLayout {
     display: block;
     max-width: none;

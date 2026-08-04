@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 120;
+
 export async function GET() {
   try {
     const industries = await prisma.keyIndustry.findMany({

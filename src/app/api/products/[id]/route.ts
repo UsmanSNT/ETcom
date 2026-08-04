@@ -7,6 +7,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     where: { OR: [{ id }, { slug: id }] },
     include: {
       images: { orderBy: { order: "asc" }, select: { id: true } },
+      detailImages: { orderBy: { order: "asc" }, select: { id: true } },
       reviews: { select: { rating: true } },
     },
   });
@@ -21,6 +22,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   return NextResponse.json({
     ...rest,
     images: rest.images.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
+    detailImages: rest.detailImages.map((image) => ({ id: image.id, url: `/api/images/${image.id}` })),
     avgRating,
     reviewCount,
   });

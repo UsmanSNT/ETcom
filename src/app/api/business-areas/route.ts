@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 60;
+
 export async function GET() {
   try {
     const areas = await prisma.businessArea.findMany({

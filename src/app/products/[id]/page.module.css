@@ -99,9 +99,10 @@
 .mainImageFrame {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  display: grid;
-  place-items: center;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   border: 1px solid var(--brand-gray-100);
   border-radius: 16px;
@@ -111,7 +112,8 @@
 
 .mainImage {
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 680px;
   display: block;
   object-fit: contain;
   pointer-events: none;
@@ -165,6 +167,7 @@
 
 .mainImageFrame:hover .zoomHint { opacity: 1; }
 .noImage { color: var(--brand-text-muted); font-size: 14px; }
+.sidebarOverlay { display: none; }
 
 @media (min-width: 1180px) {
   .zoomPanel { display: block; }
@@ -285,6 +288,24 @@
 
 .inquiryError { color: #d64545; font-size: 12px; margin: 0; }
 
+.purchaseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  background: #1a56db;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  transition: opacity .15s ease;
+}
+
+.purchaseBtn:hover { opacity: .88; }
+
 .inquirySuccess {
   padding: 16px;
   border-radius: 8px;
@@ -293,6 +314,43 @@
   font-size: 13px;
   font-weight: 600;
   line-height: 1.6;
+}
+
+.detailDescSection {
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 1px solid var(--brand-gray-100);
+}
+
+.detailDescTitle {
+  margin-bottom: 28px;
+  color: var(--brand-navy);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.detailDescText {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto 34px;
+  color: var(--brand-text-muted);
+  font-size: 15px;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+.detailDescImages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.detailDescImg {
+  display: block;
+  width: 100%;
+  max-width: 860px;
+  height: auto;
 }
 
 .relatedSection {
@@ -441,14 +499,93 @@
 
 .lightboxClose:hover { background: var(--brand-gray-50); }
 
-@media (max-width: 800px) {
-  .pageLayout { grid-template-columns: 1fr; padding: 0 18px; gap: 0; }
-  .categorySidebar { display: none; }
-  .container { padding: 32px 0 72px; }
-  .detailLayout { grid-template-columns: 1fr; gap: 30px; }
+/* Large tablet: keep the shop sidebar, but stack product media and details. */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .pageLayout {
+    grid-template-columns: 200px minmax(0, 1fr);
+    max-width: 100%;
+    padding-left: 16px;
+  }
+  .categorySidebar { top: 82px; height: calc(100vh - 82px); }
+  .container { width: 100%; padding: 36px 18px 76px; }
+  .detailLayout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .productInfo { position: static; }
+  .gallery { flex-direction: column; gap: 12px; }
+  .thumbnailList { flex-direction: row; width: 100%; overflow-x: auto; padding-bottom: 5px; }
+  .thumbnailButton { width: 72px; flex: 0 0 72px; }
+  .lens, .zoomPanel { display: none; }
+  .mainImageFrame {
+    min-height: 0;
+    height: auto;
+    overflow: hidden;
+  }
+  .mainImage {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 520px;
+    object-fit: contain;
+  }
+  .inquiryBox { padding: 20px; }
+  .relatedRail { grid-auto-columns: minmax(155px, 23vw); }
+}
+
+/* Small tablet and phones: the sidebar becomes an off-canvas drawer. */
+@media (max-width: 899px) {
+  .pageLayout {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 clamp(18px, 4vw, 30px);
+  }
+  .categorySidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 100;
+    background: #fff;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    box-shadow: none;
+    display: block;
+  }
+  .categorySidebarOpen {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,.12);
+  }
+  .sidebarOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: rgba(0,0,0,.35);
+  }
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 36px 0 72px;
+    border-left: 0;
+    overflow: hidden;
+  }
+  .detailLayout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .productInfo { position: static; padding-top: 0; }
-  .gallery { flex-direction: column-reverse; gap: 12px; }
-  .mainImageFrame { aspect-ratio: 1; cursor: pointer; }
+  .gallery { flex-direction: column; gap: 12px; }
+  .mainImageFrame {
+    min-height: 0;
+    height: auto;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .mainImage {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: min(480px, 58vh);
+    object-fit: contain;
+  }
   .thumbnailList { flex-direction: row; width: 100%; overflow-x: auto; padding-bottom: 5px; }
   .thumbnailButton { width: 72px; flex: 0 0 72px; }
   .lens, .zoomPanel { display: none; }
@@ -459,5 +596,37 @@
   .zoomHint { opacity: 1; }
   .relatedSection { margin-top: 52px; }
   .relatedHeader { align-items: flex-start; }
-  .relatedRail { grid-auto-columns: minmax(150px, 44vw); }
+  .relatedRail { grid-auto-columns: minmax(170px, 31vw); }
+}
+
+/* Phones: preserve comfortable touch targets down to 320px. */
+@media (max-width: 767px) {
+  .pageLayout { padding: 0 clamp(14px, 4.5vw, 22px); }
+  .container { padding-top: 24px; padding-bottom: 64px; }
+  .detailLayout { gap: 22px; }
+  .mainImageFrame { border-radius: 12px; }
+  .mainImage { max-height: min(420px, 54vh); }
+  .thumbnailButton { width: 64px; flex-basis: 64px; }
+  .title { margin-bottom: 12px; font-size: clamp(24px, 7vw, 32px); }
+  .price { margin-bottom: 20px; font-size: 20px; }
+  .desc { padding-top: 20px; font-size: 14px; }
+  .inquiryBox { margin-top: 22px; padding: 18px; }
+  .relatedHeader { gap: 14px; }
+  .relatedHeader h2 { font-size: 21px; }
+  .relatedRail { grid-auto-columns: minmax(145px, 43vw); gap: 12px; }
+  .detailDescSection { margin-top: 44px; padding-top: 30px; }
+  .detailDescTitle { margin-bottom: 20px; font-size: 20px; }
+}
+
+@media (max-width: 479px) {
+  .pageLayout { padding: 0 14px; }
+  .categorySidebar { width: min(286px, 86vw); }
+  .gallery { gap: 10px; }
+  .mainImage { max-height: min(360px, 50vh); }
+  .zoomHint { right: 10px; bottom: 10px; padding: 7px 10px; }
+  .inquiryRow { grid-template-columns: minmax(0, 1fr); }
+  .inquiryBox { padding: 16px; }
+  .relatedHeader > a { font-size: 12px; }
+  .relatedRail { grid-auto-columns: minmax(142px, 72vw); }
+  .lightboxBody { padding: 10px; }
 }

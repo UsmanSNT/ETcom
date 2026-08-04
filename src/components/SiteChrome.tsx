@@ -5,6 +5,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { VisitTracker } from "./VisitTracker";
+import styles from "./SiteChrome.module.css";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -18,7 +19,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     <>
       <VisitTracker />
       <Header />
-      <main style={{ paddingTop: 82 }}>{children}</main>
+      <main className={styles.main}>{children}</main>
       <Footer />
       <MobileBottomNav />
     </>
