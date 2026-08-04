@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 import styles from "./page.module.css";
 import { useSiteConfig } from "@/components/useSiteConfig";
@@ -57,11 +58,26 @@ const VISIBLE_PROMOTION_TABS = PROMOTION_TABS.filter(
 );
 
 export default function PromotionPage() {
+  return (
+    <Suspense fallback={null}>
+      <PromotionPageContent />
+    </Suspense>
+  );
+}
+
+function PromotionPageContent() {
   const { t, locale } = useLanguage();
   const siteConfig = useSiteConfig();
+  const searchParams = useSearchParams();
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [resources, setResources] = useState<DownloadResource[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [selectedCategory, setActiveCategory] = useState<string | null>(null);
+  const requestedCategory = searchParams.get("category");
+  const activeCategory = selectedCategory ?? (
+    requestedCategory === "all" || VISIBLE_PROMOTION_TABS.some((tab) => tab.key === requestedCategory)
+      ? requestedCategory
+      : "all"
+  );
 
   useEffect(() => {
     Promise.all([

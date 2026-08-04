@@ -58,12 +58,12 @@ export default function PromotionDetailLayout({ children }: { children: React.Re
 
       <nav className={listStyles.tabBar}>
         <div className={listStyles.tabBarInner}>
-          <Link href="/promotion" className={listStyles.tab}>
+          <Link href="/promotion?category=all" className={listStyles.tab}>
             <PromotionCategoryIcon type="all" className={listStyles.tabIcon} />
             <span>{locale === "ko" ? "전체" : "All"}</span>
           </Link>
           {VISIBLE_PROMOTION_TABS.map((tab) => (
-            <Link key={tab.key} href="/promotion" className={listStyles.tab}>
+            <Link key={tab.key} href={`/promotion?category=${encodeURIComponent(tab.key)}`} className={listStyles.tab}>
               <PromotionCategoryIcon type={tab.key} className={listStyles.tabIcon} />
               <span>{locale === "ko" ? tab.ko : tab.en}</span>
             </Link>
