@@ -93,21 +93,23 @@
 
 .infoCard {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
   padding: 24px 28px;
 }
 
-.infoHead {
+.infoContent {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 7px;
 }
 
 .infoIcon {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   color: #fff;
   flex-shrink: 0;
   opacity: .55;
@@ -479,6 +481,10 @@
 }
 
 @media (max-width: 767px) {
+  .infoGrid { padding: 0 16px; }
+  .infoCard { gap: 16px; padding: 20px 4px; }
+  .infoIcon { width: 34px; height: 34px; }
+
   .hero {
     min-height: 420px;
     padding: 48px 20px;

@@ -78,27 +78,27 @@ export default function ContactPage() {
       <section className={styles.infoSection}>
         <div className={styles.infoGrid}>
           <div className={styles.infoCard}>
-            <div className={styles.infoHead}>
-              <PhoneIcon className={styles.infoIcon} />
+            <PhoneIcon className={styles.infoIcon} />
+            <div className={styles.infoContent}>
               <span className={styles.infoLabel}>{t.contact.infoTelLabel}</span>
+              <div className={styles.infoValue}>{t.footer.tel}</div>
+              <div className={styles.infoDesc}>{t.contact.infoTelDesc}</div>
             </div>
-            <div className={styles.infoValue}>{t.footer.tel}</div>
-            <div className={styles.infoDesc}>{t.contact.infoTelDesc}</div>
           </div>
           <div className={styles.infoCard}>
-            <div className={styles.infoHead}>
-              <MailIcon className={styles.infoIcon} />
+            <MailIcon className={styles.infoIcon} />
+            <div className={styles.infoContent}>
               <span className={styles.infoLabel}>{t.contact.infoEmailLabel}</span>
+              <div className={styles.infoValue}>{t.footer.email}</div>
+              <div className={styles.infoDesc}>{t.contact.infoEmailDesc}</div>
             </div>
-            <div className={styles.infoValue}>{t.footer.email}</div>
-            <div className={styles.infoDesc}>{t.contact.infoEmailDesc}</div>
           </div>
           <div className={styles.infoCard}>
-            <div className={styles.infoHead}>
-              <HeadsetIcon className={styles.infoIcon} />
+            <HeadsetIcon className={styles.infoIcon} />
+            <div className={styles.infoContent}>
               <span className={styles.infoLabel}>{t.contact.infoSupportLabel}</span>
+              <div className={styles.infoDesc}>{t.contact.infoSupportDesc}</div>
             </div>
-            <div className={styles.infoDesc}>{t.contact.infoSupportDesc}</div>
           </div>
         </div>
       </section>
