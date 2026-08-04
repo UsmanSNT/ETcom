@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 // with dozens of consistently high ratings.
 const MIN_VOTES = 3;
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const products = await prisma.product.findMany({

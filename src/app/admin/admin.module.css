@@ -44,7 +44,6 @@
 .navGroup { margin-bottom: 15px; }
 .navGroupLabel { margin: 0 8px 6px; color: #6f798b; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
 .navIcon { width: 21px; color: #95a0b3; font-size: 15px; text-align: center; }
-}
 
 .navLink {
   display: flex;
