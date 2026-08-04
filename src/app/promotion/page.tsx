@@ -48,6 +48,14 @@ const PROMOTION_TABS = [
   { key: "patents-certifications", ko: "특허·인증", en: "Patents · Certifications" },
 ] as const;
 
+// Temporarily hidden until the related materials are ready. Keep the data,
+// APIs and admin features intact so these sections can be restored later.
+const HIDDEN_PROMOTION_CATEGORIES = new Set(["press", "events", "resources"]);
+const SHOW_RESOURCE_DOWNLOADS = false;
+const VISIBLE_PROMOTION_TABS = PROMOTION_TABS.filter(
+  (tab) => !HIDDEN_PROMOTION_CATEGORIES.has(tab.key),
+);
+
 export default function PromotionPage() {
   const { t, locale } = useLanguage();
   const siteConfig = useSiteConfig();
@@ -72,7 +80,9 @@ export default function PromotionPage() {
 
   const filtered = useMemo(() => {
     if (!posts) return [];
-    if (activeCategory === "all") return posts;
+    if (activeCategory === "all") {
+      return posts.filter((post) => !HIDDEN_PROMOTION_CATEGORIES.has(post.category.slug));
+    }
     const selected = PROMOTION_TABS.find((tab) => tab.key === activeCategory);
     if (!selected) return posts.filter((p) => p.category.slug === activeCategory);
     return posts.filter(
@@ -119,15 +129,19 @@ export default function PromotionPage() {
             onClick={() => setActiveCategory("all")}
           >
             <PromotionCategoryIcon type="all" />
-            <span>{t.products.all} {posts?.length ?? 0}</span>
+            <span>
+              {t.products.all}{" "}
+              {(posts?.filter((post) => !HIDDEN_PROMOTION_CATEGORIES.has(post.category.slug)).length ?? 0) + 1}
+            </span>
           </button>
-          {PROMOTION_TABS.map((tab) => {
-            const count = posts?.filter(
+          {VISIBLE_PROMOTION_TABS.map((tab) => {
+            const databaseCount = posts?.filter(
               (post) =>
                 post.category.slug === tab.key ||
                 post.category.nameKo === tab.ko ||
                 post.category.nameEn === tab.en,
             ).length ?? 0;
+            const count = tab.key === "media" ? Math.max(1, databaseCount) : databaseCount;
             return (
               <button
                 key={tab.key}
@@ -145,7 +159,19 @@ export default function PromotionPage() {
 
       <div className={styles.container}>
 
-        {activeCategory === "all" ? (
+        {activeCategory === "media" ? (
+          <section className={styles.mediaVideoSection}>
+            <div className={styles.mediaVideoFrame}>
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/6Ybnt8QKESY"
+                title="ETCOMPANY Media"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+            <h2>ETCOMPANY Media</h2>
+          </section>
+        ) : activeCategory === "all" ? (
           <div className={styles.featuredSections}>
             <PromotionList
               title={locale === "ko" ? "뉴스" : "News"}
@@ -185,7 +211,7 @@ export default function PromotionPage() {
           </div>
         )}
 
-        <section className={styles.resourcesSection}>
+        {SHOW_RESOURCE_DOWNLOADS && <section className={styles.resourcesSection}>
           <div className={styles.resourceHeader}>
             <h2>{locale === "ko" ? "자료실" : "Resources"}</h2>
             <button type="button" onClick={() => setActiveCategory("resources")}>
@@ -226,7 +252,7 @@ export default function PromotionPage() {
               );
             })}
           </div>
-        </section>
+        </section>}
 
         <div className={styles.newsletter}>
           <svg className={styles.newsletterIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">

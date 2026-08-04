@@ -14,6 +14,11 @@ const PROMOTION_TABS = [
   { key: "patents-certifications", ko: "특허·인증", en: "Patents · Certifications" },
 ] as const;
 
+const HIDDEN_PROMOTION_CATEGORIES = new Set(["press", "events", "resources"]);
+const VISIBLE_PROMOTION_TABS = PROMOTION_TABS.filter(
+  (tab) => !HIDDEN_PROMOTION_CATEGORIES.has(tab.key),
+);
+
 function PromotionCategoryIcon({ type, className }: { type: string; className?: string }) {
   if (type === "news")
     return <svg className={className} viewBox="0 0 24 24" fill="none"><path d="M4 5h13v14H5a2 2 0 0 1-2-2V7M17 8h3v9a2 2 0 0 1-2 2M7 9h7M7 13h7M7 17h4" /></svg>;
@@ -57,7 +62,7 @@ export default function PromotionDetailLayout({ children }: { children: React.Re
             <PromotionCategoryIcon type="all" className={listStyles.tabIcon} />
             <span>{locale === "ko" ? "전체" : "All"}</span>
           </Link>
-          {PROMOTION_TABS.map((tab) => (
+          {VISIBLE_PROMOTION_TABS.map((tab) => (
             <Link key={tab.key} href="/promotion" className={listStyles.tab}>
               <PromotionCategoryIcon type={tab.key} className={listStyles.tabIcon} />
               <span>{locale === "ko" ? tab.ko : tab.en}</span>

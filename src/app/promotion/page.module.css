@@ -57,6 +57,33 @@
   padding: 32px 24px 64px;
 }
 
+.mediaVideoSection {
+  max-width: 920px;
+  margin: 0 auto 48px;
+}
+
+.mediaVideoFrame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #07152b;
+  box-shadow: 0 16px 36px rgba(7, 21, 43, .14);
+}
+
+.mediaVideoFrame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.mediaVideoSection h2 {
+  margin-top: 16px;
+  color: var(--brand-navy);
+  font-size: 20px;
+  font-weight: 800;
+}
+
 .tabBar {
   background: #07152b;
   min-height: 130px;

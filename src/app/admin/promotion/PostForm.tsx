@@ -126,6 +126,7 @@ export function PostForm({ postId, initial }: { postId?: string; initial?: Parti
         <textarea className={styles.textarea} value={values.contentEn} onChange={(e) => update("contentEn", e.target.value)} />
       </div>
 
+
       <div className={styles.seoPanel}>
         <h2 className={styles.seoPanelTitle}>SEO 및 소셜 미디어 설정</h2>
         <div className={styles.formRow}>

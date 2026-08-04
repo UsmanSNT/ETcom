@@ -132,6 +132,7 @@ export function PromotionDetailClient({
         </div>
       )}
 
+
       {/* 3. Content */}
       <p className={styles.content}>{content}</p>
 
