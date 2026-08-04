@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 import styles from "./Footer.module.css";
 
@@ -33,6 +33,14 @@ function AccordionSection({
 export function Footer() {
   const { t } = useLanguage();
   const pathname = usePathname();
+  const [footerLogo, setFooterLogo] = useState("");
+
+  useEffect(() => {
+    fetch("/api/site-config", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((config: Record<string, string>) => setFooterLogo(config.footerLogo ?? ""))
+      .catch(() => {});
+  }, []);
 
   return (
     <>
@@ -70,8 +78,11 @@ export function Footer() {
         <div className={styles.inner}>
           <div className={styles.brandCol}>
             <div className={styles.brandName}>
-              <span className={styles.brandLogo} aria-hidden="true" />
-              {t.footer.companyName}
+              {footerLogo ? (
+                <img className={styles.customLogo} src={footerLogo} alt={t.footer.companyName} />
+              ) : (
+                <><span className={styles.brandLogo} aria-hidden="true" />{t.footer.companyName}</>
+              )}
             </div>
             <div className={styles.brandTagline}>
               AI·플랫폼·임베디드 기술로<br />더 나은 비즈니스 환경을 만듭니다.

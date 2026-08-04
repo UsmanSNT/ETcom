@@ -95,6 +95,14 @@
   background: url("/images/logo-footer.png") center / 310% auto no-repeat;
 }
 
+.customLogo {
+  display: block;
+  width: auto;
+  max-width: 230px;
+  height: 46px;
+  object-fit: contain;
+}
+
 .brandTagline {
   font-size: 13px;
   color: #9CA9BA;

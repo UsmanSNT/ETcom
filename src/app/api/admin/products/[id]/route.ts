@@ -35,6 +35,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       price: body.price ? Number(body.price) : null,
       purchaseUrl: cleanText(body.purchaseUrl),
       isPublished: body.isPublished,
+      isFeatured: Boolean(body.isFeatured),
       order: body.order,
       seoTitle: body.seoTitle ?? null,
       seoDescription: body.seoDescription ?? null,

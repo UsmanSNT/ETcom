@@ -20,6 +20,7 @@ export type ProductFormValues = {
   price: number | null;
   purchaseUrl: string;
   isPublished: boolean;
+  isFeatured: boolean;
   order: number;
   seoTitle: string;
   seoDescription: string;
@@ -43,6 +44,7 @@ const EMPTY: ProductFormValues = {
   price: null,
   purchaseUrl: "",
   isPublished: true,
+  isFeatured: false,
   order: 0,
   seoTitle: "",
   seoDescription: "",
@@ -247,6 +249,16 @@ export function ProductForm({
           <input type="checkbox" id="noIndex" checked={values.noIndex} onChange={(e) => update("noIndex", e.target.checked)} />
           <label htmlFor="noIndex">Hide from search engines (noindex)</label>
         </div>
+      </div>
+
+      <div className={styles.checkboxRow}>
+        <input
+          type="checkbox"
+          id="isFeatured"
+          checked={values.isFeatured}
+          onChange={(e) => update("isFeatured", e.target.checked)}
+        />
+        <label htmlFor="isFeatured">대표 제품으로 표시 / Featured Product</label>
       </div>
 
       <div className={styles.checkboxRow}>

@@ -57,6 +57,14 @@
   background: url("/images/logo-navbar.png") center / 310% auto no-repeat;
 }
 
+.customLogo {
+  display: block;
+  width: auto;
+  max-width: 210px;
+  height: 42px;
+  object-fit: contain;
+}
+
 /* Desktop nav */
 
 .nav {
@@ -261,6 +269,11 @@
 /* ── Responsive ── */
 
 @media (max-width: 899px) {
+  .customLogo {
+    max-width: 180px;
+    height: 36px;
+  }
+
   .productsHeader .logo {
     width: auto;
     flex: 0 1 auto;

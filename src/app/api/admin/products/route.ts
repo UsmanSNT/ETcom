@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
       price: body.price ? Number(body.price) : null,
       purchaseUrl: cleanText(body.purchaseUrl),
       isPublished: body.isPublished ?? true,
+      isFeatured: Boolean(body.isFeatured),
       order: body.order ?? 0,
       seoTitle: body.seoTitle ?? null,
       seoDescription: body.seoDescription ?? null,

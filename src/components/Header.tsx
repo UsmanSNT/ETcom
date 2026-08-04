@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
-import { BellIcon, UserIcon } from "./icons/SolutionIcons";
 import styles from "./Header.module.css";
 
 const REVEAL_ZONE = 96;
@@ -18,7 +17,6 @@ function useAutoHideOnScroll(disabled: boolean) {
 
   useEffect(() => {
     if (disabled) {
-      setHidden(false);
       return;
     }
 
@@ -75,6 +73,14 @@ export function Header() {
   const isProducts = pathname.startsWith("/products");
   const hidden = useAutoHideOnScroll(false);
   const headerRef = useRef<HTMLElement>(null);
+  const [navbarLogo, setNavbarLogo] = useState("");
+
+  useEffect(() => {
+    fetch("/api/site-config", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((config: Record<string, string>) => setNavbarLogo(config.navbarLogo ?? ""))
+      .catch(() => {});
+  }, []);
 
   const navItems = [
     { href: "/about", label: t.nav.about },
@@ -91,8 +97,11 @@ export function Header() {
     >
       <div className={styles.inner}>
         <Link href="/" className={styles.logo}>
-          <span className={styles.logoMark} aria-hidden="true" />
-          ETCOMPANY
+          {navbarLogo ? (
+            <img className={styles.customLogo} src={navbarLogo} alt="ETCOMPANY" />
+          ) : (
+            <><span className={styles.logoMark} aria-hidden="true" />ETCOMPANY</>
+          )}
         </Link>
 
         <nav className={styles.nav}>

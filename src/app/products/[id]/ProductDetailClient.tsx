@@ -69,10 +69,13 @@ export function ProductDetailClient({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selected, setSelected] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [viewerScale, setViewerScale] = useState(1);
+  const [viewerOrigin, setViewerOrigin] = useState("50% 50%");
   const [hoverZoom, setHoverZoom] = useState(false);
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
   const [lens, setLens] = useState({ left: 0, top: 0, width: 0, height: 0 });
   const frameRef = useRef<HTMLDivElement>(null);
+  const viewerPointerStart = useRef({ x: 0, y: 0 });
 
   const [avgRating] = useState(product.avgRating);
   const [reviewCount] = useState(product.reviewCount);
@@ -95,6 +98,26 @@ export function ProductDetailClient({
       document.body.style.overflow = "";
     };
   }, [zoomed]);
+
+  function zoomViewerAt(clientX: number, clientY: number, element: HTMLImageElement) {
+    const rect = element.getBoundingClientRect();
+    const x = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
+    const y = Math.min(100, Math.max(0, ((clientY - rect.top) / rect.height) * 100));
+    setViewerOrigin(`${x}% ${y}%`);
+    setViewerScale((scale) => scale > 1 ? 1 : 2.5);
+  }
+
+  function selectImage(index: number) {
+    setSelected(index);
+    setViewerScale(1);
+    setViewerOrigin("50% 50%");
+  }
+
+  function openViewer() {
+    setViewerScale(1);
+    setViewerOrigin("50% 50%");
+    setZoomed(true);
+  }
 
   function trackPointer(clientX: number, clientY: number) {
     const frame = frameRef.current;
@@ -205,7 +228,7 @@ export function ProductDetailClient({
                   type="button"
                   key={image.id}
                   className={`${styles.thumbnailButton} ${selected === index ? styles.thumbnailActive : ""}`}
-                  onClick={() => setSelected(index)}
+                  onClick={() => selectImage(index)}
                   aria-label={`${title} ${index + 1}`}
                   aria-pressed={selected === index}
                 >
@@ -226,7 +249,7 @@ export function ProductDetailClient({
               }}
               onMouseLeave={() => setHoverZoom(false)}
               onMouseMove={(event) => hoverZoom && trackPointer(event.clientX, event.clientY)}
-              onClick={() => activeImage && setZoomed(true)}
+              onClick={() => activeImage && openViewer()}
             >
               {activeImage ? (
                 <img className={styles.mainImage} src={activeImage.url} alt={`${title} ${selected + 1}`} />
@@ -366,6 +389,11 @@ export function ProductDetailClient({
           >
             <div className={styles.lightboxHeader}>
               <span>{title}</span>
+              <div className={styles.lightboxControls} aria-label={locale === "ko" ? "이미지 확대 제어" : "Image zoom controls"}>
+                <button type="button" onClick={() => setViewerScale((scale) => Math.max(1, scale - .5))} aria-label="Zoom out">−</button>
+                <span>{Math.round(viewerScale * 100)}%</span>
+                <button type="button" onClick={() => setViewerScale((scale) => Math.min(4, scale + .5))} aria-label="Zoom in">+</button>
+              </div>
               <button
                 type="button"
                 className={styles.lightboxClose}
@@ -375,8 +403,23 @@ export function ProductDetailClient({
                 ×
               </button>
             </div>
-            <div className={styles.lightboxBody}>
-              <img src={activeImage.url} alt={`${title} ${selected + 1}`} />
+            <div className={`${styles.lightboxBody} ${viewerScale > 1 ? styles.lightboxBodyZoomed : ""}`}>
+              <img
+                src={activeImage.url}
+                alt={`${title} ${selected + 1}`}
+                draggable={false}
+                style={{ transform: `scale(${viewerScale})`, transformOrigin: viewerOrigin }}
+                onPointerDown={(event) => {
+                  viewerPointerStart.current = { x: event.clientX, y: event.clientY };
+                }}
+                onPointerUp={(event) => {
+                  const moved = Math.hypot(
+                    event.clientX - viewerPointerStart.current.x,
+                    event.clientY - viewerPointerStart.current.y,
+                  );
+                  if (moved < 10) zoomViewerAt(event.clientX, event.clientY, event.currentTarget);
+                }}
+              />
             </div>
             {images.length > 1 && (
               <div className={styles.lightboxThumbs}>
@@ -385,7 +428,7 @@ export function ProductDetailClient({
                     type="button"
                     key={image.id}
                     className={`${styles.thumbnailButton} ${selected === index ? styles.thumbnailActive : ""}`}
-                    onClick={() => setSelected(index)}
+                    onClick={() => selectImage(index)}
                     aria-label={`${title} ${index + 1}`}
                     aria-pressed={selected === index}
                   >

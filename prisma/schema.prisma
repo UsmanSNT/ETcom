@@ -31,6 +31,7 @@ model Product {
   price          Int?
   purchaseUrl    String?
   isPublished    Boolean  @default(true)
+  isFeatured     Boolean  @default(false)
   order          Int      @default(0)
   seoTitle       String?
   seoDescription String?
@@ -46,6 +47,7 @@ model Product {
   reviews        ProductReview[]
 
   @@index([isPublished, order])
+  @@index([isPublished, isFeatured, order])
 }
 
 model ProductReview {

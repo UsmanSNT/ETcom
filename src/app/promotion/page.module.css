@@ -441,6 +441,10 @@
 }
 
 @media (max-width: 767px) {
+  .tabBar {
+    display: none;
+  }
+
   .hero {
     min-height: 460px;
     padding: 54px 24px;
