@@ -1,8 +1,12 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
+import { getDatabaseUrl } from "../src/lib/databaseUrl";
 
-const prisma = new PrismaClient();
+const databaseUrl = getDatabaseUrl();
+const prisma = new PrismaClient(
+  databaseUrl ? { datasources: { db: { url: databaseUrl } } } : undefined,
+);
 
 const certificates = [
   {
