@@ -157,7 +157,10 @@ export default function Home() {
     post.category?.nameKo.includes("인증") ||
     post.category?.nameEn.toLowerCase().includes("patent") ||
     post.category?.nameEn.toLowerCase().includes("certif");
-  const certificationPosts = posts.filter(isCertificationPost).slice(0, 5);
+  const certificationPosts = posts
+    .filter(isCertificationPost)
+    .filter((post) => !post.slug?.startsWith("certification-detail-"))
+    .slice(0, 5);
 
   /* ── Dashboard animation state ── */
   const [sensorHistories, setSensorHistories] = useState<number[][]>(() =>

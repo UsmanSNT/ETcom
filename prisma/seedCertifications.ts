@@ -29,6 +29,48 @@ const certificates = [
     titleKo: "벤처기업확인서",
     titleEn: "Venture Enterprise Certificate",
   },
+  {
+    slug: "certification-detail-kc-smartfarm-laser",
+    image: "certificate-detail-kc-smartfarm-laser.png",
+    titleKo: "KC 방송통신기자재 적합등록증 - 스마트팜·레이저 모듈",
+    titleEn: "KC Registration - Smart Farm and Laser Modules",
+  },
+  {
+    slug: "certification-detail-kc-controller-board",
+    image: "certificate-detail-kc-controller-board.png",
+    titleKo: "KC 방송통신기자재 적합등록증 - 모터 컨트롤러·SerialLink Board",
+    titleEn: "KC Registration - Motor Controller and SerialLink Board",
+  },
+  {
+    slug: "certification-detail-test-humidity-1",
+    image: "certificate-detail-test-humidity-1.png",
+    titleKo: "농업기계 성능시험 성적서 - 습도센서",
+    titleEn: "Agricultural Machinery Performance Test - Humidity Sensor",
+  },
+  {
+    slug: "certification-detail-test-humidity-temperature",
+    image: "certificate-detail-test-humidity-temperature.png",
+    titleKo: "농업기계 성능시험 성적서 - 습도·온도센서",
+    titleEn: "Agricultural Machinery Performance Test - Humidity and Temperature Sensors",
+  },
+  {
+    slug: "certification-detail-test-temperature",
+    image: "certificate-detail-test-temperature.png",
+    titleKo: "농업기계 성능시험 성적서 - 온도센서",
+    titleEn: "Agricultural Machinery Performance Test - Temperature Sensor",
+  },
+  {
+    slug: "certification-detail-test-ph-1",
+    image: "certificate-detail-test-ph-1.png",
+    titleKo: "농업기계 성능시험 성적서 - pH센서",
+    titleEn: "Agricultural Machinery Performance Test - pH Sensor",
+  },
+  {
+    slug: "certification-detail-test-ph-2",
+    image: "certificate-detail-test-ph-2.png",
+    titleKo: "농업기계 성능시험 성적서 - pH센서 시험결과",
+    titleEn: "Agricultural Machinery Performance Test Results - pH Sensor",
+  },
 ] as const;
 
 async function main() {
