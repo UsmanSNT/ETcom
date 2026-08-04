@@ -131,7 +131,7 @@ export const dictionaries = {
     ],
     business: {
       breadcrumb: "사업분야",
-      label: "ABOUT US",
+      label: "",
       title1: "AI와 임베디드 기술로",
       title2: "산업과 환경을 연결합니다.",
       desc1: "이티컴퍼니는 AI, 임베디드, IoT 기술을 기반으로",
@@ -421,7 +421,7 @@ export const dictionaries = {
     ],
     business: {
       breadcrumb: "Solutions",
-      label: "ABOUT US",
+      label: "",
       title1: "Connecting industry and environment",
       title2: "with AI and embedded technology.",
       desc1: "ETCOMPANY builds on AI, embedded and IoT technology",

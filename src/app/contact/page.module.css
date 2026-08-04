@@ -39,10 +39,10 @@
 }
 
 .title {
-  font-size: 44px;
+  font-size: clamp(26px, 3.5vw, 44px);
   font-weight: 800;
   line-height: 1.28;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   color: var(--brand-navy);
   margin-bottom: 24px;
 }
@@ -504,7 +504,6 @@
   }
 
   .title {
-    font-size: 32px;
     margin-bottom: 20px;
   }
 

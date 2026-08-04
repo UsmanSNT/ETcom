@@ -56,9 +56,10 @@
 }
 
 .title {
-  font-size: 26px;
+  font-size: clamp(26px, 3.5vw, 44px);
   font-weight: 800;
-  line-height: 1.45;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
   color: var(--brand-navy);
   margin-bottom: 24px;
 }
@@ -91,9 +92,6 @@
   .heroWithBg .inner {
     grid-template-columns: minmax(0, 650px);
     justify-content: start;
-  }
-  .title {
-    font-size: 34px;
   }
   .heroWithBg {
     min-height: 0;

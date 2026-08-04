@@ -15,6 +15,7 @@ import {
 } from "@/components/icons/SolutionIcons";
 import { ProductHeroCarousel } from "./ProductHeroCarousel";
 import { ScrollRow } from "@/components/ScrollRow";
+import { CatIcon } from "./CatIcon";
 import styles from "./page.module.css";
 
 type Product = {
@@ -50,25 +51,6 @@ type HierarchicalCategory = {
 };
 
 const PAGE_SIZE = 8;
-
-function CatIcon({ name }: { name: string }) {
-  const n = name.toLowerCase();
-  if (n.includes("education") || n.includes("kit"))
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3L2 9l10 6 10-6-10-6z"/><path d="M2 17l10 6 10-6"/><path d="M2 13l10 6 10-6"/></svg>;
-  if (n.includes("industrial"))
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M2 20h20"/><path d="M5 20V8l5 4V8l5 4V4h4v16"/></svg>;
-  if (n.includes("iot") || n.includes("ai"))
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M6 10H2m4 4H2m20-4h-4m4 4h-4M10 6V2m4 0v4M10 22v-4m4 0v4"/></svg>;
-  if (n.includes("innovat"))
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>;
-  if (n.includes("electron") || n.includes("component"))
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 2v6m0 8v6M2 12h6m8 0h6"/><circle cx="12" cy="12" r="4"/></svg>;
-  if (n.includes("architect") || n.includes("diorama"))
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>;
-  if (n.includes("lifestyle") || n.includes("other"))
-    return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>;
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>;
-}
 
 export default function ProductsPage() {
   const { t, locale } = useLanguage();
@@ -290,16 +272,6 @@ export default function ProductsPage() {
           <Link href="/contact">{t.products.inquiryBtn} →</Link>
         </div>
 
-        <div className={styles.sidebarNotice}>
-          <div className={styles.noticeHeader}>
-            <strong>NOTICE</strong>
-            <Link href="/promotion">{t.promotion.viewAll} →</Link>
-          </div>
-          <Link href="/promotion">스마트팜 통합 환경 제어기 신제품 출시 <time>2026.07.15</time></Link>
-          <Link href="/promotion">IoT 데이터로거 APP 업데이트 안내 <time>2026.06.30</time></Link>
-          <Link href="/promotion">AFPRO 2026 전시회 참가 보고서 <time>2026.06.20</time></Link>
-        </div>
-
         <div className={styles.customDevelopment}>
           <strong>맞춤형 개발이<br />필요하신가요?</strong>
           <p>고객의 요구에 맞춘 하드웨어 및 소프트웨어 개발 서비스를 제공합니다.</p>
@@ -365,35 +337,6 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {imageSearchResults === null && (
-          <>
-            <div className={styles.filterBar}>
-              <div className={styles.filterCount}>
-                상품 <strong>{filtered.length}</strong>개
-              </div>
-              <div className={styles.filterSorts}>
-                {([
-                  ["recommend", "추천순"],
-                  ["popularity", "판매인기순"],
-                  ["priceLow", "낮은가격순"],
-                  ["priceHigh", "높은가격순"],
-                  ["rating", "상품평순"],
-                  ["latest", "등록일순"],
-                ] as const).map(([key, label]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className={`${styles.filterSortBtn} ${sortBy === key ? styles.filterSortBtnActive : ""}`}
-                    onClick={() => setSortBy(key)}
-                  >
-                    {sortBy === key && <span className={styles.filterCheck}>✓</span>}
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
 
         {products && filtered.length === 0 ? (
           <p className={styles.empty}>{search.trim() ? t.products.searchEmpty : t.products.empty}</p>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { StarRatingDisplay } from "@/components/StarRating";
 import { HeadsetIcon } from "@/components/icons/SolutionIcons";
+import { CatIcon } from "../CatIcon";
 import styles from "./page.module.css";
 import shopStyles from "../page.module.css";
 
@@ -139,6 +140,7 @@ export function ProductDetailClient({
                     }
                   }}
                 >
+                  <span className={shopStyles.sidebarIcon}><CatIcon name={cat.nameEn} /></span>
                   <span className={shopStyles.sidebarItemLabel}>{name}</span>
                   {hasChildren && (
                     <span className={`${shopStyles.sidebarItemArrow} ${expanded ? shopStyles.sidebarItemArrowOpen : ""}`}>›</span>
@@ -172,17 +174,7 @@ export function ProductDetailClient({
           <Link href="/contact">{t.products.inquiryBtn} →</Link>
         </div>
 
-        <div className={shopStyles.sidebarNotice}>
-          <div className={shopStyles.noticeHeader}>
-            <strong>NOTICE</strong>
-            <Link href="/promotion">{locale === "ko" ? "전체보기" : "View all"} →</Link>
-          </div>
-          <Link href="/promotion">스마트팜 통합 환경 제어기 신제품 출시 <time>2026.07.15</time></Link>
-          <Link href="/promotion">IoT 데이터로거 APP 업데이트 안내 <time>2026.06.30</time></Link>
-          <Link href="/promotion">AFPRO 2026 전시회 참가 보고서 <time>2026.06.20</time></Link>
-        </div>
-
-        <div className={shopStyles.customDevelopment}>
+<div className={shopStyles.customDevelopment}>
           <strong>맞춤형 개발이<br />필요하신가요?</strong>
           <p>고객의 요구에 맞춘 하드웨어 및 소프트웨어 개발 서비스를 제공합니다.</p>
           <Link href="/contact">자세히 보기 →</Link>

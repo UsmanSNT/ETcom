@@ -15,7 +15,6 @@ export function CoreCompetencies() {
 
   return (
     <section className={styles.section}>
-      <div className={styles.label}>{t.core.label}</div>
       <div className={styles.grid}>
         {ITEMS.map(({ icon: Icon, titleKey }) => (
           <div key={titleKey} className={styles.item}>
