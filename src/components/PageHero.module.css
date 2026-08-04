@@ -7,13 +7,13 @@
   position: relative;
   width: min(1330px, 100%);
   min-height: 0;
-  aspect-ratio: 1572 / 656;
+  aspect-ratio: 16 / 5;
   margin: 0 auto;
   display: flex;
   align-items: center;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
 .heroWithBg .inner {
@@ -101,7 +101,7 @@
 @media (max-width: 899px) {
   .heroWithBg {
     width: 100%;
-    min-height: 420px;
+    min-height: 360px;
     aspect-ratio: auto;
     background-position: center right;
     background-size: cover;

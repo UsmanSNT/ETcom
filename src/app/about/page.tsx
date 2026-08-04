@@ -19,6 +19,7 @@ export default function AboutPage() {
         desc1={t.about.desc1}
         desc2={t.about.desc2}
         artImage="/images/home-hero-bg.png"
+        configKey="aboutHeroImage"
       />
 
       <section className={styles.missionSection}>

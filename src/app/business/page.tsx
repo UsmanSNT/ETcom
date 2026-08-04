@@ -167,6 +167,7 @@ export default function BusinessPage() {
         desc1={t.business.desc1}
         desc2={t.business.desc2}
         artImage="/images/sulutions-bg-0.png"
+        configKey="businessHeroImage"
       />
 
       <CoreCompetencies />

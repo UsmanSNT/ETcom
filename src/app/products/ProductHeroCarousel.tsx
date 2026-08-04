@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import styles from "./page.module.css";
+import { useSiteConfig } from "@/components/useSiteConfig";
 
 type Slide = {
   image: string;
@@ -90,6 +91,7 @@ const AUTO_PLAY_MS = 5000;
 
 export function ProductHeroCarousel() {
   const { locale, t } = useLanguage();
+  const siteConfig = useSiteConfig();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -121,7 +123,7 @@ export function ProductHeroCarousel() {
         <div
           key={slide.image}
           className={`${styles.heroSlide} ${index === active ? styles.heroSlideActive : ""}`}
-          style={{ backgroundImage: `url(${slide.image})` }}
+          style={{ backgroundImage: `url(${siteConfig[`productHeroImage${index + 1}`] || slide.image})` }}
           aria-hidden={index !== active}
         >
           <div className={styles.heroSlideScrim} />

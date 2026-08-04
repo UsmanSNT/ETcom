@@ -2,7 +2,7 @@
   position: relative;
   width: min(1330px, 100%);
   min-height: 0;
-  aspect-ratio: 1572 / 656;
+  aspect-ratio: 16 / 5;
   margin: 0 auto;
   padding: 48px 64px;
   display: flex;
@@ -11,7 +11,7 @@
   background-image: url("/images/contact-hero.png");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
 .heroInner {
@@ -486,8 +486,8 @@
   .infoIcon { width: 34px; height: 34px; }
 
   .hero {
-    min-height: 420px;
-    padding: 48px 20px;
+    min-height: 360px;
+    padding: 36px 20px;
     align-items: center;
     background-position: 60% center;
   }

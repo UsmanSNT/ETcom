@@ -6,8 +6,10 @@ import { PhoneIcon, MailIcon, HeadsetIcon, PlusIcon, CartIcon } from "@/componen
 
 type FaqData = { id: string; questionKo: string; questionEn: string; answerKo: string; answerEn: string };
 import styles from "./page.module.css";
+import { useSiteConfig } from "@/components/useSiteConfig";
 
 export default function ContactPage() {
+  const siteConfig = useSiteConfig();
   const { t, locale } = useLanguage();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -55,7 +57,10 @@ export default function ContactPage() {
 
   return (
     <div>
-      <section className={styles.hero}>
+      <section
+        className={styles.hero}
+        style={{ backgroundImage: `url(${siteConfig.contactHeroImage || "/images/contact-hero.png"})` }}
+      >
         <div className={styles.heroInner}>
           <div>
             <div className={styles.breadcrumb}>HOME &gt; {t.contact.breadcrumb}</div>

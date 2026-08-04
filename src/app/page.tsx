@@ -8,7 +8,6 @@ import {
   CloudIcon,
   CubeIcon,
   FactoryIcon,
-  HeadsetIcon,
   LeafIcon,
   NetworkIcon,
   SensorIcon,
@@ -18,6 +17,7 @@ import CollectDashboard from "@/components/main/CollectDashboard";
 import AIAnalysisDashboard from "@/components/main/AIAnalysisDashboard";
 import ControlDashboard from "@/components/main/ControlDashboard";
 import styles from "./page.module.css";
+import { useSiteConfig } from "@/components/useSiteConfig";
 
 type Post = {
   id: string;
@@ -134,6 +134,7 @@ const MENU_ICONS = [
 
 export default function Home() {
   const { t, locale } = useLanguage();
+  const siteConfig = useSiteConfig();
   const menuItems = [
     t.home.dashMenu1,
     t.home.dashMenu2,
@@ -149,6 +150,13 @@ export default function Home() {
     t.home.sensorLux,
   ];
   const [posts, setPosts] = useState<Post[]>([]);
+  const isCertificationPost = (post: Post) =>
+    post.category?.slug === "patents-certifications" ||
+    post.category?.nameKo.includes("특허") ||
+    post.category?.nameKo.includes("인증") ||
+    post.category?.nameEn.toLowerCase().includes("patent") ||
+    post.category?.nameEn.toLowerCase().includes("certif");
+  const certificationPosts = posts.filter(isCertificationPost).slice(0, 5);
 
   /* ── Dashboard animation state ── */
   const [sensorHistories, setSensorHistories] = useState<number[][]>(() =>
@@ -202,7 +210,10 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <section className={styles.hero}>
+      <section
+        className={styles.hero}
+        style={{ backgroundImage: `url(${siteConfig.homeHeroImage || "/images/home-bg.png"})` }}
+      >
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <p className={styles.tagline}>{t.home.tagline}</p>
@@ -303,62 +314,29 @@ export default function Home() {
       </section>
 
       <section className={styles.homeInfoBand}>
-        <div className={styles.newsColumn}>
-          <div className={styles.infoHeading}>
-            <p className={styles.sectionLabel}>NEWS</p>
-            <Link href="/promotion">{locale === "ko" ? "전체 보기" : "View all"} →</Link>
-          </div>
-          <div className={styles.newsList}>
-            {(posts.length ? posts.filter((post) => post.category?.slug !== "patents-certifications").slice(0, 3) : [
-              { id: "1", titleKo: "AFFRO 2026 전시회 참가 보고서", titleEn: "AFFRO 2026 Exhibition Report", publishedAt: "2026-07-29" },
-              { id: "2", titleKo: "스마트팜 통합 환경 제어기 신제품 출시", titleEn: "New Smart Farm Controller", publishedAt: "2026-07-15" },
-              { id: "3", titleKo: "IoT 데이터로거 시리얼링크 APP 업데이트 안내", titleEn: "IoT Datalogger App Update", publishedAt: "2026-06-30" },
-            ]).map((post) => (
-              <Link href={posts.length ? `/promotion/${post.slug ?? post.id}` : "/promotion"} key={post.id}>
-                <span>{locale === "ko" ? post.titleKo : post.titleEn}</span>
-                <time>{new Date(post.publishedAt).toISOString().slice(0, 10).replaceAll("-", ".")}</time>
-              </Link>
-            ))}
-          </div>
-          <Link href="/promotion" className={styles.inlineMore}>{t.home.newsMore} →</Link>
-        </div>
-
         <div className={styles.certColumn}>
-          <p className={styles.sectionLabel}>CERTIFICATIONS</p>
+          <p className={`${styles.sectionLabel} ${styles.certTitle}`}>{locale === "ko" ? "인증서" : "CERTIFICATES"}</p>
           <div className={styles.certGrid}>
-            {(posts.filter((post) => post.category?.slug === "patents-certifications").slice(0, 5).length
-              ? posts.filter((post) => post.category?.slug === "patents-certifications").slice(0, 5)
-              : [
-                  { id: "cert-1", titleKo: "특허등록", titleEn: "Patent", publishedAt: "2025-01-01" },
-                  { id: "cert-2", titleKo: "특허출원", titleEn: "Patent Application", publishedAt: "2025-01-01" },
-                  { id: "cert-3", titleKo: "특허출원", titleEn: "Patent Application", publishedAt: "2025-01-01" },
-                  { id: "cert-4", titleKo: "ISO 9001", titleEn: "ISO 9001", publishedAt: "2025-01-01" },
-                  { id: "cert-5", titleKo: "ISO 14001", titleEn: "ISO 14001", publishedAt: "2025-01-01" },
-                ]).map((cert, index) => {
-                  const imageUrl = "images" in cert ? cert.images?.[0]?.url ?? cert.thumbnailUrl : undefined;
+            {certificationPosts.map((cert, index) => {
+                  const imageUrl = cert.images?.[0]?.url ?? cert.thumbnailUrl ?? undefined;
+                  const certTitle = (locale === "ko" ? cert.titleKo : cert.titleEn)?.trim()
+                    || (locale === "ko" ? cert.category?.nameKo : cert.category?.nameEn)
+                    || (locale === "ko" ? "인증서" : "Certificate");
                   return (
-                    <Link href={cert.id.startsWith("cert-") ? "/promotion" : `/promotion/${cert.slug ?? cert.id}`} className={styles.certItem} key={cert.id}>
+                    <Link href={`/promotion/${cert.slug ?? cert.id}`} className={styles.certItem} key={cert.id}>
                       <div className={styles.certVisual}>
                         {imageUrl ? <img src={imageUrl} alt="" /> : index < 3 ? <span className={styles.certDocument}>CERTIFICATE</span> : <span className={styles.certSeal}>ET</span>}
                       </div>
-                      <strong>{locale === "ko" ? cert.titleKo : cert.titleEn}</strong>
+                      <strong>{certTitle}</strong>
                     </Link>
                   );
                 })}
+            {certificationPosts.length === 0 && (
+              <p className={styles.certEmpty}>{locale === "ko" ? "등록된 특허·인증이 없습니다." : "No patents or certifications registered."}</p>
+            )}
           </div>
         </div>
 
-        <div className={styles.contactCard}>
-          <p>CONTACT US</p>
-          <div className={styles.contactBody}>
-            <HeadsetIcon className={styles.headsetIcon} aria-hidden="true" />
-            <div>
-              <strong>{t.home.contactTitle}</strong>
-              <span>{t.home.contactDesc1}<br />{t.home.contactDesc2}</span>
-              <Link href="/contact">{t.home.contactCta} →</Link>
-            </div>
-          </div>
-        </div>
       </section>
     </div>
   );

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import listStyles from "../page.module.css";
+import { useSiteConfig } from "@/components/useSiteConfig";
 
 const PROMOTION_TABS = [
   { key: "press", ko: "보도자료", en: "Press Releases" },
@@ -31,10 +32,14 @@ function PromotionCategoryIcon({ type, className }: { type: string; className?: 
 
 export default function PromotionDetailLayout({ children }: { children: React.ReactNode }) {
   const { t, locale } = useLanguage();
+  const siteConfig = useSiteConfig();
 
   return (
     <div>
-      <section className={listStyles.hero}>
+      <section
+        className={listStyles.hero}
+        style={{ backgroundImage: `url(${siteConfig.promotionHeroImage || "/images/promotion-hero.png"})` }}
+      >
         <div className={listStyles.heroInner}>
           <div className={listStyles.breadcrumb}>HOME &gt; {t.promotion.breadcrumb}</div>
           <h1 className={listStyles.title}>{t.promotion.title}</h1>

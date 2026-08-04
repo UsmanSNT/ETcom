@@ -1,3 +1,6 @@
+"use client";
+
+import { useSiteConfig } from "./useSiteConfig";
 import styles from "./PageHero.module.css";
 
 export function PageHero({
@@ -9,6 +12,7 @@ export function PageHero({
   desc2,
   showArt = true,
   artImage,
+  configKey,
 }: {
   breadcrumb: string;
   label: string;
@@ -18,11 +22,15 @@ export function PageHero({
   desc2: string;
   showArt?: boolean;
   artImage?: string;
+  configKey?: string;
 }) {
+  const config = useSiteConfig();
+  const backgroundImage = (configKey && config[configKey]) || artImage;
+
   return (
     <section
-      className={`${styles.hero} ${artImage ? styles.heroWithBg : ""}`}
-      style={artImage ? { backgroundImage: `url(${artImage})` } : undefined}
+      className={`${styles.hero} ${backgroundImage ? styles.heroWithBg : ""}`}
+      style={backgroundImage ? { backgroundImage: `url(${backgroundImage})` } : undefined}
     >
       <div className={styles.inner}>
         <div>
@@ -40,7 +48,7 @@ export function PageHero({
             {desc2}
           </p>
         </div>
-        {showArt && !artImage && <div className={styles.art} />}
+        {showArt && !backgroundImage && <div className={styles.art} />}
       </div>
     </section>
   );

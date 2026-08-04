@@ -4,9 +4,9 @@
   position: relative;
   width: min(1330px, 100%);
   min-height: 0;
-  aspect-ratio: 1534 / 704;
+  aspect-ratio: 16 / 5;
   margin: 0 auto;
-  background: #f8f9fa url("/images/home-bg.png") center / 100% 100% no-repeat;
+  background: #f8f9fa url("/images/home-bg.png") center / cover no-repeat;
 }
 .heroInner { position: relative; z-index: 1; width: calc(100% - 80px); height: 100%; min-height: 0; margin: auto; display: flex; align-items: center; }
 .heroCopy { width: 46%; padding: 10px 0 0 44px; }
@@ -153,12 +153,31 @@
 .homeInfoBand {
   width: min(1320px, calc(100% - 80px));
   display: grid;
-  grid-template-columns: 1.05fr 1.65fr .9fr;
-  margin: 0 auto 0;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0 auto 38px;
   border: 1px solid #d7e0e9;
   border-radius: 6px;
   background: linear-gradient(105deg, #f4f9fd, #eaf3fa);
   overflow: hidden;
+}
+
+.homeInfoBand .certColumn {
+  padding: 34px 42px 38px;
+  border-right: 0;
+}
+
+.homeInfoBand .certGrid {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.certTitle {
+  color: var(--brand-navy);
+  font-size: 14px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: .08em;
 }
 
 .homeInfoBand > div {
@@ -175,25 +194,35 @@
 .homeInfoBand .inlineMore { margin-top: 12px; }
 
 .certGrid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 13px;
-  margin-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px clamp(26px, 5vw, 72px);
+  margin-top: 30px;
 }
 
 .certItem {
+  width: 190px;
   min-width: 0;
   display: grid;
-  grid-template-rows: 108px auto;
+  grid-template-rows: 142px auto;
   align-items: start;
+  padding: 16px 14px 18px;
+  border: 1px solid #dce4ed;
+  border-radius: 12px;
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 8px 24px rgba(17,47,82,.08);
   text-align: center;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
+.certItem:hover { transform: translateY(-4px); border-color: #b9cbe0; box-shadow: 0 14px 30px rgba(17,47,82,.13); }
 .certVisual {
   width: 100%;
-  height: 108px;
+  height: 142px;
   display: grid;
   place-items: center;
-  padding: 6px;
+  padding: 4px;
   overflow: hidden;
 }
 .certVisual img {
@@ -201,7 +230,7 @@
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: 96px;
+  max-height: 132px;
   object-fit: contain;
 }
 .certDocument { width: 62px; height: 84px; display: grid; place-items: center; padding: 7px; border: 1px solid #9eabb9; background: #fff; color: #9a6c28; font-size: 7px; box-shadow: 0 3px 8px rgba(7,21,43,.08); }
@@ -209,14 +238,16 @@
 .certItem strong {
   display: block;
   min-height: 34px;
-  margin-top: 12px;
-  padding: 0 3px;
+  margin-top: 14px;
+  padding: 12px 4px 0;
+  border-top: 1px solid #e7edf3;
   color: var(--brand-navy);
-  font-size: 10px;
-  line-height: 1.55;
+  font-size: 12px;
+  line-height: 1.5;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
+.certEmpty { grid-column: 1 / -1; padding: 34px 0; color: #758297; font-size: 12px; }
 
 .homeInfoBand .contactCard {
   min-height: 0;
@@ -294,14 +325,14 @@
 }
 
 @media (max-width: 700px) {
-  .hero { width: 100%; min-height: 540px; aspect-ratio: auto; background-position: 62% center; background-size: cover; }
+  .hero { width: 100%; min-height: 360px; aspect-ratio: auto; background-position: 62% center; background-size: cover; }
   .hero::before {
     content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(100deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.8) 45%, rgba(255,255,255,.3) 100%);
   }
-  .heroInner { width: calc(100% - 40px); min-height: 540px; align-items: flex-start; padding-top: 62px; }
+  .heroInner { width: calc(100% - 40px); min-height: 360px; align-items: flex-start; padding-top: 42px; }
   .heroCopy { width: 100%; }
   .tagline { color: #4a5568; }
   .heroSubtitle { color: #26313f; }

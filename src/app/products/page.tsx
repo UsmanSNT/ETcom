@@ -56,6 +56,8 @@ function ProductsPageContent() {
   const { t, locale } = useLanguage();
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get("category") ?? "all";
+  const showAllProducts = searchParams.get("view") === "all";
+  const showStorefront = activeCategory === "all" && !showAllProducts;
   const [products, setProducts] = useState<Product[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
@@ -215,14 +217,14 @@ function ProductsPageContent() {
       </aside>
 
       <main className={styles.shopMain}>
-        {activeCategory === "all" && (
+        {showStorefront && (
           <>
             <ProductHeroCarousel />
             <StorefrontSections products={featuredProducts} locale={locale} />
           </>
         )}
 
-        <div className={`${styles.container} ${activeCategory !== "all" ? styles.catalogVisible : ""}`} id="all-products">
+        <div className={`${styles.container} ${!showStorefront ? styles.catalogVisible : ""}`} id="all-products">
         <form className={styles.searchBar} onSubmit={handleSearchSubmit} role="search">
           <SearchIcon className={styles.searchIcon} aria-hidden="true" />
           <input
@@ -375,7 +377,7 @@ function StorefrontSections({ products, locale }: { products: Product[]; locale:
       <section className={styles.featuredSection}>
         <div className={styles.sectionHeading}>
           <h2>{locale === "ko" ? "대표 제품군" : "Featured Products"}</h2>
-          <a href="#all-products">{locale === "ko" ? "전체 제품 보기" : "View all products"} →</a>
+          <Link href="/products?view=all#all-products">{locale === "ko" ? "전체 제품 보기" : "View all products"} →</Link>
         </div>
         <ScrollRow className={styles.featuredRail}>
           {products.map((product) => (

@@ -2,7 +2,7 @@
   position: relative;
   width: min(1330px, 100%);
   min-height: 0;
-  aspect-ratio: 1572 / 580;
+  aspect-ratio: 16 / 5;
   margin: 0 auto;
   padding: 48px 64px;
   display: flex;
@@ -11,7 +11,7 @@
   background-image: url("/images/promotion-hero.png");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
+  background-size: cover;
 }
 
 .heroInner {
@@ -446,8 +446,8 @@
   }
 
   .hero {
-    min-height: 460px;
-    padding: 54px 24px;
+    min-height: 360px;
+    padding: 40px 24px;
     align-items: flex-start;
     background-position: 62% center;
   }

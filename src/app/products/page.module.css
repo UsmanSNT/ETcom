@@ -454,7 +454,7 @@
 
 .shopMain .hero {
   min-height: 0;
-  aspect-ratio: 1520 / 720;
+  aspect-ratio: 16 / 5;
   background-position: center center;
   background-size: 100% 100%;
   background-color: #f7f7f8;
@@ -700,7 +700,7 @@
 @media (max-width: 767px) {
   .heroCarousel {
     aspect-ratio: auto;
-    min-height: 260px;
+    min-height: 300px;
   }
 
   .heroSlide {
@@ -1313,7 +1313,7 @@
 
   .heroCarousel {
     aspect-ratio: auto;
-    min-height: 280px;
+    min-height: 300px;
   }
 }
 

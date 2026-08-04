@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import styles from "./page.module.css";
+import { useSiteConfig } from "@/components/useSiteConfig";
 
 type Post = {
   id: string;
@@ -49,6 +50,7 @@ const PROMOTION_TABS = [
 
 export default function PromotionPage() {
   const { t, locale } = useLanguage();
+  const siteConfig = useSiteConfig();
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [resources, setResources] = useState<DownloadResource[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -94,7 +96,10 @@ export default function PromotionPage() {
 
   return (
     <div>
-      <section className={styles.hero}>
+      <section
+        className={styles.hero}
+        style={{ backgroundImage: `url(${siteConfig.promotionHeroImage || "/images/promotion-hero.png"})` }}
+      >
         <div className={styles.heroInner}>
           <div className={styles.breadcrumb}>HOME &gt; {t.promotion.breadcrumb}</div>
           <h1 className={styles.title}>{t.promotion.title}</h1>
