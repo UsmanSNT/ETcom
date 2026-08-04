@@ -592,7 +592,8 @@
 .heroCarousel {
   position: relative;
   width: 100%;
-  aspect-ratio: 1520 / 720;
+  aspect-ratio: 16 / 5;
+  max-height: 390px;
   overflow: hidden;
   background: #f7f7f8;
 }
@@ -602,7 +603,7 @@
   inset: 0;
   display: flex;
   align-items: center;
-  padding: 40px 24px;
+  padding: 24px;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
