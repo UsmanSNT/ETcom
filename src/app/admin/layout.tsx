@@ -41,13 +41,12 @@ const NAV_GROUPS = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [checked, setChecked] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const isLoginPage = pathname === "/admin/login";
+  const [checked, setChecked] = useState(isLoginPage);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (isLoginPage) {
-      setChecked(true);
       return;
     }
     fetch("/api/admin/me")
@@ -57,8 +56,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       })
       .catch(() => router.replace("/admin/login"));
   }, [isLoginPage, router]);
-
-  useEffect(() => setMenuOpen(false), [pathname]);
 
   if (isLoginPage) return <>{children}</>;
   if (!checked) return null;
@@ -75,7 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <button type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="관리자 메뉴 열기">☰</button>
       </header>
       <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ""}`}>
-        <Link href="/admin" className={styles.brand}>
+        <Link href="/admin" className={styles.brand} onClick={() => setMenuOpen(false)}>
           <span>ET</span>
           <div><strong>ADMIN</strong><small>사이트 관리 시스템</small></div>
         </Link>
@@ -86,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {group.items.map((item) => {
                 const active = item.href === "/admin" ? pathname === item.href : pathname.startsWith(item.href);
                 return (
-                  <Link key={item.href} href={item.href} className={`${styles.navLink} ${active ? styles.navLinkActive : ""}`}>
+                  <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className={`${styles.navLink} ${active ? styles.navLinkActive : ""}`}>
                     <span className={styles.navIcon} aria-hidden="true">{item.icon}</span>
                     {item.label}
                   </Link>
