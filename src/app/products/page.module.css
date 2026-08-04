@@ -258,6 +258,9 @@
   padding: 18px clamp(16px, 2.4vw, 34px) 0;
 }
 
+.featuredSearchArea { margin-bottom: 18px; }
+.featuredSearchArea .searchBar { margin: 0; }
+
 .featuredSection { padding-bottom: 14px; }
 
 .sectionHeading {
@@ -280,6 +283,7 @@
   font-weight: 750;
   white-space: nowrap;
 }
+
 
 .featuredRail {
   display: grid;

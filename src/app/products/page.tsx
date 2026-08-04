@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { StarRatingDisplay } from "@/components/StarRating";
@@ -54,16 +54,26 @@ export default function ProductsPage() {
 
 function ProductsPageContent() {
   const { t, locale } = useLanguage();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get("category") ?? "all";
   const showAllProducts = searchParams.get("view") === "all";
   const showStorefront = activeCategory === "all" && !showAllProducts;
   const [products, setProducts] = useState<Product[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
+  const initialQuery = searchParams.get("q") ?? "";
+  const [searchInput, setSearchInput] = useState(initialQuery);
+  const [search, setSearch] = useState(initialQuery);
   const [sortBy] = useState<"recommend" | "popularity" | "priceLow" | "priceHigh" | "rating" | "latest">("recommend");
-  const [imageSearchResults, setImageSearchResults] = useState<Product[] | null>(null);
+  const [imageSearchResults, setImageSearchResults] = useState<Product[] | null>(() => {
+    if (typeof window === "undefined" || searchParams.get("imageSearch") !== "stored") return null;
+    try {
+      const stored = sessionStorage.getItem("product-image-search-results");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return [];
+    }
+  });
   const [imageSearchStatus, setImageSearchStatus] = useState<"idle" | "loading" | "error">("idle");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -98,6 +108,7 @@ function ProductsPageContent() {
       const results: Product[] = await res.json();
       setImageSearchResults(results);
       setImageSearchStatus("idle");
+      router.push("/products?view=all#all-products");
     } catch {
       setImageSearchResults([]);
       setImageSearchStatus("error");
@@ -178,6 +189,7 @@ function ProductsPageContent() {
     event.preventDefault();
     setCurrentPage(1);
     setSearch(searchInput);
+    router.push("/products?view=all#all-products");
   }
 
   function handleSearchClear() {
@@ -220,49 +232,23 @@ function ProductsPageContent() {
         {showStorefront && (
           <>
             <ProductHeroCarousel />
-            <StorefrontSections products={featuredProducts} locale={locale} />
+            <StorefrontSections
+              products={featuredProducts}
+              locale={locale}
+              searchBar={<ProductSearchBar t={t} searchInput={searchInput} setSearchInput={setSearchInput} onSubmit={handleSearchSubmit} onClear={handleSearchClear} onImageSearch={handleImageSearch} />}
+            />
           </>
         )}
 
         <div className={`${styles.container} ${!showStorefront ? styles.catalogVisible : ""}`} id="all-products">
-        <form className={styles.searchBar} onSubmit={handleSearchSubmit} role="search">
-          <SearchIcon className={styles.searchIcon} aria-hidden="true" />
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder={t.products.searchPlaceholder}
-            value={searchInput}
-            onChange={(event) => setSearchInput(event.target.value)}
-            aria-label={t.products.searchLabel}
-          />
-          {searchInput && (
-            <button
-              type="button"
-              className={styles.searchClearBtn}
-              onClick={handleSearchClear}
-              aria-label={t.products.searchClear}
-            >
-              <CloseIcon />
-            </button>
-          )}
-          <label className={styles.imageSearchBtn} aria-label={t.products.imageSearchLabel} title={t.products.imageSearchLabel}>
-            <CameraIcon />
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp,image/gif"
-              hidden
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) handleImageSearch(file);
-                event.target.value = "";
-              }}
-            />
-          </label>
-          <button type="submit" className={styles.searchSubmitBtn}>
-            {t.products.searchLabel}
-          </button>
-        </form>
-
+        {!showStorefront && <ProductSearchBar
+          t={t}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          onSubmit={handleSearchSubmit}
+          onClear={handleSearchClear}
+          onImageSearch={handleImageSearch}
+        />}
         {(imageSearchResults !== null || imageSearchStatus === "loading") && (
           <div className={styles.imageSearchBanner}>
             {imagePreview && <img src={imagePreview} alt="" className={styles.imageSearchThumb} />}
@@ -359,7 +345,56 @@ function ProductsPageContent() {
   );
 }
 
-function StorefrontSections({ products, locale }: { products: Product[]; locale: "ko" | "en" }) {
+function ProductSearchBar({
+  t,
+  searchInput,
+  setSearchInput,
+  onSubmit,
+  onClear,
+  onImageSearch,
+}: {
+  t: ReturnType<typeof useLanguage>["t"];
+  searchInput: string;
+  setSearchInput: (value: string) => void;
+  onSubmit: (event: FormEvent) => void;
+  onClear: () => void;
+  onImageSearch: (file: File) => void;
+}) {
+  return (
+    <form className={styles.searchBar} onSubmit={onSubmit} role="search">
+      <SearchIcon className={styles.searchIcon} aria-hidden="true" />
+      <input
+        type="text"
+        className={styles.searchInput}
+        placeholder={t.products.searchPlaceholder}
+        value={searchInput}
+        onChange={(event) => setSearchInput(event.target.value)}
+        aria-label={t.products.searchLabel}
+      />
+      {searchInput && (
+        <button type="button" className={styles.searchClearBtn} onClick={onClear} aria-label={t.products.searchClear}>
+          <CloseIcon />
+        </button>
+      )}
+      <label className={styles.imageSearchBtn} aria-label={t.products.imageSearchLabel} title={t.products.imageSearchLabel}>
+        <CameraIcon />
+        <input
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          hidden
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) onImageSearch(file);
+            event.target.value = "";
+          }}
+        />
+      </label>
+      <button type="submit" className={styles.searchSubmitBtn}>{t.products.searchLabel}</button>
+    </form>
+  );
+}
+
+function StorefrontSections({ products, locale, searchBar }: { products: Product[]; locale: "ko" | "en"; searchBar: React.ReactNode }) {
   const reasons = [
     { icon: "gear", ko: "직접 설계·제조", en: "Direct Design & Manufacturing", koDesc: "하드웨어 설계부터 제품 제작까지 모든 과정을 직접 수행하며 최고의 품질을 보장합니다.", enDesc: "We manage the full process from hardware design to manufacturing." },
     { icon: "research", ko: "기업부설연구소", en: "Corporate R&D Center", koDesc: "지속적인 연구개발로 검증된 기술력과 혁신적인 솔루션을 제공합니다.", enDesc: "Continuous R&D delivers proven technology and innovative solutions." },
@@ -379,6 +414,7 @@ function StorefrontSections({ products, locale }: { products: Product[]; locale:
           <h2>{locale === "ko" ? "대표 제품군" : "Featured Products"}</h2>
           <Link href="/products?view=all#all-products">{locale === "ko" ? "전체 제품 보기" : "View all products"} →</Link>
         </div>
+        <div className={styles.featuredSearchArea}>{searchBar}</div>
         <ScrollRow className={styles.featuredRail}>
           {products.map((product) => (
             <Link key={product.id} href={`/products/${product.slug ?? product.id}`} className={styles.featuredCard}>

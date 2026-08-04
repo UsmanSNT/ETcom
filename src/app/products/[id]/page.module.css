@@ -329,6 +329,10 @@
   font-weight: 800;
 }
 
+.detailSearchBar {
+  margin-bottom: 28px;
+}
+
 .detailDescText {
   width: 100%;
   max-width: 860px;

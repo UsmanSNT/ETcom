@@ -2,9 +2,10 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
 import { StarRatingDisplay } from "@/components/StarRating";
-import { HeadsetIcon } from "@/components/icons/SolutionIcons";
+import { CameraIcon, CloseIcon, HeadsetIcon, SearchIcon } from "@/components/icons/SolutionIcons";
 import { ProductCategoryNav } from "../ProductCategoryNav";
 import styles from "./page.module.css";
 import shopStyles from "../page.module.css";
@@ -55,6 +56,7 @@ export function ProductDetailClient({
   relatedProducts: RelatedProduct[];
 }) {
   const { locale, t } = useLanguage();
+  const router = useRouter();
   const category = locale === "ko" ? product.categoryKo : product.categoryEn;
   const title = locale === "ko" ? product.titleKo : product.titleEn;
   const images = useMemo(
@@ -66,6 +68,8 @@ export function ProductDetailClient({
     [product.images, product.thumbnailUrl],
   );
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [productSearch, setProductSearch] = useState("");
+  const [imageSearching, setImageSearching] = useState(false);
   const [selected, setSelected] = useState(0);
   const [zoomed, setZoomed] = useState(false);
   const [viewerScale, setViewerScale] = useState(1);
@@ -137,6 +141,27 @@ export function ProductDetailClient({
 
   const activeImage = images[selected];
 
+  function submitProductSearch(event: FormEvent) {
+    event.preventDefault();
+    const query = productSearch.trim();
+    router.push(`/products?view=all${query ? `&q=${encodeURIComponent(query)}` : ""}#all-products`);
+  }
+
+  async function searchByImage(file: File) {
+    setImageSearching(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/products/search-by-image", { method: "POST", body: formData });
+      if (!response.ok) throw new Error();
+      const results = await response.json();
+      sessionStorage.setItem("product-image-search-results", JSON.stringify(results));
+      router.push("/products?view=all&imageSearch=stored#all-products");
+    } finally {
+      setImageSearching(false);
+    }
+  }
+
   const zoomFractionX = lens.width < frameSize.width ? lens.left / (frameSize.width - lens.width) : 0.5;
   const zoomFractionY = lens.height < frameSize.height ? lens.top / (frameSize.height - lens.height) : 0.5;
   const panelImageWidth = frameSize.width * ZOOM_SCALE;
@@ -170,6 +195,23 @@ export function ProductDetailClient({
         </div>
       </aside>
       <div className={styles.container}>
+      <form className={`${shopStyles.searchBar} ${styles.detailSearchBar}`} onSubmit={submitProductSearch} role="search">
+        <SearchIcon className={shopStyles.searchIcon} aria-hidden="true" />
+        <input
+          type="text"
+          className={shopStyles.searchInput}
+          placeholder={t.products.searchPlaceholder}
+          value={productSearch}
+          onChange={(event) => setProductSearch(event.target.value)}
+          aria-label={t.products.searchLabel}
+        />
+        {productSearch && <button type="button" className={shopStyles.searchClearBtn} onClick={() => setProductSearch("")} aria-label={t.products.searchClear}><CloseIcon /></button>}
+        <label className={shopStyles.imageSearchBtn} aria-label={t.products.imageSearchLabel} title={t.products.imageSearchLabel}>
+          <CameraIcon />
+          <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden disabled={imageSearching} onChange={(event) => { const file = event.target.files?.[0]; if (file) void searchByImage(file); event.target.value = ""; }} />
+        </label>
+        <button type="submit" className={shopStyles.searchSubmitBtn}>{imageSearching ? t.products.imageSearchLoading : t.products.searchLabel}</button>
+      </form>
       <div className={styles.detailLayout}>
         <div className={styles.gallery}>
           {images.length > 1 && (
