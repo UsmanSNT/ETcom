@@ -39,37 +39,6 @@ const solutions = [
   { key: "oem", icon: CubeIcon },
 ] as const;
 
-const featuredCertificates = [
-  {
-    id: "patent-ball-launcher",
-    image: "/images/certificate-patent-ball-launcher.png",
-    href: "/images/certificate-patent-ball-launcher.png",
-    ko: "공 자동 투입 및 발사 장치 특허증",
-    en: "Automatic Ball Loading and Launching Device Patent",
-  },
-  {
-    id: "patent-smartfarm-water",
-    image: "/images/certificate-patent-smartfarm-water.png",
-    href: "/images/certificate-patent-smartfarm-water.png",
-    ko: "물관리장치를 이용한 스마트팜 서비스 제공 시스템 특허증",
-    en: "Smart Farm Water Management Service System Patent",
-  },
-  {
-    id: "trademark-serial-link",
-    image: "/images/certificate-trademark-serial-link.png",
-    href: "/images/certificate-trademark-serial-link.png",
-    ko: "Serial Link 상표등록증",
-    en: "Serial Link Trademark Registration",
-  },
-  {
-    id: "venture-enterprise-certificate",
-    image: "/images/certificate-venture-enterprise.png",
-    href: "/documents/venture-enterprise-certificate.pdf",
-    ko: "벤처기업확인서",
-    en: "Venture Enterprise Certificate",
-  },
-] as const;
-
 type SensorConfig = {
   label: string;
   unit: string;
@@ -364,20 +333,9 @@ export default function Home() {
                     </Link>
                   );
                 })}
-              {featuredCertificates.map((cert) => (
-                <a
-                  href={cert.href}
-                  className={styles.certItem}
-                  key={cert.id}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <div className={styles.certVisual}>
-                    <img src={cert.image} alt={locale === "ko" ? cert.ko : cert.en} />
-                  </div>
-                  <strong>{locale === "ko" ? cert.ko : cert.en}</strong>
-                </a>
-              ))}
+              {certificationPosts.length === 0 && (
+                <p className={styles.certEmpty}>{locale === "ko" ? "등록된 특허·인증이 없습니다." : "No patents or certifications registered."}</p>
+              )}
             </div>
           </div>
 
