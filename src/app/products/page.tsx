@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { FormEvent, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { StarRatingDisplay } from "@/components/StarRating";
 import {
@@ -12,7 +13,7 @@ import {
 } from "@/components/icons/SolutionIcons";
 import { ProductHeroCarousel } from "./ProductHeroCarousel";
 import { ScrollRow } from "@/components/ScrollRow";
-import { CatIcon } from "./CatIcon";
+import { ProductCategoryNav } from "./ProductCategoryNav";
 import styles from "./page.module.css";
 
 type Product = {
@@ -44,9 +45,18 @@ type HierarchicalCategory = {
 const PAGE_SIZE = 8;
 
 export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className={styles.shopLayout} />}>
+      <ProductsPageContent />
+    </Suspense>
+  );
+}
+
+function ProductsPageContent() {
   const { t, locale } = useLanguage();
+  const searchParams = useSearchParams();
+  const activeCategory = searchParams.get("category") ?? "all";
   const [products, setProducts] = useState<Product[] | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -55,7 +65,6 @@ export default function ProductsPage() {
   const [imageSearchStatus, setImageSearchStatus] = useState<"idle" | "loading" | "error">("idle");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const [hierarchicalCategories, setHierarchicalCategories] = useState<HierarchicalCategory[]>([]);
 
@@ -99,14 +108,7 @@ export default function ProductsPage() {
     setImagePreview(null);
   }
 
-  function toggleExpand(catId: string) {
-    setExpandedCategories((prev) => {
-      if (prev.has(catId)) return new Set();
-      return new Set([catId]);
-    });
-  }
-
-  function getCategoryNames(catId: string): { ko: string; en: string } | null {
+  const getCategoryNames = useCallback((catId: string): { ko: string; en: string } | null => {
     for (const parent of hierarchicalCategories) {
       if (parent.id === catId) return { ko: parent.nameKo, en: parent.nameEn };
       for (const child of parent.children) {
@@ -114,7 +116,7 @@ export default function ProductsPage() {
       }
     }
     return null;
-  }
+  }, [hierarchicalCategories]);
 
   const filtered = useMemo(() => {
     if (imageSearchResults) return imageSearchResults;
@@ -143,11 +145,7 @@ export default function ProductsPage() {
     if (query) {
       list = list.filter((p) =>
         p.titleKo.toLowerCase().includes(query) ||
-        p.titleEn.toLowerCase().includes(query) ||
-        p.descriptionKo.toLowerCase().includes(query) ||
-        p.descriptionEn.toLowerCase().includes(query) ||
-        (p.categoryKo?.toLowerCase().includes(query) ?? false) ||
-        (p.categoryEn?.toLowerCase().includes(query) ?? false)
+        p.titleEn.toLowerCase().includes(query)
       );
     }
     list = [...list].sort((a, b) => {
@@ -167,7 +165,7 @@ export default function ProductsPage() {
       }
     });
     return list;
-  }, [products, activeCategory, search, sortBy, locale, imageSearchResults, hierarchicalCategories]);
+  }, [products, activeCategory, search, sortBy, locale, imageSearchResults, hierarchicalCategories, getCategoryNames]);
 
   useEffect(() => {
     const timer = setTimeout(() => setSearch(searchInput), 250);
@@ -205,60 +203,7 @@ export default function ProductsPage() {
       )}
 
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
-        <nav className={styles.sidebarNav}>
-          <button
-            type="button"
-            className={styles.sidebarAllBtn}
-            onClick={() => { setActiveCategory("all"); setCurrentPage(1); setExpandedCategories(new Set()); }}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-            {t.products.all}
-          </button>
-          {hierarchicalCategories.map((cat) => {
-            const name = locale === "ko" ? cat.nameKo : cat.nameEn;
-            const expanded = expandedCategories.has(cat.id);
-            const hasChildren = cat.children.length > 0;
-            const isActive = activeCategory === cat.id;
-            return (
-              <div key={cat.id}>
-                <button
-                  type="button"
-                  className={`${styles.sidebarItem} ${isActive ? styles.sidebarItemActive : ""}`}
-                  onClick={() => {
-                    setActiveCategory(cat.id);
-                    setCurrentPage(1);
-                    if (hasChildren) toggleExpand(cat.id);
-                  }}
-                >
-                  <span className={styles.sidebarIcon}>
-                    <CatIcon name={cat.nameEn} />
-                  </span>
-                  <span className={styles.sidebarItemLabel}>{name}</span>
-                  {hasChildren && (
-                    <span className={`${styles.sidebarItemArrow} ${expanded ? styles.sidebarItemArrowOpen : ""}`}>›</span>
-                  )}
-                </button>
-                {hasChildren && expanded && (
-                  <div className={styles.sidebarSub}>
-                    {cat.children.map((sub) => {
-                      const subName = locale === "ko" ? sub.nameKo : sub.nameEn;
-                      return (
-                        <button
-                          key={sub.id}
-                          type="button"
-                          className={`${styles.sidebarSubItem} ${activeCategory === sub.id ? styles.sidebarSubItemActive : ""}`}
-                          onClick={() => { setActiveCategory(sub.id); setCurrentPage(1); }}
-                        >
-                          {subName}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </nav>
+        <ProductCategoryNav categories={hierarchicalCategories} locale={locale} activeCategory={activeCategory} />
 
         <div className={styles.sidebarContact}>
           <HeadsetIcon />
@@ -270,11 +215,14 @@ export default function ProductsPage() {
       </aside>
 
       <main className={styles.shopMain}>
-        <ProductHeroCarousel />
+        {activeCategory === "all" && (
+          <>
+            <ProductHeroCarousel />
+            <StorefrontSections products={featuredProducts} locale={locale} />
+          </>
+        )}
 
-        <StorefrontSections products={featuredProducts} locale={locale} />
-
-        <div className={styles.container} id="all-products" aria-hidden="true">
+        <div className={`${styles.container} ${activeCategory !== "all" ? styles.catalogVisible : ""}`} id="all-products">
         <form className={styles.searchBar} onSubmit={handleSearchSubmit} role="search">
           <SearchIcon className={styles.searchIcon} aria-hidden="true" />
           <input

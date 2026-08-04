@@ -70,6 +70,14 @@
 .sidebarItem:hover { background: #f5f7fa; }
 .sidebarItemActive { background: #f0f3f7; color: var(--brand-navy); font-weight: 800; }
 
+.sidebarItemLink {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .sidebarItemLabel { flex: 1; }
 
 .sidebarItemArrow {
@@ -78,6 +86,10 @@
   color: #aab4c1;
   transition: transform .2s;
   flex-shrink: 0;
+  padding: 4px 6px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
 .sidebarItemArrowOpen {
@@ -343,7 +355,7 @@
   display: grid;
   grid-template-columns: 1.25fr repeat(3, minmax(0, 1fr));
   gap: 28px;
-  margin-top: 18px;
+  margin: 18px 0 38px;
   padding: 28px 30px 0;
   border-radius: 12px;
   background: linear-gradient(135deg, #06224a, #0b3971);
@@ -419,6 +431,10 @@
    repeated below the landing sections. */
 .storefrontSections + .container {
   display: none;
+}
+
+.storefrontSections + .container.catalogVisible {
+  display: block;
 }
 
 .hero {

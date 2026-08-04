@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { StarRatingDisplay } from "@/components/StarRating";
 import { HeadsetIcon } from "@/components/icons/SolutionIcons";
-import { CatIcon } from "../CatIcon";
+import { ProductCategoryNav } from "../ProductCategoryNav";
 import styles from "./page.module.css";
 import shopStyles from "../page.module.css";
 
@@ -65,7 +65,6 @@ export function ProductDetailClient({
         : [],
     [product.images, product.thumbnailUrl],
   );
-  const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selected, setSelected] = useState(0);
   const [zoomed, setZoomed] = useState(false);
@@ -142,6 +141,9 @@ export function ProductDetailClient({
   const zoomFractionY = lens.height < frameSize.height ? lens.top / (frameSize.height - lens.height) : 0.5;
   const panelImageWidth = frameSize.width * ZOOM_SCALE;
   const panelImageHeight = frameSize.height * ZOOM_SCALE;
+  const activeNavCategory = hierarchicalCategories
+    .flatMap((parent) => [parent, ...parent.children])
+    .find((item) => item.nameKo === product.categoryKo || item.nameEn === product.categoryEn)?.id;
 
   return (
     <div className={styles.pageLayout}>
@@ -152,58 +154,7 @@ export function ProductDetailClient({
         className={styles.categorySidebar}
         style={sidebarOpen ? { transform: "translateX(0)", boxShadow: "4px 0 24px rgba(0,0,0,.12)" } : undefined}
       >
-        <nav className={shopStyles.sidebarNav} aria-label={locale === "ko" ? "제품 카테고리" : "Product categories"}>
-          <Link
-            href="/products"
-            className={shopStyles.sidebarAllBtn}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-            {locale === "ko" ? "전체" : "All"}
-          </Link>
-          {hierarchicalCategories.map((cat) => {
-            const name = locale === "ko" ? cat.nameKo : cat.nameEn;
-            const hasChildren = cat.children.length > 0;
-            const expanded = expandedCats.has(cat.id);
-            return (
-              <div key={cat.id}>
-                <button
-                  type="button"
-                  className={shopStyles.sidebarItem}
-                  onClick={() => {
-                    if (hasChildren) {
-                      setExpandedCats((prev) => {
-                        if (prev.has(cat.id)) return new Set();
-                        return new Set([cat.id]);
-                      });
-                    }
-                  }}
-                >
-                  <span className={shopStyles.sidebarIcon}><CatIcon name={cat.nameEn} /></span>
-                  <span className={shopStyles.sidebarItemLabel}>{name}</span>
-                  {hasChildren && (
-                    <span className={`${shopStyles.sidebarItemArrow} ${expanded ? shopStyles.sidebarItemArrowOpen : ""}`}>›</span>
-                  )}
-                </button>
-                {hasChildren && expanded && (
-                  <div className={shopStyles.sidebarSub}>
-                    {cat.children.map((sub) => {
-                      const subName = locale === "ko" ? sub.nameKo : sub.nameEn;
-                      return (
-                        <Link
-                          key={sub.id}
-                          href={`/products?category=${encodeURIComponent(subName)}`}
-                          className={shopStyles.sidebarSubItem}
-                        >
-                          {subName}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </nav>
+        <ProductCategoryNav categories={hierarchicalCategories} locale={locale} activeCategory={activeNavCategory} />
 
         <div className={shopStyles.sidebarContact}>
           <HeadsetIcon />

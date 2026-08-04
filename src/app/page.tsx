@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { ScrollRow } from "@/components/ScrollRow";
 import {
   CapIcon,
   CloudIcon,
@@ -12,7 +11,6 @@ import {
   HeadsetIcon,
   LeafIcon,
   NetworkIcon,
-  PlayIcon,
   SensorIcon,
   SwitchIcon,
 } from "@/components/icons/SolutionIcons";
@@ -21,39 +19,24 @@ import AIAnalysisDashboard from "@/components/main/AIAnalysisDashboard";
 import ControlDashboard from "@/components/main/ControlDashboard";
 import styles from "./page.module.css";
 
-type Product = {
-  id: string;
-  thumbnailUrl: string | null;
-  titleKo: string;
-  titleEn: string;
-  images: Array<{ id: string; url: string }>;
-  slug: string | null;
-};
-
 type Post = {
   id: string;
   titleKo: string;
   titleEn: string;
   publishedAt: string;
   slug?: string | null;
+  category?: { slug: string; nameKo: string; nameEn: string };
+  images?: Array<{ id: string; url: string }>;
+  thumbnailUrl?: string | null;
 };
 
 const solutions = [
   { key: "smartFarm", icon: LeafIcon },
   { key: "industrialIot", icon: FactoryIcon },
-  { key: "platformCloud", icon: CloudIcon },
   { key: "education", icon: CapIcon },
+  { key: "platformCloud", icon: CloudIcon },
   { key: "oem", icon: CubeIcon },
 ] as const;
-
-const fallbackProducts = [
-  "스마트팜 통합 제어 시스템",
-  "GPS 위치추적기",
-  "원격 모니터링 장치",
-  "센서 및 계측기",
-  "식물재배 장비",
-  "식물성장 LED",
-];
 
 type SensorConfig = {
   label: string;
@@ -165,7 +148,6 @@ export default function Home() {
     t.home.sensorCo2,
     t.home.sensorLux,
   ];
-  const [products, setProducts] = useState<Product[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
 
   /* ── Dashboard animation state ── */
@@ -212,13 +194,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((response) => response.json())
-      .then((data) => setProducts(Array.isArray(data) ? data.slice(0, 6) : []))
-      .catch(() => setProducts([]));
     fetch("/api/promotion/posts")
       .then((response) => response.json())
-      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 3) : []))
+      .then((data) => setPosts(Array.isArray(data) ? data : []))
       .catch(() => setPosts([]));
   }, []);
 
@@ -296,62 +274,42 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={styles.contentSection}>
-        <p className={styles.sectionLabel}>{t.home.sectionSolutions}</p>
-        <div className={styles.solutionsGrid}>
-          {solutions.map(({ key, icon: Icon }) => (
-            <Link href="/business" className={styles.solutionItem} key={key}>
-              <Icon className={styles.solutionIcon} />
-              <span>{t.solutions[key]}</span>
-              <b aria-hidden="true">→</b>
-            </Link>
-          ))}
+      <section className={`${styles.contentSection} ${styles.newSolutionsSection}`}>
+        <div className={styles.solutionsIntro}>
+          <p className={styles.sectionLabel}>OUR SOLUTIONS</p>
+          <h2>{locale === "ko" ? <>최적의 솔루션으로<br />더 스마트한 미래를 만듭니다.</> : <>Optimal solutions for<br />a smarter future.</>}</h2>
+          <i aria-hidden="true" />
+          <p>{locale === "ko" ? "이티컴퍼니의 다양한 제품과 솔루션이 고객의 가치를 높여드립니다." : "ETCOMPANY products and solutions create more value for every customer."}</p>
         </div>
-      </section>
-
-      <section className={styles.contentSection}>
-        <div className={styles.sectionHeader}>
-          <p className={styles.sectionLabel}>{t.home.sectionProducts}</p>
-          <Link href="/products">{t.home.productsMore} →</Link>
-        </div>
-        <div className={styles.productsGrid}>
-          {(products.length ? products : fallbackProducts).map((product, index) => {
-            const isProduct = typeof product !== "string";
-            const title = isProduct
-              ? locale === "ko" ? product.titleKo : product.titleEn
-              : product;
+        <div className={styles.newSolutionsGrid}>
+          {solutions.map(({ key, icon: Icon }) => {
+            const descriptions: Record<string, [string, string]> = {
+              smartFarm: ["통합 환경 제어와 스마트 재배 솔루션", "Integrated control and smart cultivation"],
+              industrialIot: ["실시간 모니터링과 원격 관리로 산업 현장의 효율성 향상", "Real-time monitoring for efficient operations"],
+              education: ["코딩 교육과 실습을 위한 스마트 교육 솔루션", "Smart learning tools for coding education"],
+              platformCloud: ["데이터 분석과 AI 기술로 더 스마트한 의사결정 지원", "Data analytics and AI-assisted decisions"],
+              oem: ["고객 맞춤형 임베디드 개발·생산까지 원스톱 지원", "End-to-end custom embedded development"],
+            };
             return (
-              <Link
-                href={isProduct ? `/products/${product.slug ?? product.id}` : "/products"}
-                className={styles.productCard}
-                key={isProduct ? product.id : product}
-              >
-                <div className={styles.productVisual}>
-                  {isProduct && (product.images?.[0]?.url || product.thumbnailUrl) ? (
-                    <img src={product.images?.[0]?.url ?? product.thumbnailUrl ?? ""} alt={title} />
-                  ) : (
-                    <div
-                      className={`${styles.productPhoto} ${styles[`productPhoto${index + 1}`]}`}
-                      role="img"
-                      aria-label={title}
-                    />
-                  )}
-                </div>
-                <div className={styles.productLabel}>
-                  <span>{title}</span>
-                  <b aria-hidden="true">→</b>
-                </div>
+              <Link href="/business" className={styles.newSolutionItem} key={key}>
+                <Icon className={styles.newSolutionIcon} />
+                <strong>{t.solutions[key]}</strong>
+                <p>{descriptions[key]?.[locale === "ko" ? 0 : 1]}</p>
+                <b aria-hidden="true">→</b>
               </Link>
             );
           })}
         </div>
       </section>
 
-      <section className={`${styles.contentSection} ${styles.bottomSection}`}>
+      <section className={styles.homeInfoBand}>
         <div className={styles.newsColumn}>
-          <p className={styles.sectionLabel}>{t.home.sectionNews}</p>
+          <div className={styles.infoHeading}>
+            <p className={styles.sectionLabel}>NEWS</p>
+            <Link href="/promotion">{locale === "ko" ? "전체 보기" : "View all"} →</Link>
+          </div>
           <div className={styles.newsList}>
-            {(posts.length ? posts : [
+            {(posts.length ? posts.filter((post) => post.category?.slug !== "patents-certifications").slice(0, 3) : [
               { id: "1", titleKo: "AFFRO 2026 전시회 참가 보고서", titleEn: "AFFRO 2026 Exhibition Report", publishedAt: "2026-07-29" },
               { id: "2", titleKo: "스마트팜 통합 환경 제어기 신제품 출시", titleEn: "New Smart Farm Controller", publishedAt: "2026-07-15" },
               { id: "3", titleKo: "IoT 데이터로거 시리얼링크 APP 업데이트 안내", titleEn: "IoT Datalogger App Update", publishedAt: "2026-06-30" },
@@ -365,25 +323,41 @@ export default function Home() {
           <Link href="/promotion" className={styles.inlineMore}>{t.home.newsMore} →</Link>
         </div>
 
-        <div className={styles.promoColumn}>
-          <p className={styles.sectionLabel}>{t.home.sectionPromo}</p>
-          <div className={styles.promoGrid}>
-            <div className={styles.promoMain}>
-              <strong>ET<span>COMPANY</span></strong>
-              <small>Smart Solution, Better Future</small>
-              <i><PlayIcon /></i>
-            </div>
-            <div className={styles.promoThumb}><PlayIcon /></div>
-            <div className={styles.promoThumb}><PlayIcon /></div>
+        <div className={styles.certColumn}>
+          <p className={styles.sectionLabel}>CERTIFICATIONS</p>
+          <div className={styles.certGrid}>
+            {(posts.filter((post) => post.category?.slug === "patents-certifications").slice(0, 5).length
+              ? posts.filter((post) => post.category?.slug === "patents-certifications").slice(0, 5)
+              : [
+                  { id: "cert-1", titleKo: "특허등록", titleEn: "Patent", publishedAt: "2025-01-01" },
+                  { id: "cert-2", titleKo: "특허출원", titleEn: "Patent Application", publishedAt: "2025-01-01" },
+                  { id: "cert-3", titleKo: "특허출원", titleEn: "Patent Application", publishedAt: "2025-01-01" },
+                  { id: "cert-4", titleKo: "ISO 9001", titleEn: "ISO 9001", publishedAt: "2025-01-01" },
+                  { id: "cert-5", titleKo: "ISO 14001", titleEn: "ISO 14001", publishedAt: "2025-01-01" },
+                ]).map((cert, index) => {
+                  const imageUrl = "images" in cert ? cert.images?.[0]?.url ?? cert.thumbnailUrl : undefined;
+                  return (
+                    <Link href={cert.id.startsWith("cert-") ? "/promotion" : `/promotion/${cert.slug ?? cert.id}`} className={styles.certItem} key={cert.id}>
+                      <div className={styles.certVisual}>
+                        {imageUrl ? <img src={imageUrl} alt="" /> : index < 3 ? <span className={styles.certDocument}>CERTIFICATE</span> : <span className={styles.certSeal}>ET</span>}
+                      </div>
+                      <strong>{locale === "ko" ? cert.titleKo : cert.titleEn}</strong>
+                    </Link>
+                  );
+                })}
           </div>
         </div>
 
         <div className={styles.contactCard}>
           <p>CONTACT US</p>
-          <HeadsetIcon className={styles.headsetIcon} aria-hidden="true" />
-          <strong>{t.home.contactTitle}</strong>
-          <span>{t.home.contactDesc1}<br />{t.home.contactDesc2}</span>
-          <Link href="/contact">{t.home.contactCta} →</Link>
+          <div className={styles.contactBody}>
+            <HeadsetIcon className={styles.headsetIcon} aria-hidden="true" />
+            <div>
+              <strong>{t.home.contactTitle}</strong>
+              <span>{t.home.contactDesc1}<br />{t.home.contactDesc2}</span>
+              <Link href="/contact">{t.home.contactCta} →</Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>
