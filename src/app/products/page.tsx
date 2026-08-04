@@ -274,7 +274,7 @@ export default function ProductsPage() {
 
         <StorefrontSections products={featuredProducts} locale={locale} />
 
-        <div className={styles.container} id="all-products">
+        <div className={styles.container} id="all-products" aria-hidden="true">
         <form className={styles.searchBar} onSubmit={handleSearchSubmit} role="search">
           <SearchIcon className={styles.searchIcon} aria-hidden="true" />
           <input
@@ -411,15 +411,15 @@ export default function ProductsPage() {
 
 function StorefrontSections({ products, locale }: { products: Product[]; locale: "ko" | "en" }) {
   const reasons = [
-    { icon: "⚙", ko: "직접 설계·제조", en: "Direct Design & Manufacturing", koDesc: "하드웨어 설계부터 제품 제작까지 모든 과정을 직접 수행합니다.", enDesc: "We manage the full process from hardware design to manufacturing." },
-    { icon: "⌁", ko: "기업부설연구소", en: "Corporate R&D Center", koDesc: "지속적인 연구개발로 검증된 기술력과 혁신적인 솔루션을 제공합니다.", enDesc: "Continuous R&D delivers proven technology and innovative solutions." },
-    { icon: "◇", ko: "특허 및 인증", en: "Patents & Certifications", koDesc: "다수의 특허와 인증으로 기술력과 신뢰성을 인정받았습니다.", enDesc: "Our technology and reliability are backed by patents and certifications." },
-    { icon: "∞", ko: "맞춤형 개발 (OEM/ODM)", en: "Custom OEM/ODM", koDesc: "고객 요구에 맞춘 최적의 제품과 솔루션을 개발합니다.", enDesc: "We develop optimized products and solutions for each customer." },
+    { icon: "gear", ko: "직접 설계·제조", en: "Direct Design & Manufacturing", koDesc: "하드웨어 설계부터 제품 제작까지 모든 과정을 직접 수행하며 최고의 품질을 보장합니다.", enDesc: "We manage the full process from hardware design to manufacturing." },
+    { icon: "research", ko: "기업부설연구소", en: "Corporate R&D Center", koDesc: "지속적인 연구개발로 검증된 기술력과 혁신적인 솔루션을 제공합니다.", enDesc: "Continuous R&D delivers proven technology and innovative solutions." },
+    { icon: "shield", ko: "특허 및 인증", en: "Patents & Certifications", koDesc: "다수의 특허와 인증으로 기술력과 신뢰성을 인정받았습니다.", enDesc: "Our technology and reliability are backed by patents and certifications." },
+    { icon: "handshake", ko: "맞춤형 개발 (OEM/ODM)", en: "Custom OEM/ODM", koDesc: "고객 요구에 맞춘 최적의 제품과 솔루션을 신속하게 개발·공급합니다.", enDesc: "We develop optimized products and solutions for each customer." },
   ];
   const steps = [
-    { number: "01", icon: "▦", ko: "PCB 설계·제작", en: "PCB Design & Production" },
-    { number: "02", icon: "◇", ko: "기구 설계·제작", en: "Mechanical Design" },
-    { number: "03", icon: "▯", ko: "소프트웨어·APP 개발", en: "Software & App Development" },
+    { number: "01", icon: "pcb", ko: "PCB 설계·제작", en: "PCB Design & Production", koDesc: "회로 설계, PCB 레이아웃, 제작 및 생산까지 고품질 PCB를 제공합니다." },
+    { number: "02", icon: "cube", ko: "기구 설계·제작", en: "Mechanical Design", koDesc: "제품 구조 설계, 3D 모델링, 시제품 제작 및 금형까지 완벽한 제품을 구현합니다." },
+    { number: "03", icon: "phone", ko: "소프트웨어·APP 개발", en: "Software & App Development", koDesc: "임베디드 펌웨어, 서버, 모바일 앱까지 사용자 중심의 소프트웨어를 개발합니다." },
   ];
 
   return (
@@ -450,7 +450,7 @@ function StorefrontSections({ products, locale }: { products: Product[]; locale:
         </div>
         {reasons.map((reason) => (
           <div className={styles.whyItem} key={reason.ko}>
-            <span>{reason.icon}</span>
+            <span><StorefrontIcon type={reason.icon} /></span>
             <strong>{locale === "ko" ? reason.ko : reason.en}</strong>
             <p>{locale === "ko" ? reason.koDesc : reason.enDesc}</p>
           </div>
@@ -466,13 +466,41 @@ function StorefrontSections({ products, locale }: { products: Product[]; locale:
         </div>
         {steps.map((step) => (
           <div className={styles.oemStep} key={step.number}>
-            <div className={styles.oemIcon}>{step.icon}</div>
+            <div className={styles.oemIcon}><StorefrontIcon type={step.icon} /></div>
             <b>{step.number}</b>
             <strong>{locale === "ko" ? step.ko : step.en}</strong>
-            <p>{locale === "ko" ? "전문 엔지니어가 설계부터 제작까지 체계적으로 진행합니다." : "Expert engineers manage every stage from design through production."}</p>
+            <p>{locale === "ko" ? step.koDesc : "Expert engineers manage every stage from design through production."}</p>
           </div>
         ))}
+        <div className={styles.oemStats}>
+          {[
+            ["calendar", "10+", "주요 솔루션", "Key solutions"],
+            ["document", "100+", "개발·공급 제품", "Products delivered"],
+            ["patent", "50+", "특허 및 인증", "Patents & certificates"],
+            ["network", "200+", "고객사", "Customers"],
+          ].map(([icon, value, ko, en]) => (
+            <div className={styles.oemStat} key={value}>
+              <StorefrontIcon type={icon} />
+              <div><strong>{value}</strong><span>{locale === "ko" ? ko : en}</span></div>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );
+}
+
+function StorefrontIcon({ type }: { type: string }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  if (type === "gear") return <svg viewBox="0 0 24 24" {...common}><path d="M12 2.8h2.1l.7 2.5c.7.2 1.3.6 1.9 1l2.5-.7 1.1 1.8-1.8 1.9c.2.7.2 1.4 0 2.1l1.8 1.9-1.1 1.8-2.5-.7c-.6.5-1.2.8-1.9 1l-.7 2.5h-2.1l-.7-2.5c-.7-.2-1.3-.6-1.9-1l-2.5.7-1.1-1.8 1.8-1.9a7 7 0 0 1 0-2.1L5.8 7.4l1.1-1.8 2.5.7c.6-.5 1.2-.8 1.9-1z"/><circle cx="13" cy="10.4" r="3.2"/></svg>;
+  if (type === "research") return <svg viewBox="0 0 24 24" {...common}><path d="m9 3 6 0M10 3v6l-4.8 8.3A2.5 2.5 0 0 0 7.4 21h9.2a2.5 2.5 0 0 0 2.2-3.7L14 9V3"/><path d="M7.3 16h9.4M9.2 13h5.6"/><circle cx="17.5" cy="6.5" r="2.5"/><path d="m19.3 8.3 2.2 2.2"/></svg>;
+  if (type === "shield") return <svg viewBox="0 0 24 24" {...common}><path d="M12 2.5 20 6v5.8c0 5.1-3.2 8.2-8 9.7-4.8-1.5-8-4.6-8-9.7V6z"/><path d="m8.2 11.8 2.5 2.5 5.2-5.4"/></svg>;
+  if (type === "handshake") return <svg viewBox="0 0 24 24" {...common}><path d="m3 8 4-4 4 3-5 7-4-3zM21 8l-4-4-4 3 5 7 4-3z"/><path d="m8.5 11.5 5 5a1.4 1.4 0 0 0 2-2l-3-3 3.8 3.8a1.4 1.4 0 0 0 2-2l-4.2-4.2M9.5 6.5l2.5 2 2.5-2"/><path d="m7 13 1.4 1.4M5.8 14.3l1.2 1.2"/></svg>;
+  if (type === "pcb") return <svg viewBox="0 0 48 48" {...common}><rect x="5" y="7" width="38" height="32" rx="2"/><path d="M11 14h8v7h9v-7h9M11 32h7v-6h13v6h6M15 11v3M33 35v4"/><circle cx="11" cy="14" r="2"/><circle cx="37" cy="14" r="2"/><circle cx="11" cy="32" r="2"/><circle cx="37" cy="32" r="2"/></svg>;
+  if (type === "cube") return <svg viewBox="0 0 48 48" {...common}><path d="m24 4 18 10-18 10L6 14zM6 14v20l18 10 18-10V14M24 24v20"/><path d="m15 9 18 10"/></svg>;
+  if (type === "phone") return <svg viewBox="0 0 48 48" {...common}><rect x="13" y="4" width="22" height="40" rx="3"/><path d="M19 9h10M21 39h6"/></svg>;
+  if (type === "calendar") return <svg viewBox="0 0 48 48" {...common}><rect x="6" y="10" width="36" height="30" rx="3"/><path d="M14 5v10M34 5v10M6 19h36"/></svg>;
+  if (type === "document") return <svg viewBox="0 0 48 48" {...common}><path d="M12 4h18l8 8v32H12zM30 4v9h8M18 21h14M18 28h14M18 35h10"/></svg>;
+  if (type === "patent") return <svg viewBox="0 0 48 48" {...common}><path d="M8 13h32v27H8zM15 13V8h18v5"/><circle cx="24" cy="25" r="6"/><path d="m20 31-2 9 6-3 6 3-2-9"/></svg>;
+  return <svg viewBox="0 0 48 48" {...common}><circle cx="24" cy="24" r="6"/><circle cx="9" cy="13" r="4"/><circle cx="39" cy="13" r="4"/><circle cx="9" cy="37" r="4"/><circle cx="39" cy="37" r="4"/><path d="m13 15 6 6M35 15l-6 6M13 35l6-6M35 35l-6-6"/></svg>;
 }

@@ -258,7 +258,7 @@
 
 .sectionHeading h2 {
   color: var(--brand-navy);
-  font-size: clamp(22px, 2vw, 30px);
+  font-size: clamp(19px, 1.55vw, 24px);
   font-weight: 850;
 }
 
@@ -289,8 +289,24 @@
 }
 
 .featuredCard:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(7,21,43,.09); }
-.featuredImage { width: 100%; aspect-ratio: 1.35; display: grid; place-items: center; margin-bottom: 10px; overflow: hidden; }
-.featuredImage img { width: 100%; height: 100%; object-fit: contain; }
+.featuredImage {
+  width: 100%;
+  aspect-ratio: 1.35;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+  padding: 16px;
+  overflow: hidden;
+}
+.featuredImage img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 82%;
+  max-height: 82%;
+  object-fit: contain;
+  object-position: center;
+}
 .featuredCard strong { display: block; color: var(--brand-navy); font-size: 14px; line-height: 1.4; }
 
 .whySection {
@@ -298,17 +314,29 @@
   grid-template-columns: 1.3fr repeat(4, minmax(0, 1fr));
   align-items: stretch;
   margin-top: 0;
-  padding: 30px 28px;
+  padding: 24px 28px;
   border-radius: 12px;
   background: #f5f7fa;
 }
 
-.whyIntro { padding: 10px 24px 10px 4px; }
+.whyIntro { display: flex; flex-direction: column; justify-content: center; padding: 8px 28px 8px 4px; }
 .whyIntro small, .oemIntro small { color: #315b95; font-size: 11px; font-weight: 800; letter-spacing: .05em; }
-.whyIntro h2 { margin-top: 10px; color: var(--brand-navy); font-size: clamp(23px, 2vw, 31px); line-height: 1.25; }
-.whyItem { min-width: 0; padding: 8px 20px; border-left: 1px solid #dbe1e9; text-align: center; }
-.whyItem > span { height: 48px; display: grid; place-items: center; color: #244e92; font-size: 38px; line-height: 1; }
-.whyItem strong { display: block; margin-top: 12px; color: var(--brand-navy); font-size: 14px; line-height: 1.4; }
+.whyIntro h2 { margin-top: 9px; color: var(--brand-navy); font-size: clamp(22px, 1.8vw, 28px); line-height: 1.22; }
+.whyItem { min-width: 0; padding: 4px 20px; border-left: 1px solid #dbe1e9; text-align: center; }
+.whyItem > span {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  border: 1px solid #dbe7fa;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #fff, #eaf2ff);
+  color: #2455a4;
+  box-shadow: 0 5px 14px rgba(35,78,146,.08);
+}
+.whyItem > span svg { width: 38px; height: 38px; }
+.whyItem strong { display: block; margin-top: 9px; color: var(--brand-navy); font-size: 13px; line-height: 1.4; }
 .whyItem p { margin-top: 9px; color: #68768a; font-size: 11px; line-height: 1.65; }
 
 .oemSection {
@@ -316,7 +344,7 @@
   grid-template-columns: 1.25fr repeat(3, minmax(0, 1fr));
   gap: 28px;
   margin-top: 18px;
-  padding: 30px;
+  padding: 28px 30px 0;
   border-radius: 12px;
   background: linear-gradient(135deg, #06224a, #0b3971);
   color: #fff;
@@ -327,11 +355,38 @@
 .oemIntro h2 { margin-top: 10px; font-size: clamp(24px, 2.2vw, 34px); line-height: 1.2; }
 .oemIntro p { margin-top: 16px; color: #c2d0e1; font-size: 12px; line-height: 1.7; }
 .oemIntro a { display: inline-flex; margin-top: 18px; padding: 10px 14px; border: 1px solid rgba(255,255,255,.55); border-radius: 5px; font-size: 12px; font-weight: 750; }
-.oemStep { padding: 22px 18px; border-radius: 12px; background: #fff; color: var(--brand-navy); text-align: center; }
-.oemIcon { height: 60px; display: grid; place-items: center; color: #234d91; font-size: 50px; line-height: 1; }
+.oemStep { position: relative; padding: 20px 18px; border-radius: 12px; background: #fff; color: var(--brand-navy); text-align: center; }
+.oemStep:not(:nth-of-type(4))::after { content: "›"; position: absolute; top: 50%; right: -22px; transform: translate(50%, -50%); color: #fff; font-size: 34px; font-weight: 300; }
+.oemIcon { height: 58px; display: grid; place-items: center; color: #234d91; }
+.oemIcon svg { width: 58px; height: 58px; }
 .oemStep b { display: block; margin-top: 8px; color: #2f6fed; font-size: 19px; }
 .oemStep strong { display: block; margin-top: 6px; font-size: 14px; line-height: 1.45; }
 .oemStep p { margin-top: 10px; color: #6a7789; font-size: 11px; line-height: 1.6; }
+
+.oemStats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 -30px;
+  padding: 18px 30px;
+  border-top: 1px solid rgba(255,255,255,.18);
+}
+
+.oemStat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 0 18px;
+  border-left: 1px solid rgba(255,255,255,.18);
+}
+
+.oemStat:first-child { border-left: 0; }
+.oemStat > svg { width: 38px; height: 38px; flex: 0 0 auto; color: #d6e5f8; }
+.oemStat div { display: flex; flex-direction: column; }
+.oemStat strong { color: #fff; font-size: 24px; line-height: 1; }
+.oemStat span { margin-top: 5px; color: #c5d2e2; font-size: 11px; }
 
 @media (max-width: 1199px) {
   .whySection { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
@@ -340,11 +395,12 @@
   .whyItem:nth-child(2), .whyItem:nth-child(4) { border-left: 0; }
   .oemSection { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .oemIntro { grid-column: 1 / -1; }
+  .oemStep:not(:nth-of-type(4))::after { display: none; }
 }
 
 @media (max-width: 767px) {
   .storefrontSections { padding: 16px 14px 0; }
-  .sectionHeading h2 { font-size: 22px; }
+  .sectionHeading h2 { font-size: 19px; }
   .sectionHeading a { font-size: 12px; }
   .featuredRail { grid-auto-columns: minmax(150px, 68vw); }
   .whySection { grid-template-columns: 1fr; padding: 24px 18px; }
@@ -352,6 +408,17 @@
   .whyItem { padding: 22px 8px; border-left: 0; border-top: 1px solid #dbe1e9; }
   .oemSection { grid-template-columns: 1fr; gap: 14px; padding: 24px 18px; }
   .oemIntro { grid-column: auto; }
+  .oemStats { grid-template-columns: 1fr 1fr; gap: 0; margin: 8px -18px -24px; padding: 12px 18px; }
+  .oemStat { justify-content: flex-start; padding: 14px 12px; border-top: 1px solid rgba(255,255,255,.12); }
+  .oemStat:nth-child(odd) { border-left: 0; }
+  .oemStat strong { font-size: 20px; }
+}
+
+/* The storefront landing ends after OEM/ODM. The full catalog remains
+   available through product-category navigation/detail links, but is not
+   repeated below the landing sections. */
+.storefrontSections + .container {
+  display: none;
 }
 
 .hero {
