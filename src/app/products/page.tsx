@@ -205,10 +205,18 @@ function ProductsPageContent() {
         ? products.filter((product) => product.isFeatured)
         : products).slice(0, 6)
     : [];
-  const pageNumbers =
-    totalPages <= 5
-      ? Array.from({ length: totalPages }, (_, index) => index + 1)
-      : [1, 2, 3, totalPages];
+  const getPageItems = (): (number | "ellipsis-left" | "ellipsis-right")[] => {
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    const items: (number | "ellipsis-left" | "ellipsis-right")[] = [1];
+    if (currentPage > 3) items.push("ellipsis-left");
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    for (let i = start; i <= end; i++) items.push(i);
+    if (currentPage < totalPages - 2) items.push("ellipsis-right");
+    items.push(totalPages);
+    return items;
+  };
+  const pageItems = getPageItems();
 
   return (
     <div className={styles.shopLayout}>
@@ -309,21 +317,37 @@ function ProductsPageContent() {
             >
               ←
             </button>
-            {pageNumbers.map((page, index) => (
-              <span key={page} className={styles.pageGroup}>
-                {index > 0 && page - pageNumbers[index - 1] > 1 && (
-                  <span className={styles.pageEllipsis}>…</span>
-                )}
+            {pageItems.map((item, index) =>
+              item === "ellipsis-left" ? (
                 <button
+                  key="ellipsis-left"
                   type="button"
-                  className={`${styles.pageBtn} ${currentPage === page ? styles.pageBtnActive : ""}`}
-                  onClick={() => setCurrentPage(page)}
-                  aria-current={currentPage === page ? "page" : undefined}
+                  className={styles.pageEllipsis}
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 3))}
                 >
-                  {page}
+                  …
                 </button>
-              </span>
-            ))}
+              ) : item === "ellipsis-right" ? (
+                <button
+                  key="ellipsis-right"
+                  type="button"
+                  className={styles.pageEllipsis}
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 3))}
+                >
+                  …
+                </button>
+              ) : (
+                <button
+                  key={item}
+                  type="button"
+                  className={`${styles.pageBtn} ${currentPage === item ? styles.pageBtnActive : ""}`}
+                  onClick={() => setCurrentPage(item)}
+                  aria-current={currentPage === item ? "page" : undefined}
+                >
+                  {item}
+                </button>
+              )
+            )}
             <button
               type="button"
               className={styles.pageBtn}

@@ -1172,10 +1172,19 @@
 }
 
 .pageEllipsis {
-  width: 24px;
-  text-align: center;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
   color: var(--brand-text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
 }
+.pageEllipsis:hover { background: var(--brand-gray-100); color: var(--brand-navy); }
 
 .trustRow {
   margin-top: 48px;
