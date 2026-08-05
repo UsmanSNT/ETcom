@@ -172,11 +172,11 @@
 .summaryLegend { display: flex; flex-direction: column; gap: 6px; }
 .summaryLegend > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 13px; }
 .summaryLegend b { margin-left: 8px; font-weight: 600; }
-.summaryContentV { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; justify-content: flex-start; padding-top: 6px; }
-.donutLg { width: 88px; height: 88px; }
-.summaryLegendH { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; }
-.summaryLegendH > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 13px; }
-.summaryLegendH b { font-weight: 600; margin-left: 2px; }
+.summaryContentV { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 20px; flex: 1; padding-top: 6px; }
+.donutLg { width: 110px; height: 110px; flex-shrink: 0; }
+.summaryLegendH { display: flex; flex-direction: column; gap: 6px; }
+.summaryLegendH > div { display: flex; align-items: center; gap: 6px; color: #c0cfe0; font-size: 13px; }
+.summaryLegendH b { font-weight: 600; margin-left: auto; padding-left: 10px; }
 
 .statsCard { padding: 10px 12px; border-radius: 8px; background: #112941; overflow: hidden; }
 .statsGrid { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
@@ -190,14 +190,26 @@
   .sensorRow { grid-template-columns: repeat(2, 1fr); }
   .collectBottom { grid-template-columns: 1fr; }
   .aiTopRow { grid-template-columns: 1fr; }
-  .aiBottomRow { grid-template-columns: 1fr; }
+  .aiBottomRow { grid-template-columns: 1fr 1fr; }
+  .insightCard { grid-column: 1 / -1; }
   .deviceGrid { grid-template-columns: repeat(3, 1fr); }
-  .controlBottomRow { grid-template-columns: 1fr; }
+  .controlBottomRow { grid-template-columns: 1fr 1fr; }
+  .targetCard { grid-column: 1 / -1; }
   .targetGrid { grid-template-columns: 1fr; }
+  .targetList { flex-direction: row; gap: 8px; }
+  .targetRow { flex: 1; flex-direction: column; align-items: flex-start; border-bottom: none; border-right: 1px solid rgba(255,255,255,.06); padding: 0 8px; }
+  .targetRow:last-child { border-right: none; padding-right: 0; }
+  .targetRow:first-child { padding-left: 0; }
+  .targetRowSliderWrap { max-width: 100%; }
 }
 @media (max-width: 600px) {
   .sensorRow { grid-template-columns: repeat(2, 1fr); }
   .deviceGrid { grid-template-columns: repeat(2, 1fr); }
+  .targetList { flex-direction: row; gap: 8px; }
+  .targetRow { flex: 1; flex-direction: column; align-items: flex-start; border-bottom: none; border-right: 1px solid rgba(255,255,255,.06); padding: 0 8px; }
+  .targetRow:last-child { border-right: none; padding-right: 0; }
+  .targetRow:first-child { padding-left: 0; }
+  .targetRowSliderWrap { max-width: 100%; }
 }
 
 .outlineBtnActive { border-color: #22c55e; color: #22c55e; }

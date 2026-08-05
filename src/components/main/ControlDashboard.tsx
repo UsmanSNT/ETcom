@@ -93,10 +93,10 @@ export default function ControlDashboard() {
     energySaved: 12.6,
   });
 
-  const normalCount = devices.filter((d) => d.status !== "OFF" || d.auto).length;
-  const runningCount = devices.filter((d) => d.status === "ON" || d.status === "AUTO").length;
+  const normalCount = devices.filter((d) => d.status === "AUTO").length;
+  const runningCount = devices.filter((d) => d.status === "ON").length;
   const waitingCount = devices.filter((d) => d.status === "CLOSE").length;
-  const stoppedCount = devices.filter((d) => d.status === "OFF" && !d.auto).length;
+  const stoppedCount = devices.filter((d) => d.status === "OFF").length;
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -267,14 +267,37 @@ export default function ControlDashboard() {
         <div className={styles.summaryCard}>
           <h3>제어 요약</h3>
           <div className={styles.summaryContentV}>
-            <svg viewBox="0 0 120 120" className={styles.donutLg}>
-              <circle cx="60" cy="60" r="45" fill="none" stroke="#1e3a5f" strokeWidth="10" />
-              <circle cx="60" cy="60" r="45" fill="none" stroke="#3b82f6" strokeWidth="10"
-                strokeDasharray={`${(normalCount / devices.length) * 283} 283`}
-                transform="rotate(-90 60 60)" />
-              <text x="60" y="55" textAnchor="middle" fill="white" fontSize="22" fontWeight="bold">{normalCount}</text>
-              <text x="60" y="67" textAnchor="middle" fill="#8293a7" fontSize="9">/{devices.length} 정상</text>
-            </svg>
+            {(() => {
+              const r = 45;
+              const circ = 2 * Math.PI * r;
+              const total = devices.length;
+              const segments = [
+                { value: normalCount, color: "#22c55e" },
+                { value: runningCount, color: "#3b82f6" },
+                { value: waitingCount, color: "#facc15" },
+                { value: stoppedCount, color: "#ef4444" },
+              ];
+              let offset = 0;
+              return (
+                <svg viewBox="0 0 120 120" className={styles.donutLg}>
+                  <circle cx="60" cy="60" r={r} fill="none" stroke="#1e3a5f" strokeWidth="10" />
+                  {segments.map((seg, i) => {
+                    const dash = (seg.value / total) * circ;
+                    const el = (
+                      <circle key={i} cx="60" cy="60" r={r} fill="none"
+                        stroke={seg.color} strokeWidth="10"
+                        strokeDasharray={`${dash} ${circ}`}
+                        strokeDashoffset={-offset}
+                        transform="rotate(-90 60 60)" />
+                    );
+                    offset += dash;
+                    return el;
+                  })}
+                  <text x="60" y="55" textAnchor="middle" fill="white" fontSize="22" fontWeight="bold">{normalCount}</text>
+                  <text x="60" y="67" textAnchor="middle" fill="#8293a7" fontSize="9">/{total} 정상</text>
+                </svg>
+              );
+            })()}
             <div className={styles.summaryLegendH}>
               <div><span className={styles.dotGreen} />정상 <b>{normalCount}</b></div>
               <div><span className={styles.dotBlue} />작동 <b>{runningCount}</b></div>
