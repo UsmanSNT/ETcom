@@ -74,11 +74,15 @@ export function Header() {
   const hidden = useAutoHideOnScroll(false);
   const headerRef = useRef<HTMLElement>(null);
   const [navbarLogo, setNavbarLogo] = useState("");
+  const [companyName, setCompanyName] = useState("ETCOMPANY");
 
   useEffect(() => {
     fetch("/api/site-config", { cache: "no-store" })
       .then((response) => response.json())
-      .then((config: Record<string, string>) => setNavbarLogo(config.navbarLogo ?? ""))
+      .then((config: Record<string, string>) => {
+        setNavbarLogo(config.navbarLogo ?? "");
+        if (config.companyName) setCompanyName(config.companyName);
+      })
       .catch(() => {});
   }, []);
 
@@ -98,9 +102,9 @@ export function Header() {
       <div className={styles.inner}>
         <Link href="/" className={styles.logo}>
           {navbarLogo ? (
-            <img className={styles.customLogo} src={navbarLogo} alt="ETCOMPANY" />
+            <img className={styles.customLogo} src={navbarLogo} alt={companyName} />
           ) : (
-            <><span className={styles.logoMark} aria-hidden="true" />ETCOMPANY</>
+            <><span className={styles.logoMark} aria-hidden="true" />{companyName}</>
           )}
         </Link>
 

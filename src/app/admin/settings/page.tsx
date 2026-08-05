@@ -29,8 +29,22 @@ type ImageSetting = {
 };
 
 const imageSettings: ImageSetting[] = [
-  { key: "navbarLogo", title: "상단 로고 (PNG)", description: "내비게이션에 표시되는 로고입니다.", pngOnly: true, previewBackground: "#fff" },
-  { key: "footerLogo", title: "푸터 로고 (PNG)", description: "하단 푸터에 표시되는 밝은 색상 로고입니다.", pngOnly: true, previewBackground: "#0d1b2d" },
+  {
+    key: "navbarLogo",
+    title: "상단 로고 (PNG)",
+    description: "내비게이션 바에 표시되는 로고입니다. 배경이 흰색/밝은 색이므로 어두운 계열 색상(짙은 남색, 검정 등) 로고를 사용하세요. 배경은 반드시 투명(PNG)이어야 합니다.",
+    recommendedSize: "420 × 84 px (표시 크기 210 × 42 px, 2배 해상도 권장)",
+    pngOnly: true,
+    previewBackground: "#fff",
+  },
+  {
+    key: "footerLogo",
+    title: "푸터 로고 (PNG)",
+    description: "하단 푸터에 표시되는 로고입니다. 배경이 짙은 남색(#0d1b2d)이므로 흰색 또는 밝은 색상 로고를 사용하세요. 배경은 반드시 투명(PNG)이어야 합니다.",
+    recommendedSize: "460 × 92 px (표시 크기 230 × 46 px, 2배 해상도 권장)",
+    pngOnly: true,
+    previewBackground: "#0d1b2d",
+  },
   { key: "homeHeroImage", title: "메인 배너", description: "메인 페이지 상단 배너 이미지입니다.", recommendedSize: "1600 × 500 px (비율 16:5)", defaultImage: "/images/home-bg.png" },
   { key: "aboutHeroImage", title: "회사소개 배너", description: "회사소개 페이지 상단 배너 이미지입니다.", recommendedSize: "1600 × 500 px (비율 16:5)", defaultImage: "/images/home-hero-bg.png" },
   { key: "businessHeroImage", title: "솔루션 배너", description: "솔루션 페이지 상단 배너 이미지입니다.", recommendedSize: "1600 × 500 px (비율 16:5)", defaultImage: "/images/sulutions-bg-0.png" },
@@ -48,11 +62,13 @@ export default function AdminSettingsPage() {
   const [config, setConfig] = useState<Record<string, string>>({});
   const [busyKey, setBusyKey] = useState<ConfigKey | null>(null);
   const [message, setMessage] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [nameSaving, setNameSaving] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/site-config", { cache: "no-store" })
       .then((response) => response.json())
-      .then(setConfig)
+      .then((data: Record<string, string>) => { setConfig(data); setCompanyName(data.companyName ?? ""); })
       .catch(() => setMessage("설정을 불러오지 못했습니다."));
   }, []);
 
@@ -104,10 +120,54 @@ export default function AdminSettingsPage() {
     }
   }
 
+  async function saveCompanyName() {
+    setNameSaving(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/admin/site-config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "companyName", value: companyName }),
+      });
+      if (!response.ok) throw new Error();
+      setMessage("회사 이름이 저장되었습니다.");
+    } catch {
+      setMessage("저장에 실패했습니다.");
+    } finally {
+      setNameSaving(false);
+    }
+  }
+
   return (
     <div>
-      <h1 className={styles.pageTitle}>사이트 이미지 설정</h1>
-      <p style={{ margin: "-8px 0 22px", color: "#64748b", fontSize: 13 }}>
+      <h1 className={styles.pageTitle}>사이트 설정</h1>
+
+      <section className={styles.card} style={{ marginBottom: 24 }}>
+        <h2 style={{ fontSize: 17, fontWeight: 750, marginBottom: 8 }}>회사 이름</h2>
+        <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 14 }}>
+          내비게이션, 푸터, 저작권 표시에 사용되는 회사 이름입니다.
+        </p>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <input
+            type="text"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            placeholder="ETCOMPANY"
+            style={{ flex: 1, padding: "9px 14px", border: "1px solid #d1d5db", borderRadius: 7, fontSize: 14, outline: "none" }}
+          />
+          <button
+            type="button"
+            disabled={nameSaving}
+            onClick={() => void saveCompanyName()}
+            style={{ padding: "9px 18px", borderRadius: 7, background: "#07152b", color: "#fff", fontSize: 13, fontWeight: 700, border: "none", cursor: nameSaving ? "default" : "pointer", opacity: nameSaving ? 0.6 : 1 }}
+          >
+            {nameSaving ? "저장 중..." : "저장"}
+          </button>
+        </div>
+      </section>
+
+      <h2 style={{ fontSize: 17, fontWeight: 750, marginBottom: 6 }}>이미지 설정</h2>
+      <p style={{ margin: "0 0 20px", color: "#64748b", fontSize: 13 }}>
         배너 권장 비율은 약 16:5이며 JPG, PNG, WEBP 파일을 사용할 수 있습니다.
       </p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20 }}>

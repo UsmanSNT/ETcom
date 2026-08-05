@@ -34,11 +34,15 @@ export function Footer() {
   const { t } = useLanguage();
   const pathname = usePathname();
   const [footerLogo, setFooterLogo] = useState("");
+  const [companyName, setCompanyName] = useState(t.footer.companyName);
 
   useEffect(() => {
     fetch("/api/site-config", { cache: "no-store" })
       .then((response) => response.json())
-      .then((config: Record<string, string>) => setFooterLogo(config.footerLogo ?? ""))
+      .then((config: Record<string, string>) => {
+        setFooterLogo(config.footerLogo ?? "");
+        if (config.companyName) setCompanyName(config.companyName);
+      })
       .catch(() => {});
   }, []);
 
@@ -79,9 +83,9 @@ export function Footer() {
           <div className={styles.brandCol}>
             <div className={styles.brandName}>
               {footerLogo ? (
-                <img className={styles.customLogo} src={footerLogo} alt={t.footer.companyName} />
+                <img className={styles.customLogo} src={footerLogo} alt={companyName} />
               ) : (
-                <><span className={styles.brandLogo} aria-hidden="true" />{t.footer.companyName}</>
+                <><span className={styles.brandLogo} aria-hidden="true" />{companyName}</>
               )}
             </div>
             <div className={styles.brandTagline}>
@@ -143,7 +147,7 @@ export function Footer() {
         </div>
 
         <div className={styles.bottom}>
-          <div>&copy; 2026 {t.footer.companyName}. All rights reserved.</div>
+          <div>&copy; 2026 {companyName}. All rights reserved.</div>
           <div className={styles.bottomLinks}>
             <span>{t.footer.privacy}</span><i /><span>{t.footer.terms}</span>
           </div>
