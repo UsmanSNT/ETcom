@@ -7,14 +7,14 @@
 .trendHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .trendSvg { width: 100%; height: auto; flex: 1; }
 
-.dotOrange, .dotYellow, .dotRed, .dotGreen, .dotBlue { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-.dotOrange { background: #f59e0b; }
-.dotYellow { background: #eab308; }
+.dotOrange, .dotYellow, .dotRed, .dotGreen, .dotBlue { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; flex-shrink: 0; }
+.dotOrange { background: #f97316; }
+.dotYellow { background: #facc15; }
 .dotRed { background: #ef4444; }
 .dotGreen { background: #22c55e; }
 .dotBlue { background: #3b82f6; }
 
-.donut { width: 90px; height: 90px; }
+.donut { width: 110px; height: 110px; }
 
 /* ── Collect Dashboard ── */
 .collectWrap { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow: hidden; }
@@ -49,11 +49,11 @@
 .aiWrap { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow: hidden; }
 .aiTopRow { display: grid; grid-template-columns: .8fr 1.2fr; gap: 10px; }
 .anomalyCard { padding: 12px; border-radius: 8px; background: #112941; position: relative; }
-.anomalyContent { display: flex; align-items: center; gap: 12px; }
+.anomalyContent { display: flex; align-items: center; justify-content: center; gap: 48px; padding: 8px 0; }
 .donutWrap { flex-shrink: 0; }
-.anomalyLegend { display: flex; flex-direction: column; gap: 8px; }
-.anomalyLegend > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 15px; }
-.anomalyLegend b { margin-left: auto; padding-left: 12px; font-weight: 600; }
+.anomalyLegend { display: flex; flex-direction: column; gap: 10px; }
+.anomalyLegend > div { display: flex; align-items: center; gap: 6px; color: #c0cfe0; font-size: 15px; }
+.anomalyLegend b { margin-left: auto; padding-left: 16px; font-weight: 600; }
 
 .predictionChart { padding: 12px; border-radius: 8px; background: #112941; }
 .predLegend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
@@ -66,7 +66,7 @@
 .insightItem:last-child { border-bottom: 0; }
 .insightIconWrap { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 5px; background: rgba(59,130,246,0.1); flex-shrink: 0; }
 .insightItem strong { display: block; color: #fff; font-size: 12px; margin-bottom: 2px; }
-.insightItem p { color: #8293a7; font-size: 10px; line-height: 1.4; margin: 0; }
+.insightItem p { color: #8293a7; font-size: 12px; line-height: 1.4; margin: 0; }
 
 .controlRecommend { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; }
 .controlItem { display: flex; align-items: center; gap: 6px; padding: 5px 0; border-bottom: 1px solid rgba(30,58,95,0.4); }

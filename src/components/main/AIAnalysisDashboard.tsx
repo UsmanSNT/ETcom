@@ -137,15 +137,38 @@ export default function AIAnalysisDashboard() {
           <h3>AI 이상 탐지</h3>
           <div className={styles.anomalyContent}>
             <div className={styles.donutWrap}>
-              <svg viewBox="0 0 120 120" className={styles.donut}>
-                <circle cx="60" cy="60" r="45" fill="none" stroke="#1e3a5f" strokeWidth="12" />
-                <circle cx="60" cy="60" r="45" fill="none" stroke="#3b82f6" strokeWidth="12"
-                  strokeDasharray={`${(total / (total + anomaly.normal)) * 283} 283`}
-                  strokeDashoffset="0" transform="rotate(-90 60 60)" />
-                <text x="60" y="55" textAnchor="middle" fill="white" fontSize="24" fontWeight="bold">{total}</text>
-                <text x="60" y="72" textAnchor="middle" fill="#8293a7" fontSize="10">건</text>
-                <text x="60" y="85" textAnchor="middle" fill="#8293a7" fontSize="9">이상 감지</text>
-              </svg>
+              {(() => {
+                const r = 45;
+                const circ = 2 * Math.PI * r;
+                const grandTotal = anomaly.caution + anomaly.warning + anomaly.danger + anomaly.normal;
+                const segments = [
+                  { value: anomaly.caution, color: "#f97316" },
+                  { value: anomaly.warning, color: "#facc15" },
+                  { value: anomaly.danger, color: "#ef4444" },
+                  { value: anomaly.normal, color: "#22c55e" },
+                ];
+                let offset = 0;
+                return (
+                  <svg viewBox="0 0 120 120" className={styles.donut}>
+                    <circle cx="60" cy="60" r={r} fill="none" stroke="#1e3a5f" strokeWidth="12" />
+                    {segments.map((seg, i) => {
+                      const dash = (seg.value / grandTotal) * circ;
+                      const el = (
+                        <circle key={i} cx="60" cy="60" r={r} fill="none"
+                          stroke={seg.color} strokeWidth="12"
+                          strokeDasharray={`${dash} ${circ}`}
+                          strokeDashoffset={-offset}
+                          transform="rotate(-90 60 60)" />
+                      );
+                      offset += dash;
+                      return el;
+                    })}
+                    <text x="60" y="55" textAnchor="middle" fill="white" fontSize="24" fontWeight="bold">{total}</text>
+                    <text x="60" y="72" textAnchor="middle" fill="#8293a7" fontSize="10">건</text>
+                    <text x="60" y="85" textAnchor="middle" fill="#8293a7" fontSize="9">이상 감지</text>
+                  </svg>
+                );
+              })()}
             </div>
             <div className={styles.anomalyLegend}>
               <div><span className={styles.dotOrange} />주의<b>{anomaly.caution} 건</b></div>
