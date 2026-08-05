@@ -22,21 +22,21 @@
 .aiInner { width: min(1320px, 100%); min-height: 430px; margin: auto; display: grid; grid-template-columns: 45% 55%; gap: 24px; align-items: start; }
 .aiIntro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 20px 0; }
 .aiIntroLeft { display: flex; flex-direction: column; gap: 20px; }
-.aiLabel { font-size: 11px; font-weight: 700; opacity: .65; letter-spacing: .08em; }
-.aiTitle { font-size: 28px; line-height: 1.55; letter-spacing: -.03em; white-space: nowrap; }
-.aiDesc { font-size: 14px; line-height: 1.8; color: #a5b3c3; white-space: pre-line; }
+.aiLabel { font-size: 13px; font-weight: 700; opacity: .65; letter-spacing: .08em; }
+.aiTitle { font-size: 30px; line-height: 1.55; letter-spacing: -.03em; white-space: nowrap; }
+.aiDesc { font-size: 15px; line-height: 1.8; color: #a5b3c3; white-space: pre-line; }
 .aiSteps { display: flex; flex-direction: column; gap: 16px; }
 .aiStep { display: flex; align-items: flex-start; gap: 19px; padding: 14px 18px; border-radius: 10px; transition: background .2s; cursor: pointer; }
 .aiStep:hover { background: rgba(40, 168, 255, .1); }
 .aiStepActive { background: rgba(40, 168, 255, .15); }
 .aiStepIcon { width: 44px; height: 44px; flex: 0 0 auto; color: #28a8ff; stroke-width: 1.65; }
 .aiStepActive .aiStepIcon { color: #fff; }
-.aiStep strong { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 800; }
-.aiStep p { color: #a5b3c3; font-size: 12px; line-height: 1.7; }
-.aiMore { display: flex; align-items: center; gap: 16px; font-size: 13px; font-weight: 700; color: #fff; }
+.aiStep strong { display: block; margin-bottom: 7px; font-size: 16px; font-weight: 800; }
+.aiStep p { color: #a5b3c3; font-size: 14px; line-height: 1.7; }
+.aiMore { display: flex; align-items: center; gap: 16px; font-size: 14px; font-weight: 700; color: #fff; }
 
 .dashboardCard {
-  height: 520px; display: grid; grid-template-columns: 1fr; gap: 14px; padding: 20px; overflow: hidden;
+  height: 500px; display: grid; grid-template-columns: 1fr; gap: 14px; padding: 20px; overflow: hidden;
   border: 1px solid #637184; border-radius: 8px; background: rgba(4, 22, 42, .78); box-shadow: 0 16px 40px rgba(0,0,0,.18);
 }
 .dashboardMenu { display: flex; flex-direction: column; gap: 5px; }
@@ -219,32 +219,39 @@
 }
 
 .certItem {
-  width: 110px;
-  min-width: 110px;
-  flex: 0 0 110px;
+  width: 210px;
+  min-width: 210px;
+  flex: 0 0 210px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 10px 14px;
+  padding: 14px 12px 16px;
   border: 1px solid #dce4ed;
   border-radius: 12px;
   background: rgba(255,255,255,.88);
   box-shadow: 0 8px 24px rgba(17,47,82,.08);
   text-align: center;
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  overflow: hidden;
 }
 .certItem:hover { transform: translateY(-4px); border-color: #b9cbe0; box-shadow: 0 14px 30px rgba(17,47,82,.13); }
 .certVisual {
   width: 100%;
+  aspect-ratio: 3/4;
+  flex-shrink: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
+  background: #f7f9fb;
+  border-radius: 6px;
+  padding: 6px;
 }
 .certVisual img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
   border-radius: 4px;
 }
@@ -330,7 +337,12 @@
   .heroCopy { padding-left: 0; }
   .dashboardCard { height: auto; overflow: visible; }
   .aiInner { grid-template-columns: 1fr; gap: 40px; }
-  .aiIntro { gap: 32px; }
+  .aiIntro { grid-template-columns: 1fr; gap: 24px; }
+  .aiSteps { flex-direction: row; gap: 8px; }
+  .aiStep { flex: 1; flex-direction: column; align-items: center; text-align: center; padding: 10px 8px; gap: 8px; }
+  .aiStepIcon { width: 36px; height: 36px; }
+  .aiStep strong { font-size: 14px; margin-bottom: 4px; }
+  .aiStep p { font-size: 13px; }
   .solutionsGrid, .productsGrid { grid-template-columns: repeat(3, 1fr); }
   .solutionItem:nth-child(3) { border-right: 0; }
   .productVisual { border-right: 0; }
@@ -339,6 +351,7 @@
   .newSolutionsSection { grid-template-columns: 1fr; }
   .solutionsIntro { padding-right: 0; padding-bottom: 24px; border-right: 0; border-bottom: 1px solid #dce2e9; }
   .homeInfoInner { grid-template-columns: minmax(0, 1fr) 320px; }
+  .homeInfoBand .contactCard { grid-column: auto; }
 }
 
 @media (max-width: 700px) {
@@ -363,8 +376,8 @@
   .aiSteps { flex-direction: row; gap: 8px; }
   .aiStep { flex: 1; flex-direction: column; align-items: center; text-align: center; padding: 10px 8px; gap: 8px; }
   .aiStepIcon { width: 32px; height: 32px; }
-  .aiStep strong { font-size: 11px; margin-bottom: 4px; }
-  .aiStep p { font-size: 10px; }
+  .aiStep strong { font-size: 13px; margin-bottom: 4px; }
+  .aiStep p { font-size: 12px; }
   .dashboardCard { grid-template-columns: 1fr; padding: 14px; height: auto; overflow: visible; }
   .dashboardMenu {
     flex-direction: row;
@@ -398,5 +411,7 @@
   .homeInfoInner > div:last-child { border-bottom: 0; }
   .certGrid { overflow: hidden; }
   .homeInfoBand .contactCard { grid-column: auto; }
-  .contactBody { margin-top: 22px; }
+  .contactBody { margin-top: 22px; justify-content: center; }
+  .contactBody > div { align-items: center; text-align: center; }
+  .homeInfoBand .certColumn { padding: 28px 0; }
 }

@@ -285,26 +285,6 @@ export default function AIAnalysisDashboard() {
                 <div><span>최근 학습일</span><b>{modelPeriod === "월간" ? "2026.07.01 08:30" : "2026.07.28 02:15"}</b></div>
               </div>
             </div>
-            <svg viewBox="0 0 180 150" className={styles.radarSvg}>
-              {[0.25, 0.5, 0.75, 1].map((scale) => (
-                <polygon key={scale}
-                  points={radarAngles.map((a) => `${cx + Math.cos(a) * radarR * scale},${cy + Math.sin(a) * radarR * scale}`).join(" ")}
-                  fill="none" stroke="#1e3a5f" strokeWidth="0.5"
-                />
-              ))}
-              {radarAngles.map((a, i) => (
-                <line key={i} x1={cx} y1={cy} x2={cx + Math.cos(a) * radarR} y2={cy + Math.sin(a) * radarR} stroke="#1e3a5f" strokeWidth="0.5" />
-              ))}
-              <polygon
-                points={radarValues.map((v, i) => `${cx + Math.cos(radarAngles[i]) * radarR * v},${cy + Math.sin(radarAngles[i]) * radarR * v}`).join(" ")}
-                fill="rgba(59,130,246,0.2)" stroke="#3b82f6" strokeWidth="1.5"
-              />
-              {radarLabels.map((label, i) => {
-                const lx = cx + Math.cos(radarAngles[i]) * (radarR + 18);
-                const ly = cy + Math.sin(radarAngles[i]) * (radarR + 18);
-                return <text key={i} x={lx} y={ly} fill="#8293a7" fontSize="8" textAnchor="middle" dominantBaseline="middle">{label}</text>;
-              })}
-            </svg>
           </div>
         </div>
       </div>

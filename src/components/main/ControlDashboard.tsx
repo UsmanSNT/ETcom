@@ -115,17 +115,16 @@ export default function ControlDashboard() {
   const toggleDevice = (index: number) => {
     setDevices((prev) => prev.map((d, i) => {
       if (i !== index) return d;
-      if (d.status === "OFF") {
-        return { ...d, status: "AUTO" };
-      }
-      return { ...d, status: "OFF" };
+      const on = d.status === "OFF";
+      return { ...d, status: on ? "AUTO" : "OFF", auto: on };
     }));
   };
 
   const toggleAuto = (index: number) => {
     setDevices((prev) => prev.map((d, i) => {
       if (i !== index) return d;
-      return { ...d, auto: !d.auto };
+      const newAuto = !d.auto;
+      return { ...d, auto: newAuto, status: newAuto ? "AUTO" : "OFF" };
     }));
   };
 
@@ -135,6 +134,7 @@ export default function ControlDashboard() {
     setDevices((prev) => prev.map((d) => ({
       ...d,
       auto: isAuto,
+      status: isAuto ? "AUTO" : "OFF",
     })));
   };
 
@@ -220,9 +220,13 @@ export default function ControlDashboard() {
               </span>
               <div className={styles.targetRowBody}>
                 <span className={styles.targetRowLabel}>목표 온도</span>
-                <strong className={styles.targetRowValue}>{targetTemp.toFixed(1)}<small>°C</small></strong>
-                <input className={styles.targetRange} style={{ "--range-color": "#3b82f6" } as React.CSSProperties} type="range" min="10" max="40" step="0.5" value={targetTemp} onChange={(e) => setTargetTemp(Number(e.target.value))} />
-                <div className={styles.rangeLabels}><span>10°C</span><span>40°C</span></div>
+                <div className={styles.targetRowSliderLine}>
+                  <strong className={styles.targetRowValue}>{targetTemp.toFixed(1)}<small>°C</small></strong>
+                  <div className={styles.targetRowSliderWrap}>
+                    <input className={styles.targetRange} style={{ "--range-color": "#3b82f6" } as React.CSSProperties} type="range" min="10" max="40" step="0.5" value={targetTemp} onChange={(e) => setTargetTemp(Number(e.target.value))} />
+                    <div className={styles.rangeLabels}><span>10°C</span><span>40°C</span></div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -232,9 +236,13 @@ export default function ControlDashboard() {
               </span>
               <div className={styles.targetRowBody}>
                 <span className={styles.targetRowLabel}>목표 습도</span>
-                <strong className={styles.targetRowValue}>{targetHumidity}<small>%</small></strong>
-                <input className={styles.targetRange} style={{ "--range-color": "#22c55e" } as React.CSSProperties} type="range" min="20" max="90" step="1" value={targetHumidity} onChange={(e) => setTargetHumidity(Number(e.target.value))} />
-                <div className={styles.rangeLabels}><span>20%</span><span>90%</span></div>
+                <div className={styles.targetRowSliderLine}>
+                  <strong className={styles.targetRowValue}>{targetHumidity}<small>%</small></strong>
+                  <div className={styles.targetRowSliderWrap}>
+                    <input className={styles.targetRange} style={{ "--range-color": "#22c55e" } as React.CSSProperties} type="range" min="20" max="90" step="1" value={targetHumidity} onChange={(e) => setTargetHumidity(Number(e.target.value))} />
+                    <div className={styles.rangeLabels}><span>20%</span><span>90%</span></div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -244,9 +252,13 @@ export default function ControlDashboard() {
               </span>
               <div className={styles.targetRowBody}>
                 <span className={styles.targetRowLabel}>목표 CO₂</span>
-                <strong className={styles.targetRowValue}>{targetCo2}<small>ppm</small></strong>
-                <input className={styles.targetRange} style={{ "--range-color": "#a855f7" } as React.CSSProperties} type="range" min="400" max="1500" step="10" value={targetCo2} onChange={(e) => setTargetCo2(Number(e.target.value))} />
-                <div className={styles.rangeLabels}><span>400</span><span>1500</span></div>
+                <div className={styles.targetRowSliderLine}>
+                  <strong className={styles.targetRowValue}>{targetCo2}<small>ppm</small></strong>
+                  <div className={styles.targetRowSliderWrap}>
+                    <input className={styles.targetRange} style={{ "--range-color": "#a855f7" } as React.CSSProperties} type="range" min="400" max="1500" step="10" value={targetCo2} onChange={(e) => setTargetCo2(Number(e.target.value))} />
+                    <div className={styles.rangeLabels}><span>400</span><span>1500</span></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
