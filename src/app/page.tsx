@@ -160,7 +160,7 @@ export default function Home() {
   const certificationPosts = posts
     .filter(isCertificationPost)
     .filter((post) => !post.slug?.startsWith("certification-detail-"))
-    .slice(0, 5);
+;
 
   /* ── Dashboard animation state ── */
   const [sensorHistories, setSensorHistories] = useState<number[][]>(() =>
@@ -322,21 +322,27 @@ export default function Home() {
           <div className={styles.certColumn}>
             <p className={`${styles.sectionLabel} ${styles.certTitle}`}>CERTIFICATIONS</p>
             <div className={styles.certGrid}>
-              {certificationPosts.map((cert, index) => {
-                  const imageUrl = cert.images?.[0]?.url ?? cert.thumbnailUrl ?? undefined;
-                  const certTitle = (locale === "ko" ? cert.titleKo : cert.titleEn)?.trim()
-                    || (locale === "ko" ? cert.category?.nameKo : cert.category?.nameEn)
-                    || (locale === "ko" ? "인증서" : "Certificate");
-                  return (
-                    <Link href={`/promotion/${cert.slug ?? cert.id}`} className={styles.certItem} key={cert.id}>
-                      <div className={styles.certVisual}>
-                        {imageUrl ? <img src={imageUrl} alt="" /> : index < 3 ? <span className={styles.certDocument}>CERTIFICATE</span> : <span className={styles.certSeal}>ET</span>}
-                      </div>
-                      <strong>{certTitle}</strong>
-                    </Link>
-                  );
-                })}
-              {certificationPosts.length === 0 && (
+              {certificationPosts.length > 0 ? (
+                <div
+                  className={styles.certTrack}
+                  style={{ "--cert-duration": `${certificationPosts.length * 5}s` } as React.CSSProperties}
+                >
+                  {[...certificationPosts, ...certificationPosts].map((cert, index) => {
+                    const imageUrl = cert.images?.[0]?.url ?? cert.thumbnailUrl ?? undefined;
+                    const certTitle = (locale === "ko" ? cert.titleKo : cert.titleEn)?.trim()
+                      || (locale === "ko" ? cert.category?.nameKo : cert.category?.nameEn)
+                      || (locale === "ko" ? "인증서" : "Certificate");
+                    return (
+                      <Link href={`/promotion/${cert.slug ?? cert.id}`} className={styles.certItem} key={`${cert.id}-${index}`}>
+                        <div className={styles.certVisual}>
+                          {imageUrl ? <img src={imageUrl} alt="" /> : index < 3 ? <span className={styles.certDocument}>CERTIFICATE</span> : <span className={styles.certSeal}>ET</span>}
+                        </div>
+                        <strong>{certTitle}</strong>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
                 <p className={styles.certEmpty}>{locale === "ko" ? "등록된 특허·인증이 없습니다." : "No patents or certifications registered."}</p>
               )}
             </div>

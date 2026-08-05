@@ -30,12 +30,19 @@
   overflow: hidden;
 }
 
+.areaImgWrap {
+  padding: 12px 12px 0;
+}
+
 .areaImg {
   aspect-ratio: 16 / 10;
   background: linear-gradient(135deg, #1a2b45, #0e1a2b);
   object-fit: cover;
   width: 100%;
   display: block;
+  border-radius: 8px;
+  filter: blur(2px);
+  opacity: 0.8;
 }
 
 .areaBody {

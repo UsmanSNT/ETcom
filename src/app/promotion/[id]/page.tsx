@@ -21,7 +21,6 @@ async function getRelatedPosts(categoryId: string, excludeId: string) {
   return prisma.promotionPost.findMany({
     where: { categoryId, isPublished: true, NOT: { id: excludeId } },
     orderBy: { publishedAt: "desc" },
-    take: 4,
     select: {
       id: true, slug: true, titleKo: true, titleEn: true, publishedAt: true,
       thumbnailUrl: true,

@@ -32,10 +32,10 @@
 
 .collectBottom { display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; flex: 1; min-height: 0; }
 .recentTable { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; display: flex; flex-direction: column; }
-.tableWrap { overflow-x: auto; flex: 1; }
-.dataTable { width: 100%; border-collapse: collapse; }
-.dataTable th { padding: 8px 10px; text-align: left; color: #8293a7; font-size: 11px; font-weight: 600; border-bottom: 1px solid #1e3a5f; white-space: nowrap; }
-.dataTable td { padding: 7px 10px; color: #c0cfe0; font-size: 12px; border-bottom: 1px solid rgba(30,58,95,0.4); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tableWrap { overflow-x: hidden; flex: 1; }
+.dataTable { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.dataTable th { padding: 6px 4px; text-align: left; color: #8293a7; font-size: 10px; font-weight: 600; border-bottom: 1px solid #1e3a5f; white-space: nowrap; overflow: hidden; }
+.dataTable td { padding: 5px 4px; color: #c0cfe0; font-size: 11px; border-bottom: 1px solid rgba(30,58,95,0.4); white-space: nowrap; font-variant-numeric: tabular-nums; overflow: hidden; }
 .latestRow td { color: #fff; background: rgba(59,130,246,0.08); }
 
 .trendChart { padding: 12px; border-radius: 8px; background: #112941; display: flex; flex-direction: column; }
@@ -50,12 +50,12 @@
 .anomalyContent { display: flex; align-items: center; gap: 12px; }
 .donutWrap { flex-shrink: 0; }
 .anomalyLegend { display: flex; flex-direction: column; gap: 8px; }
-.anomalyLegend > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 11px; }
+.anomalyLegend > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 15px; }
 .anomalyLegend b { margin-left: auto; padding-left: 12px; font-weight: 600; }
 
 .predictionChart { padding: 12px; border-radius: 8px; background: #112941; }
 .predLegend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
-.predLegend span { display: flex; align-items: center; gap: 4px; color: #8293a7; font-size: 9px; }
+.predLegend span { display: flex; align-items: center; gap: 4px; color: #8293a7; font-size: 13px; }
 .predLegend i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; }
 
 .aiBottomRow { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 10px; flex: 1; min-height: 0; }
@@ -63,26 +63,26 @@
 .insightItem { display: flex; gap: 6px; padding: 5px 0; border-bottom: 1px solid rgba(30,58,95,0.5); }
 .insightItem:last-child { border-bottom: 0; }
 .insightIconWrap { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 5px; background: rgba(59,130,246,0.1); flex-shrink: 0; }
-.insightItem strong { display: block; color: #fff; font-size: 11px; margin-bottom: 2px; }
-.insightItem p { color: #8293a7; font-size: 9px; line-height: 1.4; margin: 0; }
+.insightItem strong { display: block; color: #fff; font-size: 15px; margin-bottom: 2px; }
+.insightItem p { color: #8293a7; font-size: 13px; line-height: 1.4; margin: 0; }
 
 .controlRecommend { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; }
 .controlItem { display: flex; align-items: center; gap: 6px; padding: 5px 0; border-bottom: 1px solid rgba(30,58,95,0.4); }
 .controlItem:last-of-type { border-bottom: 0; }
 .controlIconWrap { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 5px; background: rgba(59,130,246,0.1); flex-shrink: 0; }
-.controlLabel { flex: 1; color: #c0cfe0; font-size: 10px; }
-.controlBadge { padding: 2px 8px; border-radius: 4px; color: #fff; font-size: 9px; font-weight: 600; }
+.controlLabel { flex: 1; color: #c0cfe0; font-size: 14px; }
+.controlBadge { padding: 2px 8px; border-radius: 4px; color: #fff; font-size: 13px; font-weight: 600; }
 
 .modelPerf { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; }
 .perfContent { display: flex; gap: 10px; align-items: flex-start; }
 .perfStats { flex: 1; }
 .perfStats > div:first-child { margin-bottom: 8px; }
-.perfStats > div:first-child span { color: #8293a7; font-size: 11px; }
+.perfStats > div:first-child span { color: #8293a7; font-size: 15px; }
 .perfStats > div:first-child strong { display: block; color: #fff; font-size: 24px; margin-top: 2px; }
 .perfMeta { display: flex; flex-direction: column; gap: 4px; }
 .perfMeta > div { display: flex; justify-content: space-between; gap: 6px; white-space: nowrap; }
-.perfMeta span { color: #8293a7; font-size: 9px; }
-.perfMeta b { color: #c0cfe0; font-size: 9px; font-weight: 600; }
+.perfMeta span { color: #8293a7; font-size: 13px; }
+.perfMeta b { color: #c0cfe0; font-size: 13px; font-weight: 600; }
 .radarSvg { width: 110px; height: 110px; flex-shrink: 0; }
 
 /* ── Control Dashboard ── */
@@ -97,11 +97,15 @@
 .deviceGrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 .deviceCard { padding: 12px; border-radius: 8px; background: #0a1f38; text-align: center; }
 .deviceIconWrap { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
-.deviceLabel { color: #8293a7; font-size: 10px; margin-bottom: 6px; }
-.deviceStatus { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.deviceLabel { color: #8293a7; font-size: 12px; margin-bottom: 6px; }
+.deviceStatus { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.deviceStatusBtn { font-size: 18px; font-weight: 700; margin-bottom: 8px; border: 0; background: none; cursor: pointer; padding: 4px 12px; border-radius: 6px; transition: background .2s, box-shadow .2s; }
+.deviceStatusBtn:hover { opacity: .85; }
+.deviceStatusBtnAuto { background: rgba(34,197,94,.15); box-shadow: 0 0 8px rgba(34,197,94,.4); }
+.deviceStatusBtnOff { background: rgba(107,114,128,.1); }
 .deviceToggleRow { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }
-.deviceToggleRow span { color: #6b7f96; font-size: 9px; }
-.deviceDetail { color: #6b7f96; font-size: 9px; }
+.deviceToggleRow span { color: #6b7f96; font-size: 11px; }
+.deviceDetail { color: #6b7f96; font-size: 11px; }
 
 .toggle { position: relative; width: 32px; height: 16px; border: 0; border-radius: 8px; background: #2a4a6b; cursor: pointer; padding: 0; }
 .toggleOn { background: #3b82f6; }
@@ -109,27 +113,73 @@
 .toggleOn .toggleKnob { left: 18px; }
 
 .controlBottomRow { display: grid; grid-template-columns: 1.2fr .8fr 1fr; gap: 10px; flex: 1; min-height: 0; }
-.targetCard { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; }
-.targetGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.targetItem { text-align: center; }
-.targetItem > span { color: #8293a7; font-size: 10px; }
-.targetItem strong { display: block; color: #fff; font-size: 28px; margin: 6px 0; }
-.targetItem small { font-size: 12px; color: #8293a7; }
-.targetItem input[type="range"] { width: 100%; margin: 8px 0 4px; accent-color: #3b82f6; }
-.rangeLabels { display: flex; justify-content: space-between; color: #6b7f96; font-size: 9px; }
+.targetCard { padding: 10px; border-radius: 10px; background: #0d1f35; overflow: hidden; display: flex; flex-direction: column; }
 
-.summaryCard { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; }
+.targetCardHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.targetCardTitle { display: flex; align-items: center; gap: 7px; }
+.targetCardTitle h3 { color: #fff; font-size: 12px; font-weight: 700; margin: 0; }
+.targetCardIcon { width: 24px; height: 24px; border-radius: 6px; background: rgba(74,222,128,.18); display: grid; place-items: center; flex: 0 0 24px; }
+.targetResetBtn { width: 22px; height: 22px; border-radius: 50%; border: none; background: rgba(255,255,255,.06); color: #6b7f96; display: grid; place-items: center; cursor: pointer; transition: background .15s; }
+.targetResetBtn:hover { background: rgba(255,255,255,.12); color: #c0cfe0; }
+
+.targetList { display: flex; flex-direction: column; }
+.targetRow { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+.targetRow:last-child { border-bottom: none; padding-bottom: 0; }
+.targetRow:first-child { padding-top: 0; }
+.targetRowIcon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: 0 0 30px; }
+.targetRowBody { flex: 1; min-width: 0; }
+.targetRowLabel { display: block; color: #8293a7; font-size: 11px; font-weight: 500; margin-bottom: 1px; }
+.targetRowValue { display: block; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; margin-bottom: 5px; }
+.targetRowValue small { font-size: 12px; color: #8293a7; font-weight: 500; margin-left: 2px; }
+
+.targetRange {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 3px;
+  background: #1e3a5f;
+  outline: none;
+  margin: 0 0 3px;
+  cursor: pointer;
+}
+.targetRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--range-color, #3b82f6);
+  box-shadow: 0 0 0 2px rgba(0,0,0,.3);
+  cursor: pointer;
+}
+.targetRange::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--range-color, #3b82f6);
+  border: none;
+  cursor: pointer;
+}
+
+.rangeLabels { display: flex; justify-content: space-between; color: #4a5f75; font-size: 10px; }
+
+.summaryCard { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; display: flex; flex-direction: column; }
 .summaryContent { display: flex; align-items: center; gap: 16px; }
 .summaryLegend { display: flex; flex-direction: column; gap: 6px; }
-.summaryLegend > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 11px; }
+.summaryLegend > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 13px; }
 .summaryLegend b { margin-left: 8px; font-weight: 600; }
+.summaryContentV { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; justify-content: center; }
+.donutLg { width: 100px; height: 100px; }
+.summaryLegendH { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; }
+.summaryLegendH > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 13px; }
+.summaryLegendH b { font-weight: 600; margin-left: 2px; }
 
 .statsCard { padding: 12px; border-radius: 8px; background: #112941; overflow: hidden; }
 .statsGrid { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
 .statsGrid > div { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(30,58,95,0.4); }
 .statsGrid > div:last-child { border-bottom: 0; }
-.statsGrid span { color: #8293a7; font-size: 11px; }
-.statsGrid b { color: #fff; font-size: 13px; font-weight: 600; }
+.statsGrid span { color: #8293a7; font-size: 13px; }
+.statsGrid b { color: #fff; font-size: 15px; font-weight: 600; }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
@@ -142,6 +192,22 @@
   .targetGrid { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
-  .sensorRow { grid-template-columns: 1fr; }
+  .sensorRow { grid-template-columns: repeat(2, 1fr); }
   .deviceGrid { grid-template-columns: repeat(2, 1fr); }
 }
+
+.outlineBtnActive { border-color: #22c55e; color: #22c55e; }
+
+.anomalyDetailPanel { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.anomalyDetailItem { padding: 8px 10px; border-radius: 6px; background: #0a1f38; }
+.anomalyDetailItem strong { display: block; color: #fff; font-size: 11px; margin-bottom: 2px; }
+.anomalyDetailItem span { color: #8293a7; font-size: 10px; }
+
+.settingsPanel { margin-top: 10px; padding: 12px; border: 1px solid #2a4a6b; border-radius: 8px; background: #0a1f38; }
+.settingsPanelHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.settingsPanelHeader h4 { margin: 0; color: #fff; font-size: 12px; }
+.settingsPanelHeader button { border: 0; background: none; color: #8293a7; font-size: 16px; cursor: pointer; }
+.settingsPanelBody { display: flex; flex-direction: column; gap: 8px; }
+.settingsRow { display: flex; justify-content: space-between; align-items: center; }
+.settingsRow span { color: #8293a7; font-size: 11px; }
+.settingsRow select { min-width: 90px; }

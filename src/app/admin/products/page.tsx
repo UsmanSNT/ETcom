@@ -9,6 +9,7 @@ type Product = {
   titleKo: string;
   titleEn: string;
   isPublished: boolean;
+  isFeatured: boolean;
   order: number;
   categoryId?: string | null;
   category?: { id: string; nameKo: string; nameEn: string; parentId?: string | null } | null;
@@ -94,6 +95,15 @@ export default function AdminProductsPage() {
     void loadProducts();
   }
 
+  async function handleToggleFeatured(id: string, current: boolean) {
+    await fetch(`/api/admin/products/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isFeatured: !current }),
+    });
+    void loadProducts();
+  }
+
   async function handleSaveCategory() {
     if (!catForm.nameKo || !catForm.nameEn) return;
     await fetch("/api/admin/product-categories", {
@@ -154,13 +164,22 @@ export default function AdminProductsPage() {
           <div className={styles.listSummary}><strong>{filteredProducts.length}</strong>개 제품 <span>페이지 {page} / {totalPages}</span></div>
           <div className={styles.tableWrap}>
             <table className={styles.table}>
-              <thead><tr><th>제품</th><th>카테고리</th><th>상태</th><th>정렬</th><th>관리</th></tr></thead>
+              <thead><tr><th>제품</th><th>카테고리</th><th>상태</th><th>대표</th><th>정렬</th><th>관리</th></tr></thead>
               <tbody>
                 {visibleProducts.map((product) => (
                   <tr key={product.id}>
                     <td><div className={styles.adminProductCell}>{product.images?.[0]?.url ? <img src={product.images[0].url} alt="" /> : <span>NO IMAGE</span>}<div><strong>{product.titleKo}</strong><small>{product.titleEn}</small></div></div></td>
                     <td>{product.category?.nameKo ?? "미분류"}</td>
                     <td><span className={`${styles.statusBadge} ${product.isPublished ? styles.statusPublished : styles.statusHidden}`}>{product.isPublished ? "공개" : "비공개"}</span></td>
+                    <td style={{ textAlign: "center" }}>
+                      <button
+                        title={product.isFeatured ? "대표 해제" : "대표 설정"}
+                        onClick={() => void handleToggleFeatured(product.id, product.isFeatured)}
+                        style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", lineHeight: 1 }}
+                      >
+                        {product.isFeatured ? "⭐" : "☆"}
+                      </button>
+                    </td>
                     <td>{product.order}</td>
                     <td><div className={styles.actions}><Link href={`/admin/products/${product.id}`} className={styles.btn}>수정</Link><button className={`${styles.btn} ${styles.btnDanger}`} onClick={() => void handleDeleteProduct(product.id)}>삭제</button></div></td>
                   </tr>

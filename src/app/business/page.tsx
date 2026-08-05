@@ -182,11 +182,13 @@ export default function BusinessPage() {
               const items = locale === "ko" ? area.itemsKo : area.itemsEn;
               return (
                 <div key={area.id} className={styles.areaCard}>
-                  {area.imageUrl ? (
-                    <img src={area.imageUrl} alt={title} className={styles.areaImg} />
-                  ) : (
-                    <div className={styles.areaImg} />
-                  )}
+                  <div className={styles.areaImgWrap}>
+                    {area.imageUrl ? (
+                      <img src={area.imageUrl} alt={title} className={styles.areaImg} />
+                    ) : (
+                      <div className={styles.areaImg} />
+                    )}
+                  </div>
                   <div className={styles.areaBody}>
                     <div className={styles.areaIcon}>
                       <Icon />

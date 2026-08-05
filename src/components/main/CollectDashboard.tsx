@@ -202,7 +202,7 @@ export default function CollectDashboard() {
 
         <div className={styles.trendChart}>
           <div className={styles.trendHeader}>
-            <h3>수집 데이터 트렌드 (24시간)</h3>
+            <h3>수집 데이터 트렌드 ({timePeriod})</h3>
             <select value={timePeriod} onChange={(e) => setTimePeriod(e.target.value)}>
               <option>24시간</option>
               <option>12시간</option>
@@ -214,41 +214,43 @@ export default function CollectDashboard() {
               <span key={s.label}><i style={{ background: s.color }} />{s.label}({s.unit})</span>
             ))}
           </div>
-          <svg viewBox="0 0 600 200" className={styles.trendSvg}>
-            {[0, 1, 2, 3, 4].map((i) => (
-              <line key={i} x1="40" y1={20 + i * 40} x2="580" y2={20 + i * 40} stroke="#1e3a5f" strokeWidth="0.5" />
-            ))}
-            {["00:00", "06:00", "12:00", "18:00", "24:00"].map((t, i) => (
-              <text key={t} x={40 + i * 135} y="195" fill="#6b7f96" fontSize="10" textAnchor="middle">{t}</text>
-            ))}
-            {trendData.map((series, si) => {
-              const s = SENSORS[si];
-              const minV = s.min;
-              const maxV = s.max;
-              const rangeV = maxV - minV || 1;
-              const pts = series.map((v, i) => {
-                const x = 40 + (i / (series.length - 1)) * 540;
-                const y = 20 + (1 - (v - minV) / rangeV) * 160;
-                return `${x},${y}`;
-              });
-              return (
-                <polyline
-                  key={si}
-                  points={pts.join(" ")}
-                  fill="none"
-                  stroke={s.color}
-                  strokeWidth="1.5"
-                  opacity="0.85"
-                />
-              );
-            })}
-            {[0, 20, 40, 60, 80].map((v, i) => (
-              <text key={`yl${i}`} x="35" y={180 - i * 40 + 4} fill="#6b7f96" fontSize="9" textAnchor="end">{v}</text>
-            ))}
-            {["0", "4K", "8K", "12K", "16K"].map((v, i) => (
-              <text key={`yr${i}`} x="585" y={180 - i * 40 + 4} fill="#6b7f96" fontSize="9" textAnchor="start">{v}</text>
-            ))}
-          </svg>
+          {(() => {
+            const sliceStart = timePeriod === "12시간" ? 12 : 0;
+            const visibleData = trendData.map((s) => s.slice(sliceStart));
+            const labels = timePeriod === "12시간"
+              ? ["12:00", "15:00", "18:00", "21:00", "24:00"]
+              : timePeriod === "1주일"
+                ? ["월", "화", "수", "목", "금"]
+                : ["00:00", "06:00", "12:00", "18:00", "24:00"];
+            return (
+              <svg viewBox="0 0 600 200" className={styles.trendSvg}>
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <line key={i} x1="40" y1={20 + i * 40} x2="580" y2={20 + i * 40} stroke="#1e3a5f" strokeWidth="0.5" />
+                ))}
+                {labels.map((t, i) => (
+                  <text key={t} x={40 + i * (540 / (labels.length - 1))} y="195" fill="#6b7f96" fontSize="10" textAnchor="middle">{t}</text>
+                ))}
+                {visibleData.map((series, si) => {
+                  const s = SENSORS[si];
+                  const rangeV = (s.max - s.min) || 1;
+                  const pts = series.map((v, i) => {
+                    const x = 40 + (i / (series.length - 1)) * 540;
+                    const y = 20 + (1 - (v - s.min) / rangeV) * 160;
+                    return `${x},${y}`;
+                  });
+                  return (
+                    <polyline key={si} points={pts.join(" ")} fill="none" stroke={s.color} strokeWidth="1.5" opacity="0.85" />
+                  );
+                })}
+                {[0, 20, 40, 60, 80].map((v, i) => (
+                  <text key={`yl${i}`} x="35" y={180 - i * 40 + 4} fill="#6b7f96" fontSize="9" textAnchor="end">{v}</text>
+                ))}
+                {["0", "4K", "8K", "12K", "16K"].map((v, i) => (
+                  <text key={`yr${i}`} x="585" y={180 - i * 40 + 4} fill="#6b7f96" fontSize="9" textAnchor="start">{v}</text>
+                ))}
+              </svg>
+            );
+          })()}
         </div>
       </div>
     </div>

@@ -230,14 +230,11 @@ function ProductsPageContent() {
 
       <main className={styles.shopMain}>
         {showStorefront && (
-          <>
-            <ProductHeroCarousel />
             <StorefrontSections
               products={featuredProducts}
               locale={locale}
               searchBar={<ProductSearchBar t={t} searchInput={searchInput} setSearchInput={setSearchInput} onSubmit={handleSearchSubmit} onClear={handleSearchClear} onImageSearch={handleImageSearch} />}
             />
-          </>
         )}
 
         <div className={`${styles.container} ${!showStorefront ? styles.catalogVisible : ""}`} id="all-products">
@@ -409,12 +406,15 @@ function StorefrontSections({ products, locale, searchBar }: { products: Product
 
   return (
     <div className={styles.storefrontSections}>
+      <div className={styles.heroSearchWrap}>
+        {searchBar}
+      </div>
+      <ProductHeroCarousel />
       <section className={styles.featuredSection}>
         <div className={styles.sectionHeading}>
           <h2>{locale === "ko" ? "대표 제품군" : "Featured Products"}</h2>
           <Link href="/products?view=all#all-products">{locale === "ko" ? "전체 제품 보기" : "View all products"} →</Link>
         </div>
-        <div className={styles.featuredSearchArea}>{searchBar}</div>
         <ScrollRow className={styles.featuredRail}>
           {products.map((product) => (
             <Link key={product.id} href={`/products/${product.slug ?? product.id}`} className={styles.featuredCard}>

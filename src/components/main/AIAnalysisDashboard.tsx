@@ -81,6 +81,8 @@ export default function AIAnalysisDashboard() {
   const [anomaly, setAnomaly] = useState(ANOMALY_INIT);
   const [timePeriod, setTimePeriod] = useState("24시간");
   const [modelPeriod, setModelPeriod] = useState("주간");
+  const [showAnomalyDetail, setShowAnomalyDetail] = useState(false);
+  const [controlApplied, setControlApplied] = useState(false);
 
   const [tempHistory] = useState(() => {
     const data: number[] = [];
@@ -123,7 +125,7 @@ export default function AIAnalysisDashboard() {
   const currentTemp = tempHistory[tempHistory.length - 1];
 
   const radarLabels = ["온도 예측", "병해 예측", "습도 예측", "CO₂ 예측", "조도 예측"];
-  const radarValues = [0.88, 0.72, 0.91, 0.85, 0.78];
+  const radarValues = modelPeriod === "월간" ? [0.92, 0.78, 0.94, 0.89, 0.83] : [0.88, 0.72, 0.91, 0.85, 0.78];
   const radarAngles = radarLabels.map((_, i) => (i / radarLabels.length) * Math.PI * 2 - Math.PI / 2);
   const radarR = 55;
   const cx = 90, cy = 75;
@@ -152,7 +154,25 @@ export default function AIAnalysisDashboard() {
               <div><span className={styles.dotGreen} />정상<b>{anomaly.normal} 건</b></div>
             </div>
           </div>
-          <button className={styles.outlineBtn}>이상 내역 보기 →</button>
+          <button className={styles.outlineBtn} onClick={() => setShowAnomalyDetail((v) => !v)}>
+            {showAnomalyDetail ? "닫기 ×" : "이상 내역 보기 →"}
+          </button>
+          {showAnomalyDetail && (
+            <div className={styles.anomalyDetailPanel}>
+              <div className={styles.anomalyDetailItem} style={{ borderLeft: "3px solid #f59e0b" }}>
+                <strong>온도 상승 감지</strong>
+                <span>14:32 | 온도 26.8℃ → 임계치 초과</span>
+              </div>
+              <div className={styles.anomalyDetailItem} style={{ borderLeft: "3px solid #ef4444" }}>
+                <strong>CO₂ 급격한 변화</strong>
+                <span>13:15 | CO₂ 890ppm → 비정상 패턴</span>
+              </div>
+              <div className={styles.anomalyDetailItem} style={{ borderLeft: "3px solid #f59e0b" }}>
+                <strong>습도 하락 추세</strong>
+                <span>11:48 | 습도 48% → 하한선 접근</span>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className={styles.predictionChart}>
@@ -168,37 +188,49 @@ export default function AIAnalysisDashboard() {
             <span><i style={{ background: "#22c55e", height: 2, borderTop: "1px dashed #22c55e" }} />AI 예측 온도(℃)</span>
             <span><i style={{ background: "transparent", borderTop: "1px dashed #ef4444", height: 2 }} />상한/하한선</span>
           </div>
-          <svg viewBox="0 0 600 180" className={styles.trendSvg}>
-            <line x1="40" y1="20" x2="560" y2="20" stroke="#ef4444" strokeWidth="1" strokeDasharray="6 3" opacity="0.6" />
-            <line x1="40" y1="155" x2="560" y2="155" stroke="#ef4444" strokeWidth="1" strokeDasharray="6 3" opacity="0.4" />
-            {[0, 1, 2, 3].map((i) => (
-              <line key={i} x1="40" y1={20 + i * 45} x2="560" y2={20 + i * 45} stroke="#1e3a5f" strokeWidth="0.3" />
-            ))}
-            <polyline
-              points={tempHistory.map((v, i) => `${40 + (i / 23) * 520},${20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}`).join(" ")}
-              fill="none" stroke="#3b82f6" strokeWidth="2"
-            />
-            {tempHistory.map((v, i) => (
-              <circle key={i} cx={40 + (i / 23) * 520} cy={20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}
-                r="3" fill="#3b82f6" />
-            ))}
-            <polyline
-              points={predHistory.map((v, i) => `${40 + (i / 23) * 520},${20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}`).join(" ")}
-              fill="none" stroke="#22c55e" strokeWidth="1.5" strokeDasharray="5 3"
-            />
-            {["00:00", "06:00", "12:00", "18:00", "24:00"].map((t, i) => (
-              <text key={t} x={40 + i * 130} y="175" fill="#6b7f96" fontSize="10" textAnchor="middle">{t}</text>
-            ))}
-            {[10, 20, 30, 40].map((v, i) => (
-              <text key={v} x="35" y={155 - i * 45 + 4} fill="#6b7f96" fontSize="9" textAnchor="end">{v}</text>
-            ))}
-            <g>
-              <rect x="380" y={20 + ((upperBound - currentTemp) / (upperBound - lowerBound)) * 135 - 14} width="90" height="20" rx="4" fill="#0f2742" stroke="#3b82f6" strokeWidth="0.5" />
-              <text x="425" y={20 + ((upperBound - currentTemp) / (upperBound - lowerBound)) * 135} fill="white" fontSize="10" textAnchor="middle">
-                현재 {currentTemp.toFixed(1)}°C
-              </text>
-            </g>
-          </svg>
+          {(() => {
+            const sliceStart = timePeriod === "12시간" ? 12 : 0;
+            const visTemp = tempHistory.slice(sliceStart);
+            const visPred = predHistory.slice(sliceStart);
+            const len = visTemp.length;
+            const labels = timePeriod === "12시간"
+              ? ["12:00", "15:00", "18:00", "21:00", "24:00"]
+              : ["00:00", "06:00", "12:00", "18:00", "24:00"];
+            const visCurrentTemp = visTemp[visTemp.length - 1];
+            return (
+              <svg viewBox="0 0 600 180" className={styles.trendSvg}>
+                <line x1="40" y1="20" x2="560" y2="20" stroke="#ef4444" strokeWidth="1" strokeDasharray="6 3" opacity="0.6" />
+                <line x1="40" y1="155" x2="560" y2="155" stroke="#ef4444" strokeWidth="1" strokeDasharray="6 3" opacity="0.4" />
+                {[0, 1, 2, 3].map((i) => (
+                  <line key={i} x1="40" y1={20 + i * 45} x2="560" y2={20 + i * 45} stroke="#1e3a5f" strokeWidth="0.3" />
+                ))}
+                <polyline
+                  points={visTemp.map((v, i) => `${40 + (i / (len - 1)) * 520},${20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}`).join(" ")}
+                  fill="none" stroke="#3b82f6" strokeWidth="2"
+                />
+                {visTemp.map((v, i) => (
+                  <circle key={i} cx={40 + (i / (len - 1)) * 520} cy={20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}
+                    r="3" fill="#3b82f6" />
+                ))}
+                <polyline
+                  points={visPred.map((v, i) => `${40 + (i / (len - 1)) * 520},${20 + ((upperBound - v) / (upperBound - lowerBound)) * 135}`).join(" ")}
+                  fill="none" stroke="#22c55e" strokeWidth="1.5" strokeDasharray="5 3"
+                />
+                {labels.map((t, i) => (
+                  <text key={t} x={40 + i * (520 / (labels.length - 1))} y="175" fill="#6b7f96" fontSize="10" textAnchor="middle">{t}</text>
+                ))}
+                {[10, 20, 30, 40].map((v, i) => (
+                  <text key={v} x="35" y={155 - i * 45 + 4} fill="#6b7f96" fontSize="9" textAnchor="end">{v}</text>
+                ))}
+                <g>
+                  <rect x="380" y={20 + ((upperBound - visCurrentTemp) / (upperBound - lowerBound)) * 135 - 14} width="90" height="20" rx="4" fill="#0f2742" stroke="#3b82f6" strokeWidth="0.5" />
+                  <text x="425" y={20 + ((upperBound - visCurrentTemp) / (upperBound - lowerBound)) * 135} fill="white" fontSize="10" textAnchor="middle">
+                    현재 {visCurrentTemp.toFixed(1)}°C
+                  </text>
+                </g>
+              </svg>
+            );
+          })()}
         </div>
       </div>
 
@@ -225,7 +257,12 @@ export default function AIAnalysisDashboard() {
               <span className={styles.controlBadge} style={{ background: c.color }}>{c.status}</span>
             </div>
           ))}
-          <button className={styles.outlineBtn}>제어 적용하기 →</button>
+          <button
+            className={`${styles.outlineBtn} ${controlApplied ? styles.outlineBtnActive : ""}`}
+            onClick={() => { setControlApplied(true); setTimeout(() => setControlApplied(false), 2000); }}
+          >
+            {controlApplied ? "✓ 적용 완료" : "제어 적용하기 →"}
+          </button>
         </div>
 
         <div className={styles.modelPerf}>
@@ -243,9 +280,9 @@ export default function AIAnalysisDashboard() {
                 <strong>{accuracy.toFixed(1)} %</strong>
               </div>
               <div className={styles.perfMeta}>
-                <div><span>학습 데이터</span><b>128,560 건</b></div>
+                <div><span>학습 데이터</span><b>{modelPeriod === "월간" ? "542,180 건" : "128,560 건"}</b></div>
                 <div><span>모델 버전</span><b>v2.3.7</b></div>
-                <div><span>최근 학습일</span><b>2026.07.28 02:15</b></div>
+                <div><span>최근 학습일</span><b>{modelPeriod === "월간" ? "2026.07.01 08:30" : "2026.07.28 02:15"}</b></div>
               </div>
             </div>
             <svg viewBox="0 0 180 150" className={styles.radarSvg}>

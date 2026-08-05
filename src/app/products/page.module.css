@@ -255,11 +255,17 @@
 
 .storefrontSections {
   width: 100%;
-  padding: 18px clamp(16px, 2.4vw, 34px) 0;
+  padding: 0 clamp(16px, 2.4vw, 34px);
+}
+
+.storefrontSections > .heroCarousel {
+  margin-bottom: 18px;
 }
 
 .featuredSearchArea { margin-bottom: 18px; }
 .featuredSearchArea .searchBar { margin: 0; }
+.heroSearchWrap { padding: 16px 0 8px; }
+.heroSearchWrap .searchBar { margin: 0; }
 
 .featuredSection { padding-bottom: 14px; }
 
@@ -599,6 +605,7 @@
   aspect-ratio: 16 / 5;
   max-height: 390px;
   overflow: hidden;
+  border-radius: 12px;
   background: #f7f7f8;
 }
 

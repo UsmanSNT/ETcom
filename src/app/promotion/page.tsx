@@ -270,27 +270,6 @@ function PromotionPageContent() {
           </div>
         </section>}
 
-        <div className={styles.newsletter}>
-          <svg className={styles.newsletterIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="2.5" y="4.5" width="19" height="15" rx="1.5" />
-            <path d="m3.5 6 8.5 7 8.5-7M3.5 18l6-6M20.5 18l-6-6" />
-          </svg>
-          <div className={styles.newsletterTitle}>
-            {t.promotion.newsletterTitle}
-            <br />
-            {t.promotion.newsletterTitle2}
-          </div>
-          <div className={styles.newsletterRow}>
-            <input className={styles.newsletterInput} type="email" placeholder={t.promotion.newsletterPlaceholder} />
-            <button
-              className={styles.newsletterBtn}
-              type="button"
-              onClick={() => alert(locale === "ko" ? "뉴스레터 구독 기능을 준비 중입니다." : "Newsletter subscriptions are coming soon.")}
-            >
-              {t.promotion.newsletterBtn}
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

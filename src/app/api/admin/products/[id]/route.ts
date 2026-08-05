@@ -96,6 +96,19 @@ function cleanText(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!getAdminFromRequest(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const { id } = await params;
+  const body = await req.json().catch(() => null);
+  if (!body || typeof body.isFeatured !== "boolean") {
+    return NextResponse.json({ error: "invalid body" }, { status: 400 });
+  }
+  const product = await prisma.product.update({ where: { id }, data: { isFeatured: body.isFeatured } });
+  return NextResponse.json({ ok: true, isFeatured: product.isFeatured });
+}
+
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!getAdminFromRequest(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

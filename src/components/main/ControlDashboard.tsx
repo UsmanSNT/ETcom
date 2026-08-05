@@ -67,12 +67,12 @@ function Co2GenIcon() {
 }
 
 const INITIAL_DEVICES: Device[] = [
-  { icon: <FanIcon />, label: "환기 팬", status: "ON", auto: true, detail: "풍속 70%" },
-  { icon: <LedIcon />, label: "LED 조명", status: "OFF", auto: false, detail: "밝기 0%" },
+  { icon: <FanIcon />, label: "환기 팬", status: "AUTO", auto: true, detail: "풍속 70%" },
+  { icon: <LedIcon />, label: "LED 조명", status: "OFF", auto: true, detail: "밝기 0%" },
   { icon: <PumpIcon />, label: "양액 펌프", status: "AUTO", auto: true, detail: "주기 15분 / 10초" },
   { icon: <HvacIcon />, label: "냉난방기", status: "AUTO", auto: true, detail: "설정 24.0℃" },
-  { icon: <WindowIcon />, label: "창문 개폐기", status: "CLOSE", auto: true, detail: "닫힘" },
-  { icon: <Co2GenIcon />, label: "CO₂ 발생기", status: "OFF", auto: false, detail: "CO₂ 800ppm" },
+  { icon: <WindowIcon />, label: "창문 개폐기", status: "OFF", auto: true, detail: "닫힘" },
+  { icon: <Co2GenIcon />, label: "CO₂ 발생기", status: "OFF", auto: true, detail: "CO₂ 800ppm" },
 ];
 
 function randomWalk(prev: number, min: number, max: number, step: number) {
@@ -110,6 +110,18 @@ export default function ControlDashboard() {
     return () => clearInterval(id);
   }, []);
 
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const toggleDevice = (index: number) => {
+    setDevices((prev) => prev.map((d, i) => {
+      if (i !== index) return d;
+      if (d.status === "OFF") {
+        return { ...d, status: "AUTO" };
+      }
+      return { ...d, status: "OFF" };
+    }));
+  };
+
   const toggleAuto = (index: number) => {
     setDevices((prev) => prev.map((d, i) => {
       if (i !== index) return d;
@@ -117,10 +129,17 @@ export default function ControlDashboard() {
     }));
   };
 
+  const applyControlMode = (mode: string) => {
+    setControlMode(mode);
+    const isAuto = mode === "자동 모드";
+    setDevices((prev) => prev.map((d) => ({
+      ...d,
+      auto: isAuto,
+    })));
+  };
+
   const statusColor = (s: string) => {
-    if (s === "ON") return "#3b82f6";
-    if (s === "AUTO") return "#f59e0b";
-    if (s === "CLOSE") return "#ef4444";
+    if (s === "AUTO") return "#22c55e";
     return "#6b7280";
   };
 
@@ -131,11 +150,11 @@ export default function ControlDashboard() {
           <div className={styles.deviceHeader}>
             <h3>자동 제어 상태</h3>
             <div className={styles.modeSelect}>
-              <select value={controlMode} onChange={(e) => setControlMode(e.target.value)}>
+              <select value={controlMode} onChange={(e) => applyControlMode(e.target.value)}>
                 <option>자동 모드</option>
                 <option>수동 모드</option>
               </select>
-              <button className={styles.settingsBtn}>전체 제어 설정</button>
+              <button className={styles.settingsBtn} onClick={() => setSettingsOpen((v) => !v)}>전체 제어 설정</button>
             </div>
           </div>
           <div className={styles.deviceGrid}>
@@ -143,7 +162,13 @@ export default function ControlDashboard() {
               <div className={styles.deviceCard} key={i}>
                 <div className={styles.deviceIconWrap}>{d.icon}</div>
                 <div className={styles.deviceLabel}>{d.label}</div>
-                <div className={styles.deviceStatus} style={{ color: statusColor(d.status) }}>{d.status}</div>
+                <button
+                  className={`${styles.deviceStatusBtn} ${d.status === "AUTO" ? styles.deviceStatusBtnAuto : styles.deviceStatusBtnOff}`}
+                  style={{ color: statusColor(d.status) }}
+                  onClick={() => toggleDevice(i)}
+                >
+                  {d.status}
+                </button>
                 <div className={styles.deviceToggleRow}>
                   <span>{d.auto ? "자동 모드" : "수동 모드"}</span>
                   <button
@@ -157,54 +182,92 @@ export default function ControlDashboard() {
               </div>
             ))}
           </div>
+          {settingsOpen && (
+            <div className={styles.settingsPanel}>
+              <div className={styles.settingsPanelHeader}>
+                <h4>전체 제어 설정</h4>
+                <button onClick={() => setSettingsOpen(false)}>×</button>
+              </div>
+              <div className={styles.settingsPanelBody}>
+                <div className={styles.settingsRow}>
+                  <span>제어 모드</span>
+                  <select value={controlMode} onChange={(e) => applyControlMode(e.target.value)}>
+                    <option>자동 모드</option>
+                    <option>수동 모드</option>
+                  </select>
+                </div>
+                <div className={styles.settingsRow}>
+                  <span>데이터 수집 주기</span>
+                  <select defaultValue="5초"><option>1초</option><option>5초</option><option>10초</option><option>30초</option></select>
+                </div>
+                <div className={styles.settingsRow}>
+                  <span>이상 알림</span>
+                  <select defaultValue="활성화"><option>활성화</option><option>비활성화</option></select>
+                </div>
+                <button className={styles.outlineBtn} onClick={() => setSettingsOpen(false)}>설정 저장</button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.controlBottomRow}>
         <div className={styles.targetCard}>
-          <h3>환경 목표 설정</h3>
-          <div className={styles.targetGrid}>
-            <div className={styles.targetItem}>
-              <span>목표 온도</span>
-              <strong>{targetTemp.toFixed(1)}<small>℃</small></strong>
-              <input type="range" min="10" max="40" step="0.5" value={targetTemp}
-                onChange={(e) => setTargetTemp(Number(e.target.value))} />
-              <div className={styles.rangeLabels}><span>10℃</span><span>40℃</span></div>
+          <div className={styles.targetList}>
+            <div className={styles.targetRow}>
+              <span className={styles.targetRowIcon} style={{ background: "rgba(59,130,246,.18)" }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+              </span>
+              <div className={styles.targetRowBody}>
+                <span className={styles.targetRowLabel}>목표 온도</span>
+                <strong className={styles.targetRowValue}>{targetTemp.toFixed(1)}<small>°C</small></strong>
+                <input className={styles.targetRange} style={{ "--range-color": "#3b82f6" } as React.CSSProperties} type="range" min="10" max="40" step="0.5" value={targetTemp} onChange={(e) => setTargetTemp(Number(e.target.value))} />
+                <div className={styles.rangeLabels}><span>10°C</span><span>40°C</span></div>
+              </div>
             </div>
-            <div className={styles.targetItem}>
-              <span>목표 습도</span>
-              <strong>{targetHumidity}<small>%</small></strong>
-              <input type="range" min="20" max="90" step="1" value={targetHumidity}
-                onChange={(e) => setTargetHumidity(Number(e.target.value))} />
-              <div className={styles.rangeLabels}><span>20%</span><span>90%</span></div>
+
+            <div className={styles.targetRow}>
+              <span className={styles.targetRowIcon} style={{ background: "rgba(34,197,94,.18)" }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              </span>
+              <div className={styles.targetRowBody}>
+                <span className={styles.targetRowLabel}>목표 습도</span>
+                <strong className={styles.targetRowValue}>{targetHumidity}<small>%</small></strong>
+                <input className={styles.targetRange} style={{ "--range-color": "#22c55e" } as React.CSSProperties} type="range" min="20" max="90" step="1" value={targetHumidity} onChange={(e) => setTargetHumidity(Number(e.target.value))} />
+                <div className={styles.rangeLabels}><span>20%</span><span>90%</span></div>
+              </div>
             </div>
-            <div className={styles.targetItem}>
-              <span>목표 CO₂</span>
-              <strong>{targetCo2}<small>ppm</small></strong>
-              <input type="range" min="400" max="1500" step="10" value={targetCo2}
-                onChange={(e) => setTargetCo2(Number(e.target.value))} />
-              <div className={styles.rangeLabels}><span>400</span><span>1500</span></div>
+
+            <div className={styles.targetRow}>
+              <span className={styles.targetRowIcon} style={{ background: "rgba(168,85,247,.18)" }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a855f7" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 18.5a4.5 4.5 0 0 1-.42-8.98 7 7 0 0 1 13.84 0A4.5 4.5 0 0 1 17.5 18.5H6.5z"/><text x="12" y="16" fill="#a855f7" stroke="none" fontSize="5.5" fontWeight="700" textAnchor="middle">CO₂</text></svg>
+              </span>
+              <div className={styles.targetRowBody}>
+                <span className={styles.targetRowLabel}>목표 CO₂</span>
+                <strong className={styles.targetRowValue}>{targetCo2}<small>ppm</small></strong>
+                <input className={styles.targetRange} style={{ "--range-color": "#a855f7" } as React.CSSProperties} type="range" min="400" max="1500" step="10" value={targetCo2} onChange={(e) => setTargetCo2(Number(e.target.value))} />
+                <div className={styles.rangeLabels}><span>400</span><span>1500</span></div>
+              </div>
             </div>
           </div>
         </div>
 
         <div className={styles.summaryCard}>
           <h3>제어 요약</h3>
-          <div className={styles.summaryContent}>
-            <svg viewBox="0 0 120 120" className={styles.donut}>
+          <div className={styles.summaryContentV}>
+            <svg viewBox="0 0 120 120" className={styles.donutLg}>
               <circle cx="60" cy="60" r="45" fill="none" stroke="#1e3a5f" strokeWidth="10" />
               <circle cx="60" cy="60" r="45" fill="none" stroke="#3b82f6" strokeWidth="10"
                 strokeDasharray={`${(normalCount / devices.length) * 283} 283`}
                 transform="rotate(-90 60 60)" />
-              <text x="60" y="52" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold">{normalCount}</text>
-              <text x="60" y="62" textAnchor="middle" fill="#8293a7" fontSize="8">/{devices.length}</text>
-              <text x="60" y="78" textAnchor="middle" fill="#8293a7" fontSize="9">정상 작동</text>
+              <text x="60" y="55" textAnchor="middle" fill="white" fontSize="22" fontWeight="bold">{normalCount}</text>
+              <text x="60" y="67" textAnchor="middle" fill="#8293a7" fontSize="9">/{devices.length} 정상</text>
             </svg>
-            <div className={styles.summaryLegend}>
-              <div><span className={styles.dotGreen} />정상<b>{normalCount}</b></div>
-              <div><span className={styles.dotBlue} />작동 중<b>{runningCount}</b></div>
-              <div><span className={styles.dotYellow} />대기 중<b>{waitingCount}</b></div>
-              <div><span className={styles.dotRed} />정지<b>{stoppedCount}</b></div>
+            <div className={styles.summaryLegendH}>
+              <div><span className={styles.dotGreen} />정상 <b>{normalCount}</b></div>
+              <div><span className={styles.dotBlue} />작동 <b>{runningCount}</b></div>
+              <div><span className={styles.dotYellow} />대기 <b>{waitingCount}</b></div>
+              <div><span className={styles.dotRed} />정지 <b>{stoppedCount}</b></div>
             </div>
           </div>
         </div>

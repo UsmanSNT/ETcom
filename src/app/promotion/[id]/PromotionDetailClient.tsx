@@ -114,18 +114,15 @@ export function PromotionDetailClient({
             )}
           </div>
           {images.length > 1 && (
-            <div className={styles.thumbs}>
-              {images.map((image, index) => (
+            <div className={styles.dots}>
+              {images.map((_, index) => (
                 <button
                   type="button"
-                  key={image.id}
-                  className={`${styles.thumbButton} ${selected === index ? styles.thumbActive : ""}`}
+                  key={index}
+                  className={`${styles.dot} ${selected === index ? styles.dotActive : ""}`}
                   onClick={() => setSelected(index)}
-                  aria-label={`${title} ${index + 1}`}
-                  aria-pressed={selected === index}
-                >
-                  <img src={image.url} alt="" />
-                </button>
+                  aria-label={`${index + 1}`}
+                />
               ))}
             </div>
           )}
@@ -158,6 +155,7 @@ export function PromotionDetailClient({
                 key={p.id}
                 href={`/promotion/${p.slug ?? p.id}`}
                 className={styles.relatedCard}
+                scroll={false}
               >
                 <div className={styles.relatedThumb}>
                   {p.imageUrl && (
@@ -178,39 +176,6 @@ export function PromotionDetailClient({
           </div>
         </section>
       )}
-
-      {/* 구독하기 */}
-      <div className={listStyles.newsletter}>
-        <svg className={listStyles.newsletterIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="2.5" y="4.5" width="19" height="15" rx="1.5" />
-          <path d="m3.5 6 8.5 7 8.5-7M3.5 18l6-6M20.5 18l-6-6" />
-        </svg>
-        <div className={listStyles.newsletterTitle}>
-          {t.promotion.newsletterTitle}
-          <br />
-          {t.promotion.newsletterTitle2}
-        </div>
-        <div className={listStyles.newsletterRow}>
-          <input
-            className={listStyles.newsletterInput}
-            type="email"
-            placeholder={t.promotion.newsletterPlaceholder}
-          />
-          <button
-            className={listStyles.newsletterBtn}
-            type="button"
-            onClick={() =>
-              alert(
-                locale === "ko"
-                  ? "뉴스레터 구독 기능을 준비 중입니다."
-                  : "Newsletter subscriptions are coming soon.",
-              )
-            }
-          >
-            {t.promotion.newsletterBtn}
-          </button>
-        </div>
-      </div>
 
     </div>
   );
