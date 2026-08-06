@@ -377,6 +377,8 @@
 .faqGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(5, auto);
+  grid-auto-flow: column;
   gap: 0 40px;
   margin-top: 20px;
 }
