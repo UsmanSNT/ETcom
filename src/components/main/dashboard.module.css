@@ -214,6 +214,10 @@
   .summaryLegendH { display: flex; flex-direction: column; gap: 6px; width: auto; }
 }
 @media (max-width: 600px) {
+  .aiBottomRow { grid-template-columns: 1fr; }
+  .insightCard { grid-column: auto; }
+  .controlBottomRow { grid-template-columns: 1fr; }
+  .targetCard { grid-column: auto; }
   .sensorRow { grid-template-columns: repeat(2, 1fr); }
   .deviceGrid { grid-template-columns: repeat(2, 1fr); }
   .targetList { flex-direction: row; gap: 8px; }

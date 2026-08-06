@@ -4,7 +4,7 @@
   min-height: 0;
   aspect-ratio: 16 / 5;
   margin: 0 auto;
-  padding: 48px 64px;
+  padding: 48px 24px;
   display: flex;
   align-items: center;
   background-color: #fff;
@@ -13,6 +13,7 @@
   background-position: center;
   background-size: cover;
 }
+
 
 .heroInner {
   width: 100%;
@@ -441,7 +442,7 @@
 }
 
 .channelLabel {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--brand-text-muted);
 }
@@ -454,7 +455,7 @@
 }
 
 .channelLink {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--brand-blue);
   text-decoration: underline;
 }

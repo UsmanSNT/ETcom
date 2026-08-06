@@ -4,7 +4,7 @@
   min-height: 0;
   aspect-ratio: 16 / 5;
   margin: 0 auto;
-  padding: 48px 64px;
+  padding: 48px 24px;
   display: flex;
   align-items: center;
   background-color: #fff;
@@ -219,7 +219,7 @@
 .listCategory {
   margin-bottom: 6px;
   color: var(--brand-blue);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -233,7 +233,7 @@
   margin-top: 7px;
   overflow: hidden;
   color: var(--brand-text-muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.55;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -301,7 +301,7 @@
   justify-content: center;
   padding: 16px 10px;
   border: 1px solid var(--brand-gray-100);
-  border-radius: 7px;
+  border-radius: 8px;
   text-align: center;
   background: #fff;
   color: inherit;
@@ -339,7 +339,7 @@
 
 .resourceCard > strong {
   color: var(--brand-navy);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.4;
 }
 

@@ -83,7 +83,7 @@
 }
 
 .areaItem {
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
   padding: 4px 0;
   display: flex;
@@ -126,7 +126,7 @@
   align-items: stretch;
   gap: 18px;
   padding: 16px 20px;
-  border-radius: 18px;
+  border-radius: 12px;
   background: #fbfcfe;
   border: 1px solid #eef1f6;
   box-shadow: 0 2px 6px rgba(15, 39, 72, 0.04);
@@ -161,7 +161,7 @@
 }
 
 .techTitle {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 800;
   color: var(--brand-navy);
 }
@@ -175,7 +175,7 @@
 .industriesSection {
   max-width: 1330px;
   margin: 0 auto;
-  padding: 48px 24px 40px;
+  padding: 40px 24px;
 }
 
 .industriesLabel {

@@ -8,21 +8,21 @@
   margin: 0 auto;
   background: #f8f9fa url("/images/home-bg.png") center / cover no-repeat;
 }
-.heroInner { position: relative; z-index: 1; width: calc(100% - 80px); height: 100%; min-height: 0; margin: auto; display: flex; align-items: center; }
-.heroCopy { width: 46%; padding: 10px 0 0 44px; }
-.tagline { margin-bottom: 24px; color: #8490a0; font-size: 12px; font-weight: 600; letter-spacing: .28em; }
+.heroInner { position: relative; z-index: 1; width: calc(100% - 48px); height: 100%; min-height: 0; margin: auto; display: flex; align-items: center; }
+.heroCopy { width: 46%; padding: 10px 0 0 0; }
+.tagline { margin-bottom: 24px; color: #8490a0; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; }
 .heroTitle { color: #07152b; font-size: clamp(44px, 4vw, 58px); line-height: 1.18; letter-spacing: -.045em; }
-.heroSubtitle { margin-top: 28px; color: #606a78; font-size: 17px; line-height: 1.65; }
+.heroSubtitle { margin-top: 28px; color: #606a78; font-size: 15px; line-height: 1.65; }
 .textLink {
   display: inline-flex; justify-content: space-between; gap: 50px; margin-top: 46px; padding-bottom: 10px;
   border-bottom: 1px solid #aab1ba; color: #07152b; font-size: 13px; font-weight: 700;
 }
 
-.aiSection { padding: 44px 40px; background: radial-gradient(circle at 22% 15%, #062b51, transparent 33%), #00152b; color: white; }
-.aiInner { width: min(1320px, 100%); min-height: 430px; margin: auto; display: grid; grid-template-columns: 45% 55%; gap: 24px; align-items: start; }
+.aiSection { padding: 44px 0; background: radial-gradient(circle at 22% 15%, #062b51, transparent 33%), #00152b; color: white; }
+.aiInner { width: min(1330px, calc(100% - 48px)); min-height: 430px; margin: auto; display: grid; grid-template-columns: 45% 55%; gap: 24px; align-items: start; }
 .aiIntro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 20px 0; }
 .aiIntroLeft { display: flex; flex-direction: column; gap: 20px; }
-.aiLabel { font-size: 13px; font-weight: 700; opacity: .65; letter-spacing: .08em; }
+.aiLabel { font-size: 12px; font-weight: 700; opacity: .65; letter-spacing: .08em; }
 .aiTitle { font-size: 30px; line-height: 1.55; letter-spacing: -.03em; white-space: nowrap; }
 .aiDesc { font-size: 15px; line-height: 1.8; color: #a5b3c3; white-space: pre-line; }
 .aiSteps { display: flex; flex-direction: column; gap: 16px; }
@@ -80,10 +80,10 @@
 .predictionCard { transition: all .3s ease; }
 .dashboardMenu span { transition: background .2s, color .2s; }
 
-.contentSection { width: min(1320px, calc(100% - 80px)); margin: auto; padding: 46px 0; border-bottom: 1px solid #e5e8ec; }
-.sectionLabel { color: #3d4755; font-size: 11px; font-weight: 700; }
+.contentSection { width: min(1330px, calc(100% - 48px)); margin: auto; padding: 46px 0; border-bottom: 1px solid #e5e8ec; }
+.sectionLabel { color: #3d4755; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; }
 .sectionHeader { display: flex; justify-content: space-between; align-items: center; }
-.sectionHeader > a { font-size: 11px; font-weight: 700; }
+.sectionHeader > a { font-size: 12px; font-weight: 700; }
 .solutionsGrid { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 38px; }
 .solutionSub { display: block; margin-top: 4px; color: #708096; font-size: 10px; font-weight: 500; }
 .solutionItem { min-height: 98px; display: grid; grid-template-columns: 1fr auto; align-items: end; justify-items: center; padding: 0 25px; border-right: 1px solid #d9dde2; }
@@ -122,7 +122,7 @@
 
 .solutionsIntro > p:last-child {
   color: #657286;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.75;
 }
 
@@ -160,7 +160,7 @@
 }
 
 .homeInfoInner {
-  width: min(1320px, calc(100% - 80px));
+  width: min(1330px, calc(100% - 48px));
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
   margin: 0 auto;
@@ -333,6 +333,7 @@
 .contactCard strong { font-size: 19px; }.contactCard span { margin-top: 8px; color: #b5c0cc; font-size: 11px; line-height: 1.6; }
 .contactCard a { margin-top: 14px; padding: 9px 20px; border: 1px solid #7f8d9e; border-radius: 4px; font-size: 11px; }
 
+/* ── Large tablets: iPad Pro 1024, Nest Hub 1024, Galaxy Z Fold open 882 ── */
 @media (max-width: 1050px) {
   .heroCopy { padding-left: 0; }
   .dashboardCard { height: auto; overflow: visible; }
@@ -350,68 +351,108 @@
   .contactCard { grid-column: 1 / 3; }
   .newSolutionsSection { grid-template-columns: 1fr; }
   .solutionsIntro { padding-right: 0; padding-bottom: 24px; border-right: 0; border-bottom: 1px solid #dce2e9; }
-  .homeInfoInner { grid-template-columns: minmax(0, 1fr) 320px; }
+  .homeInfoInner { grid-template-columns: minmax(0, 1fr) 300px; }
   .homeInfoBand .contactCard { grid-column: auto; }
 }
 
-@media (max-width: 700px) {
-  .hero { width: 100%; min-height: 360px; aspect-ratio: auto; background-position: 62% center; background-size: cover; }
+/* ── Small tablets / large phones: iPad Mini 768, Surface Duo 540-720 ── */
+@media (max-width: 768px) {
+  .hero { width: 100%; min-height: 320px; aspect-ratio: auto; background-position: 62% center; background-size: cover; }
   .hero::before {
     content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(100deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.8) 45%, rgba(255,255,255,.3) 100%);
   }
-  .heroInner { width: calc(100% - 40px); min-height: 360px; align-items: flex-start; padding-top: 42px; }
-  .heroCopy { width: 100%; }
-  .tagline { color: #4a5568; }
-  .heroSubtitle { color: #26313f; }
-  .promoColumn { padding-left: 0; border-left: 0; }
-  .tagline { font-size: 9px; margin-bottom: 18px; }
-  .heroTitle { font-size: 39px; }
-  .heroSubtitle { font-size: 14px; }
-  .textLink { margin-top: 32px; }
-  .aiSection { padding: 45px 20px; }
-  .aiIntro { grid-template-columns: 1fr; gap: 24px; }
+  .heroInner { width: calc(100% - 40px); min-height: 320px; align-items: flex-start; padding-top: 36px; }
+  .heroCopy { width: 70%; }
+  .tagline { color: #4a5568; font-size: 10px; margin-bottom: 16px; }
+  .heroTitle { font-size: clamp(30px, 5vw, 44px); }
+  .heroSubtitle { font-size: 14px; margin-top: 18px; }
+  .textLink { margin-top: 28px; }
+  .aiSection { padding: 36px 24px; }
+  .aiInner { grid-template-columns: 1fr; gap: 32px; }
+  .aiIntro { grid-template-columns: 1fr; gap: 20px; }
   .aiSteps { flex-direction: row; gap: 8px; }
   .aiStep { flex: 1; flex-direction: column; align-items: center; text-align: center; padding: 10px 8px; gap: 8px; }
   .aiStepIcon { width: 32px; height: 32px; }
   .aiStep strong { font-size: 13px; margin-bottom: 4px; }
   .aiStep p { font-size: 12px; }
   .dashboardCard { grid-template-columns: 1fr; padding: 14px; height: auto; overflow: visible; }
-  .dashboardMenu {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 8px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 4px;
-  }
+  .dashboardMenu { flex-direction: row; flex-wrap: nowrap; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 4px; }
   .dashboardMenu::-webkit-scrollbar { display: none; }
   .dashboardMenu span { flex: 0 0 auto; }
   .statGrid { grid-template-columns: repeat(2, 1fr); }
   .dashboardBottom { grid-template-columns: 1fr; }
   .chartCard { height: 145px; }
-  .contentSection { width: calc(100% - 40px); padding: 38px 0; }
-  .solutionsGrid, .productsGrid { grid-template-columns: repeat(2, 1fr); }
-  .solutionItem { border-right: 0; border-bottom: 1px solid #e4e7eb; padding: 20px 8px; }
-  .productVisual { height: 135px; }
+  .contentSection { width: calc(100% - 40px); padding: 34px 0; }
+  .solutionsGrid { grid-template-columns: repeat(3, 1fr); }
+  .productsGrid { grid-template-columns: repeat(3, 1fr); }
+  .solutionItem { border-right: 0; border-bottom: 1px solid #e4e7eb; padding: 16px 8px; }
+  .productVisual { height: 120px; border-right: 0; }
   .bottomSection { grid-template-columns: 1fr; }
   .contactCard { grid-column: auto; }
-  .promoGrid { height: 170px; }
+  .promoColumn { padding-left: 0; border-left: 0; }
+  .promoGrid { height: 160px; }
   .newSolutionsSection { display: block; }
-  .newSolutionsGrid { grid-template-columns: 1fr 1fr; margin-top: 24px; }
-  .newSolutionItem { padding: 20px 10px; border-right: 0; border-bottom: 1px solid #dce2e9; }
+  .newSolutionsGrid { grid-template-columns: 1fr 1fr; margin-top: 20px; }
+  .newSolutionItem { padding: 16px 10px; border-right: 0; border-bottom: 1px solid #dce2e9; }
   .newSolutionItem:nth-child(odd) { border-right: 1px solid #dce2e9; }
   .newSolutionItem:last-child { grid-column: 1 / -1; }
   .homeInfoBand { width: 100vw; margin-left: calc(50% - 50vw); }
   .homeInfoInner { width: calc(100% - 40px); grid-template-columns: 1fr; }
-  .homeInfoInner > div { padding: 28px 20px; border-right: 0; border-bottom: 1px solid #d5dee8; }
+  .homeInfoInner > div { padding: 24px 16px; border-right: 0; border-bottom: 1px solid #d5dee8; }
   .homeInfoInner > div:last-child { border-bottom: 0; }
   .certGrid { overflow: hidden; }
   .homeInfoBand .contactCard { grid-column: auto; }
-  .contactBody { margin-top: 22px; justify-content: center; }
+  .contactBody { margin-top: 18px; justify-content: center; }
   .contactBody > div { align-items: center; text-align: center; }
-  .homeInfoBand .certColumn { padding: 28px 0; }
+  .homeInfoBand .certColumn { padding: 24px 0; }
+}
+
+/* ── Phones: iPhone 14 Pro Max 430, Pixel 7 412, Galaxy A51 412, Galaxy S8+ 360 ── */
+@media (max-width: 480px) {
+  .hero { min-height: 300px; }
+  .heroInner { width: calc(100% - 32px); min-height: 300px; padding-top: 32px; }
+  .heroCopy { width: 100%; }
+  .heroTitle { font-size: clamp(26px, 8vw, 36px); }
+  .heroSubtitle { font-size: 13px; margin-top: 14px; }
+  .tagline { font-size: 9px; }
+  .textLink { margin-top: 24px; gap: 24px; }
+  .aiSection { padding: 32px 16px; }
+  .aiTitle { font-size: 22px; white-space: normal; }
+  .aiDesc { font-size: 13px; }
+  .aiStep strong { font-size: 12px; }
+  .aiStep p { font-size: 11px; }
+  .contentSection { width: calc(100% - 32px); padding: 28px 0; }
+  .solutionsGrid { grid-template-columns: repeat(2, 1fr); }
+  .productsGrid { grid-template-columns: repeat(2, 1fr); }
+  .statGrid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .statTile { height: 110px; padding: 12px; }
+  .statTile strong { font-size: 19px; }
+  .promoGrid { grid-template-columns: 1fr; height: auto; gap: 8px; }
+  .promoMain { height: 130px; }
+  .promoThumb { height: 80px; }
+  .homeInfoInner { width: calc(100% - 32px); }
+  .homeInfoInner > div { padding: 20px 12px; }
+  .newSolutionsGrid { grid-template-columns: 1fr 1fr; }
+  .newSolutionItem { padding: 14px 8px; }
+}
+
+/* ── Small phones: iPhone SE 375, Galaxy Z Fold closed 344 ── */
+@media (max-width: 375px) {
+  .heroTitle { font-size: clamp(22px, 7.5vw, 28px); }
+  .heroSubtitle { font-size: 12px; }
+  .aiTitle { font-size: 19px; }
+  .aiStep { padding: 8px 4px; }
+  .aiStepIcon { width: 26px; height: 26px; }
+  .aiStep strong { font-size: 11px; }
+  .aiStep p { font-size: 10px; }
+  .statTile { height: 100px; }
+  .statTile strong { font-size: 17px; }
+  .newSolutionsGrid { grid-template-columns: 1fr; }
+  .newSolutionItem:nth-child(odd) { border-right: 0; }
+  .newSolutionItem:last-child { grid-column: auto; }
+  .contentSection { width: calc(100% - 24px); }
+  .homeInfoInner { width: calc(100% - 24px); }
 }

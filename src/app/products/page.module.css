@@ -213,7 +213,7 @@
 .noticeHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .noticeHeader strong { color: var(--brand-navy); font-size: 12px; }
 .noticeHeader a { color: var(--brand-text-muted); font-size: 10px; }
-.sidebarNotice > a { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--brand-gray-100); color: #3f4b5d; font-size: 11px; line-height: 1.55; }
+.sidebarNotice > a { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--brand-gray-100); color: #3f4b5d; font-size: 12px; line-height: 1.55; }
 .sidebarNotice time { color: #929baa; font-size: 9px; white-space: nowrap; }
 
 .customDevelopment {
@@ -250,8 +250,8 @@
 
 .customDevelopment > * { position: relative; z-index: 1; }
 .customDevelopment strong { display: block; font-size: 18px; line-height: 1.35; }
-.customDevelopment p { margin-top: 14px; color: #bdc9d5; font-size: 11px; line-height: 1.7; }
-.customDevelopment a { display: inline-flex; margin-top: 18px; padding: 10px 13px; border: 1px solid rgba(255,255,255,.5); border-radius: 4px; color: #fff; font-size: 11px; font-weight: 700; }
+.customDevelopment p { margin-top: 14px; color: #bdc9d5; font-size: 12px; line-height: 1.7; }
+.customDevelopment a { display: inline-flex; margin-top: 18px; padding: 10px 13px; border: 1px solid rgba(255,255,255,.5); border-radius: 4px; color: #fff; font-size: 12px; font-weight: 700; }
 
 .storefrontSections {
   width: 100%;
@@ -352,14 +352,14 @@
   place-items: center;
   margin: 0 auto;
   border: 1px solid #dbe7fa;
-  border-radius: 17px;
+  border-radius: 16px;
   background: linear-gradient(145deg, #fff, #eaf2ff);
   color: #2455a4;
   box-shadow: 0 5px 14px rgba(35,78,146,.08);
 }
 .whyItem > span svg { width: 38px; height: 38px; }
 .whyItem strong { display: block; margin-top: 9px; color: var(--brand-navy); font-size: 13px; line-height: 1.4; }
-.whyItem p { margin-top: 9px; color: #68768a; font-size: 11px; line-height: 1.65; }
+.whyItem p { margin-top: 9px; color: #68768a; font-size: 12px; line-height: 1.65; }
 
 .oemSection {
   display: grid;
@@ -383,7 +383,7 @@
 .oemIcon svg { width: 58px; height: 58px; }
 .oemStep b { display: block; margin-top: 8px; color: #2f6fed; font-size: 19px; }
 .oemStep strong { display: block; margin-top: 6px; font-size: 14px; line-height: 1.45; }
-.oemStep p { margin-top: 10px; color: #6a7789; font-size: 11px; line-height: 1.6; }
+.oemStep p { margin-top: 10px; color: #6a7789; font-size: 12px; line-height: 1.6; }
 
 .oemStats {
   grid-column: 1 / -1;
@@ -408,7 +408,7 @@
 .oemStat > svg { width: 38px; height: 38px; flex: 0 0 auto; color: #d6e5f8; }
 .oemStat div { display: flex; flex-direction: column; }
 .oemStat strong { color: #fff; font-size: 24px; line-height: 1; }
-.oemStat span { margin-top: 5px; color: #c5d2e2; font-size: 11px; }
+.oemStat span { margin-top: 5px; color: #c5d2e2; font-size: 12px; }
 
 @media (max-width: 1199px) {
   .whySection { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
@@ -418,6 +418,12 @@
   .oemSection { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .oemIntro { grid-column: 1 / -1; }
   .oemStep:not(:nth-of-type(4))::after { display: none; }
+}
+
+@media (max-width: 768px) {
+  .whySection { grid-template-columns: 1fr; padding: 24px 18px; }
+  .whyIntro { grid-column: auto; padding: 0 0 20px; }
+  .whyItem { padding: 22px 8px; border-left: 0; border-top: 1px solid #dbe1e9; }
 }
 
 @media (max-width: 767px) {
@@ -472,7 +478,7 @@
 
 .heroInner {
   width: 100%;
-  max-width: 1440px;
+  max-width: 1330px;
   margin: 0 auto;
   padding-left: 0;
 }
@@ -800,7 +806,7 @@
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1330px;
   margin: 0 auto;
   padding: 32px 24px 64px;
 }
@@ -1269,6 +1275,7 @@
   .shopLayout {
     display: block;
     max-width: none;
+    padding-left: 0;
     position: relative;
   }
 
@@ -1276,7 +1283,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    bottom: 0;
+    height: fit-content;
+    max-height: 100vh;
     width: 280px;
     z-index: 100;
     background: #fff;
@@ -1321,6 +1329,12 @@
     width: 22px;
     height: 22px;
   }
+
+  .sidebarAllBtn { justify-content: center; }
+  .sidebarContact { text-align: center; margin-top: 20px; padding: 18px 16px; }
+  .sidebarContact a { margin-top: 12px; }
+  .sidebarNav { padding-bottom: 0; }
+  .sidebar { padding-bottom: 16px; }
 
   .shopMain {
     border-left: 0;
