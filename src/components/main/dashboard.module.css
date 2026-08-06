@@ -14,7 +14,7 @@
 .dotGreen { background: #22c55e; }
 .dotBlue { background: #3b82f6; }
 
-.donut { width: 110px; height: 110px; }
+.donut { width: 80px; height: 80px; }
 
 /* ── Collect Dashboard ── */
 .collectWrap { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow: hidden; }
@@ -49,11 +49,11 @@
 .aiWrap { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow: hidden; }
 .aiTopRow { display: grid; grid-template-columns: .8fr 1.2fr; gap: 10px; }
 .anomalyCard { padding: 12px; border-radius: 8px; background: #112941; position: relative; }
-.anomalyContent { display: flex; align-items: center; justify-content: center; gap: 48px; padding: 8px 0; }
+.anomalyContent { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0; margin-top: -24px; }
 .donutWrap { flex-shrink: 0; }
-.anomalyLegend { display: flex; flex-direction: column; gap: 10px; }
-.anomalyLegend > div { display: flex; align-items: center; gap: 6px; color: #c0cfe0; font-size: 15px; }
-.anomalyLegend b { margin-left: auto; padding-left: 16px; font-weight: 600; }
+.anomalyLegend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; width: 100%; }
+.anomalyLegend > div { display: flex; align-items: center; gap: 5px; white-space: nowrap; overflow: hidden; color: #8293a7; font-size: clamp(9px, 0.85vw, 12px); }
+.anomalyLegend b { color: #c0cfe0; font-size: clamp(9px, 0.85vw, 12px); font-weight: 700; white-space: nowrap; margin-left: auto; }
 
 .predictionChart { padding: 12px; border-radius: 8px; background: #112941; }
 .predLegend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
@@ -75,13 +75,13 @@
 .controlLabel { flex: 1; color: #c0cfe0; font-size: 14px; }
 .controlBadge { padding: 2px 8px; border-radius: 4px; color: #fff; font-size: 13px; font-weight: 600; }
 
-.modelPerf { padding: 12px; border-radius: 8px; background: #112941; overflow: visible; display: flex; flex-direction: column; }
-.perfContent { display: flex; gap: 10px; align-items: center; flex: 1; }
+.modelPerf { padding: 8px 10px; border-radius: 8px; background: #112941; overflow: visible; display: flex; flex-direction: column; }
+.perfContent { display: flex; gap: 10px; align-items: flex-start; flex: 1; }
 .perfStats { flex: 1; min-width: 0; }
-.perfStats > div:first-child { margin-bottom: 8px; }
-.perfStats > div:first-child span { color: #8293a7; font-size: 15px; }
-.perfStats > div:first-child strong { display: block; color: #fff; font-size: 24px; margin-top: 2px; }
-.perfMeta { display: flex; flex-direction: column; gap: 4px; }
+.perfStats > div:first-child { margin-bottom: 2px; }
+.perfStats > div:first-child span { color: #8293a7; font-size: 13px; }
+.perfStats > div:first-child strong { display: block; color: #fff; font-size: 20px; margin-top: 1px; }
+.perfMeta { display: flex; flex-direction: column; gap: 3px; }
 .perfMeta > div { display: flex; justify-content: space-between; gap: 6px; white-space: nowrap; }
 .perfMeta span { color: #8293a7; font-size: 13px; }
 .perfMeta b { color: #c0cfe0; font-size: 13px; font-weight: 600; }
@@ -99,15 +99,21 @@
 .deviceGrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
 .deviceCard { padding: 12px; border-radius: 8px; background: #0a1f38; text-align: center; }
 .deviceIconWrap { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
-.deviceLabel { color: #8293a7; font-size: 12px; margin-bottom: 6px; }
+.deviceLabel { color: #c8d8e8; font-size: clamp(11px, 1.1vw, 14px); margin-bottom: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .deviceStatus { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
 .deviceStatusBtn { font-size: 18px; font-weight: 700; margin-bottom: 8px; border: 0; background: none; cursor: pointer; padding: 4px 12px; border-radius: 6px; transition: background .2s, box-shadow .2s; }
 .deviceStatusBtn:hover { opacity: .85; }
+.deviceToggleBtn { display: block; width: 100%; border: 0; cursor: pointer; border-radius: 5px; font-size: clamp(10px, 0.9vw, 12px); font-weight: 800; padding: 3px 0; margin-bottom: 5px; letter-spacing: 0.04em; transition: background .2s, box-shadow .2s; }
+.deviceToggleBtnAuto { background: rgba(34,197,94,.18); color: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,.35); }
+.deviceToggleBtnAuto:hover { background: rgba(34,197,94,.28); }
+.deviceToggleBtnOff { background: rgba(107,114,128,.12); color: #8293a7; }
+.deviceToggleBtnOff:hover { background: rgba(107,114,128,.22); }
+.deviceModeLabel { color: #a0b4c8; font-size: clamp(10px, 0.95vw, 12px); margin-bottom: 4px; white-space: nowrap; font-weight: 500; }
 .deviceStatusBtnAuto { background: rgba(34,197,94,.15); box-shadow: 0 0 8px rgba(34,197,94,.4); }
 .deviceStatusBtnOff { background: rgba(107,114,128,.1); }
 .deviceToggleRow { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }
 .deviceToggleRow span { color: #6b7f96; font-size: 11px; }
-.deviceDetail { color: #6b7f96; font-size: 11px; }
+.deviceDetail { color: #b0c4d8; font-size: clamp(10px, 0.95vw, 12px); }
 
 .toggle { position: relative; width: 32px; height: 16px; border: 0; border-radius: 8px; background: #2a4a6b; cursor: pointer; padding: 0; }
 .toggleOn { background: #3b82f6; }
@@ -172,11 +178,11 @@
 .summaryLegend { display: flex; flex-direction: column; gap: 6px; }
 .summaryLegend > div { display: flex; align-items: center; gap: 4px; color: #c0cfe0; font-size: 13px; }
 .summaryLegend b { margin-left: 8px; font-weight: 600; }
-.summaryContentV { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 20px; flex: 1; padding-top: 6px; }
-.donutLg { width: 110px; height: 110px; flex-shrink: 0; }
-.summaryLegendH { display: flex; flex-direction: column; gap: 6px; }
+.summaryContentV { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; padding: 0; margin-top: -6px; }
+.donutLg { width: 80px; height: 80px; flex-shrink: 0; }
+.summaryLegendH { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; width: 100%; }
 .summaryLegendH > div { display: flex; align-items: center; gap: 6px; color: #c0cfe0; font-size: 13px; }
-.summaryLegendH b { font-weight: 600; margin-left: auto; padding-left: 10px; }
+.summaryLegendH b { font-weight: 600; margin-left: auto; padding-left: 8px; }
 
 .statsCard { padding: 10px 12px; border-radius: 8px; background: #112941; overflow: hidden; }
 .statsGrid { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
@@ -201,6 +207,11 @@
   .targetRow:last-child { border-right: none; padding-right: 0; }
   .targetRow:first-child { padding-left: 0; }
   .targetRowSliderWrap { max-width: 100%; }
+  /* anomaly & summary: horizontal on tablet */
+  .anomalyContent { flex-direction: row; justify-content: center; gap: 32px; margin-top: 0 !important; padding: 8px 0; }
+  .anomalyLegend { display: flex; flex-direction: column; gap: 10px; width: auto; }
+  .summaryContentV { flex-direction: row; justify-content: center; gap: 20px; }
+  .summaryLegendH { display: flex; flex-direction: column; gap: 6px; width: auto; }
 }
 @media (max-width: 600px) {
   .sensorRow { grid-template-columns: repeat(2, 1fr); }
@@ -210,6 +221,11 @@
   .targetRow:last-child { border-right: none; padding-right: 0; }
   .targetRow:first-child { padding-left: 0; }
   .targetRowSliderWrap { max-width: 100%; }
+  /* anomaly & summary: horizontal on mobile too */
+  .anomalyContent { flex-direction: row; justify-content: center; gap: 24px; }
+  .anomalyLegend { display: flex; flex-direction: column; gap: 8px; width: auto; }
+  .summaryContentV { flex-direction: row; justify-content: center; gap: 16px; }
+  .summaryLegendH { display: flex; flex-direction: column; gap: 6px; width: auto; }
 }
 
 .outlineBtnActive { border-color: #22c55e; color: #22c55e; }

@@ -163,21 +163,12 @@ export default function ControlDashboard() {
                 <div className={styles.deviceIconWrap}>{d.icon}</div>
                 <div className={styles.deviceLabel}>{d.label}</div>
                 <button
-                  className={`${styles.deviceStatusBtn} ${d.status === "AUTO" ? styles.deviceStatusBtnAuto : styles.deviceStatusBtnOff}`}
-                  style={{ color: statusColor(d.status) }}
-                  onClick={() => toggleDevice(i)}
+                  className={`${styles.deviceToggleBtn} ${d.auto ? styles.deviceToggleBtnAuto : styles.deviceToggleBtnOff}`}
+                  onClick={() => toggleAuto(i)}
                 >
-                  {d.status}
+                  {d.auto ? "AUTO" : "OFF"}
                 </button>
-                <div className={styles.deviceToggleRow}>
-                  <span>{d.auto ? "자동 모드" : "수동 모드"}</span>
-                  <button
-                    className={`${styles.toggle} ${d.auto ? styles.toggleOn : ""}`}
-                    onClick={() => toggleAuto(i)}
-                  >
-                    <span className={styles.toggleKnob} />
-                  </button>
-                </div>
+                <div className={styles.deviceModeLabel}>{d.auto ? "자동 모드" : "수동 모드"}</div>
                 <div className={styles.deviceDetail}>{d.detail}</div>
               </div>
             ))}

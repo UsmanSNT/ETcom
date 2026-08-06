@@ -12,7 +12,7 @@ const ANOMALY_INIT = { caution: 1, warning: 1, danger: 0, normal: 128 };
 const INSIGHTS = [
   {
     title: "온도 상승 패턴 감지",
-    desc: "최근 온도 상승 속도가 평소보다 15% 빠르게 나타나고 있습니다.",
+    desc: "온도 상승 속도가 평소보다 15% 빠릅니다.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
@@ -21,7 +21,7 @@ const INSIGHTS = [
   },
   {
     title: "CO₂ 농도 예측",
-    desc: "향후 3시간 내 CO₂ 농도가 850ppm 이상으로 상승할 것으로 예측됩니다.",
+    desc: "3시간 내 CO₂ 농도 850ppm 초과가 예측됩니다.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M6.5 18.5a4.5 4.5 0 0 1-.42-8.98 7 7 0 0 1 13.84 0A4.5 4.5 0 0 1 17.5 18.5H6.5z" />
