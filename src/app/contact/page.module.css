@@ -367,11 +367,18 @@
 }
 
 .bottomGrid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 40px;
   padding-top: 40px;
   border-top: 1px solid var(--brand-gray-100);
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+  margin-top: 20px;
 }
 
 .faqItem {
@@ -414,6 +421,13 @@
 .channelsCol {
   display: flex;
   flex-direction: column;
+  padding-top: 32px;
+  border-top: 1px solid var(--brand-gray-100);
+}
+
+.channelsCol .channelsGrid {
+  grid-template-columns: repeat(3, minmax(0, 220px));
+  justify-content: start;
 }
 
 .channelsGrid {
@@ -472,9 +486,6 @@
   .mainGrid {
     grid-template-columns: 1fr 1fr;
   }
-  .bottomGrid {
-    grid-template-columns: 1.4fr 1fr;
-  }
   /* Let the channel cards grow taller to match the neighbouring FAQ column. */
   .channelsGrid {
     flex: 1;
@@ -482,6 +493,8 @@
 }
 
 @media (max-width: 767px) {
+  .faqGrid { grid-template-columns: 1fr; gap: 0; }
+  .channelsCol .channelsGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); justify-content: stretch; }
   .infoGrid { padding: 0 16px; }
   .infoCard { gap: 16px; padding: 20px 4px; }
   .infoIcon { width: 34px; height: 34px; }

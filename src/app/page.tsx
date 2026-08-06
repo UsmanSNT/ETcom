@@ -291,10 +291,10 @@ export default function Home() {
 
       <section className={`${styles.contentSection} ${styles.newSolutionsSection}`}>
         <div className={styles.solutionsIntro}>
-          <p className={styles.sectionLabel}>OUR SOLUTIONS</p>
-          <h2>{locale === "ko" ? <>최적의 솔루션으로<br />더 스마트한 미래를 만듭니다.</> : <>Optimal solutions for<br />a smarter future.</>}</h2>
+          <p className={styles.sectionLabel}>OUR PRODUCTS</p>
+          <h2>{locale === "ko" ? <>산업을 연결하는<br />스마트 기술</> : <>Smart Technology<br />Connecting Industries</>}</h2>
           <i aria-hidden="true" />
-          <p>{locale === "ko" ? "이티컴퍼니의 다양한 제품과 솔루션이 고객의 가치를 높여드립니다." : "ETCOMPANY products and solutions create more value for every customer."}</p>
+          <p>{locale === "ko" ? "다양한 산업의 디지털 전환을 지원하는 제품 라인업과 솔루션을 만나보세요" : "Explore our product lineup and solutions supporting digital transformation across industries."}</p>
         </div>
         <div className={styles.newSolutionsGrid}>
           {solutions.map(({ key, icon: Icon }) => {

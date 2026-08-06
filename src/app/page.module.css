@@ -335,7 +335,8 @@
 
 /* ── Large tablets: iPad Pro 1024, Nest Hub 1024, Galaxy Z Fold open 882 ── */
 @media (max-width: 1050px) {
-  .heroCopy { padding-left: 0; }
+  .hero { min-height: 340px; }
+  .heroCopy { padding-left: 0; padding-bottom: 40px; }
   .dashboardCard { height: auto; overflow: visible; }
   .aiInner { grid-template-columns: 1fr; gap: 40px; }
   .aiIntro { grid-template-columns: 1fr; gap: 24px; }
@@ -408,6 +409,12 @@
   .contactBody { margin-top: 18px; justify-content: center; }
   .contactBody > div { align-items: center; text-align: center; }
   .homeInfoBand .certColumn { padding: 24px 0; }
+}
+
+/* ── Tablet only: extra bottom room so "OUR SOLUTIONS" clears the dark aiSection ── */
+@media (min-width: 481px) and (max-width: 768px) {
+  .textLink { margin-top: 16px; }
+  .heroCopy { padding-bottom: 48px; }
 }
 
 /* ── Phones: iPhone 14 Pro Max 430, Pixel 7 412, Galaxy A51 412, Galaxy S8+ 360 ── */
