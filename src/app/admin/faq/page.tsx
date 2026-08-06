@@ -103,10 +103,7 @@ export default function AdminFaqPage() {
       <div className={styles.toolbar}>
         <h1 className={styles.pageTitle}>자주 묻는 질문 관리</h1>
         {!editing && (
-          <div style={{ display: "flex", gap: 8 }}>
-            <button className={styles.btn} onClick={handleSeedDefaults} disabled={saving}>기본 데이터 불러오기</button>
-            <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ 신규 등록</button>
-          </div>
+          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ 신규 등록</button>
         )}
       </div>
 
