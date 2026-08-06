@@ -22,6 +22,19 @@ const emptyForm = (): Omit<FaqItem, "id"> & { id?: string } => ({
   isPublished: true,
 });
 
+const DEFAULT_FAQS: Array<Omit<FaqItem, "id">> = [
+  { questionKo: "Q1. 어떤 제품과 서비스를 제공하나요?", questionEn: "Q1. What products and services do you offer?", answerKo: "ETCOMPANY는 스마트팜, 산업용 IoT, 임베디드 시스템, 교육기자재 및 OEM·ODM 솔루션을 제공합니다.", answerEn: "ETCOMPANY provides smart farm, industrial IoT, embedded systems, educational equipment, and OEM·ODM solutions.", order: 1, isPublished: true },
+  { questionKo: "Q2. 제품에 대한 기술 상담이 가능한가요?", questionEn: "Q2. Can I receive technical consultation on products?", answerKo: "네. 제품 선택부터 적용 방법, 기술 문의까지 전문 엔지니어가 상담해드립니다.", answerEn: "Yes. Our expert engineers are available for consultation from product selection to application and technical inquiries.", order: 2, isPublished: true },
+  { questionKo: "Q3. OEM·ODM 시제품 개발이 가능한가요?", questionEn: "Q3. Is OEM·ODM prototype development available?", answerKo: "가능합니다. 제품 기획부터 PCB 설계, 펌웨어 개발, 기구 설계, 시제품 제작 및 양산까지 One-stop 서비스를 제공합니다.", answerEn: "Yes. We offer One-stop services from product planning, PCB design, firmware development, mechanical design, prototyping to mass production.", order: 3, isPublished: true },
+  { questionKo: "Q4. 제품 구매는 어떻게 하나요?", questionEn: "Q4. How can I purchase products?", answerKo: "당사가 운영하는 이티몰 쇼핑몰 외 쿠팡, 네이버 등을 통해 구매할 수 있으며, 대량 구매는 별도 문의해 주시기 바랍니다.", answerEn: "Products are available through our ETMALL shop, Coupang, Naver, and others. For bulk purchases, please contact us separately.", order: 4, isPublished: true },
+  { questionKo: "Q5. 제품의 A/S는 어떻게 받을 수 있나요?", questionEn: "Q5. How can I get after-sales service?", answerKo: "고객센터를 통해 접수하시면 제품 확인 후 수리 또는 교환 절차를 안내해드립니다.", answerEn: "Please submit a request through our customer center, and we will guide you through the repair or exchange process.", order: 5, isPublished: true },
+  { questionKo: "Q6. 제품 사용 매뉴얼과 자료는 어디에서 확인할 수 있나요?", questionEn: "Q6. Where can I find product manuals and resources?", answerKo: "구매하시는 제품에 QR코드로 동봉되어 있습니다.", answerEn: "A QR code linking to the manual is included with the product at time of purchase.", order: 6, isPublished: true },
+  { questionKo: "Q7. 스마트팜 구축 및 기술 지원이 가능한가요?", questionEn: "Q7. Is smart farm construction and technical support available?", answerKo: "네. 환경제어, 식물생장 LED, 센서, 통합제어 시스템 등 구축 및 기술 지원을 제공합니다.", answerEn: "Yes. We provide construction and technical support for environment control, plant-growth LED, sensors, and integrated control systems.", order: 7, isPublished: true },
+  { questionKo: "Q8. 산업용 자동화 시스템도 맞춤 제작이 가능한가요?", questionEn: "Q8. Is custom manufacturing of industrial automation systems available?", answerKo: "가능합니다. 고객 환경에 맞는 하드웨어와 소프트웨어를 설계하여 제공합니다.", answerEn: "Yes. We design and deliver hardware and software tailored to your environment.", order: 8, isPublished: true },
+  { questionKo: "Q9. 교육기관 납품 및 견적 요청이 가능한가요?", questionEn: "Q9. Can educational institutions request supply and quotation?", answerKo: "네. 학교, 대학, 연구기관, 공공기관 등 다양한 교육기관 납품 및 견적 상담을 지원합니다.", answerEn: "Yes. We support supply and quotation consultations for schools, universities, research institutes, and public institutions.", order: 9, isPublished: true },
+  { questionKo: "Q10. 견적 및 상담은 어떻게 신청하나요?", questionEn: "Q10. How can I request a quote or consultation?", answerKo: "전화, 이메일 또는 홈페이지 문의를 통해 상담을 신청하실 수 있으며, 담당자가 빠르게 안내해드립니다.", answerEn: "You can request a consultation by phone, email, or through the website inquiry form, and our representative will respond promptly.", order: 10, isPublished: true },
+];
+
 export default function AdminFaqPage() {
   const [faqs, setFaqs] = useState<FaqItem[]>([]);
   const [form, setForm] = useState(emptyForm());
@@ -71,12 +84,29 @@ export default function AdminFaqPage() {
     load();
   }
 
+  async function handleSeedDefaults() {
+    if (!confirm(`기본 FAQ ${DEFAULT_FAQS.length}개를 등록하시겠습니까?`)) return;
+    setSaving(true);
+    for (const faq of DEFAULT_FAQS) {
+      await fetch("/api/admin/faq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(faq),
+      });
+    }
+    setSaving(false);
+    load();
+  }
+
   return (
     <div>
       <div className={styles.toolbar}>
         <h1 className={styles.pageTitle}>자주 묻는 질문 관리</h1>
         {!editing && (
-          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ 신규 등록</button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button className={styles.btn} onClick={handleSeedDefaults} disabled={saving}>기본 데이터 불러오기</button>
+            <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={startNew}>+ 신규 등록</button>
+          </div>
         )}
       </div>
 
