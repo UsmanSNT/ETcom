@@ -495,7 +495,7 @@
 }
 
 @media (max-width: 767px) {
-  .faqGrid { grid-template-columns: 1fr; gap: 0; }
+  .faqGrid { grid-template-columns: 1fr; grid-template-rows: unset; grid-auto-flow: row; gap: 0; }
   .channelsCol .channelsGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); justify-content: stretch; }
   .infoGrid { padding: 0 16px; }
   .infoCard { gap: 16px; padding: 20px 4px; }
